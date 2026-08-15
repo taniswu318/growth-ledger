@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-15T06:40:40.631Z"
+    "lastUpdated": "2026-08-15T06:41:02.372Z"
   },
   "presets": [
     {
@@ -90,6 +90,42 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1786776060224_imf4h",
+      "type": "reward",
+      "title": "做单杠",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-07-15T06:40",
+      "note": ""
+    },
+    {
+      "id": "rec_1786776060223_e6szm",
+      "type": "reward",
+      "title": "运动",
+      "points": 2,
+      "category": "",
+      "timestamp": "2026-07-15T06:40",
+      "note": ""
+    },
+    {
+      "id": "rec_1786776060222_unr26",
+      "type": "reward",
+      "title": "英语跟读",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-07-15T06:40",
+      "note": ""
+    },
+    {
+      "id": "rec_1786776060221_7yki5",
+      "type": "reward",
+      "title": "看英语视频30分钟",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-07-15T06:40",
+      "note": ""
+    },
     {
       "id": "rec_1786776038435_pw1xj",
       "type": "reward",
