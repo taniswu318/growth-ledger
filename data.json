@@ -1,31 +1,9 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-15T06:23:36.396Z"
+    "lastUpdated": "2026-08-15T06:23:38.862Z"
   },
-  "presets": [
-    {
-      "id": "p4",
-      "type": "penalty",
-      "title": "无故拖延超过 15 分钟",
-      "points": 5,
-      "category": "习惯"
-    },
-    {
-      "id": "p5",
-      "type": "expense",
-      "title": "兑换零食/冰淇淋",
-      "points": 5,
-      "category": "零用兑换"
-    },
-    {
-      "id": "p6",
-      "type": "expense",
-      "title": "兑换游戏/平板时间 30分",
-      "points": 10,
-      "category": "愿望兑换"
-    }
-  ],
+  "presets": [],
   "records": [
     {
       "id": "rec_1786771538347_ti7zx",
