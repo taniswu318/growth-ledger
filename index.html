@@ -179,17 +179,6 @@
       </button>
     </div>
 
-    <!-- Quick Presets -->
-    <div class="space-y-1.5">
-      <div class="flex items-center justify-between text-xs font-semibold text-slate-400 dark:text-slate-500 px-1">
-        <span>快捷填入 (点击追加到输入框)</span>
-        <button onclick="openPresetManagerModal()" class="text-indigo-500 hover:underline">管理预设</button>
-      </div>
-      <div id="quickPresetsContainer" class="flex gap-2 overflow-x-auto no-scrollbar py-1">
-        <!-- Rendered by JS -->
-      </div>
-    </div>
-
     <!-- Filter & Monthly Stream Section -->
     <div class="pt-2">
       <div class="flex items-center justify-between mb-3 px-1">
@@ -200,6 +189,8 @@
           <button onclick="switchTab('expense')" id="tabExpense" class="px-2.5 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 transition">支出</button>
         </div>
         <div class="flex items-center gap-2">
+          <button onclick="openPresetManagerModal()" class="text-xs text-slate-500 dark:text-slate-400 font-medium hover:underline">管理常用预设</button>
+          <span class="text-slate-300 dark:text-slate-700">|</span>
           <button onclick="toggleExpandAllMonths()" id="toggleAllMonthsBtn" class="text-xs text-indigo-500 font-medium hover:underline">展开全部月份</button>
         </div>
       </div>
@@ -220,11 +211,11 @@
 
   <!-- ================= MODALS ================= -->
 
-  <!-- Modal 1: Batch & Single Rapid Input Modal -->
+  <!-- Modal 1: Batch & Single Rapid Input Modal with In-Modal Presets -->
   <div id="recordModal" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 shadow-2xl border border-slate-200/50 dark:border-slate-800 animate-slide-up overflow-hidden max-h-[92vh] overflow-y-auto no-scrollbar">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-        <h3 id="recordModalTitle" class="text-lg font-bold">批量记账录入</h3>
+        <h3 id="recordModalTitle" class="text-lg font-bold">记账录入</h3>
         <button onclick="closeModal('recordModal')" class="p-1 rounded-full text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
@@ -249,14 +240,27 @@
           <input type="hidden" id="recordType" value="reward" />
         </div>
 
+        <!-- In-Modal Quick Preset Chips (Click to auto-fill) -->
+        <div class="space-y-1.5 bg-slate-50 dark:bg-slate-850/60 p-2.5 rounded-2xl border border-slate-100 dark:border-slate-800">
+          <div class="flex items-center justify-between text-[11px] font-semibold text-slate-500">
+            <span>点击常用预设快速填充：</span>
+            <button type="button" onclick="saveCurrentInputAsPreset()" class="text-indigo-600 dark:text-indigo-400 font-bold hover:underline">
+              + 将当前输入存为预设
+            </button>
+          </div>
+          <div id="modalPresetChipsContainer" class="flex flex-wrap gap-1.5 pt-0.5">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
         <!-- Combined Multiple/Single Smart Input: 事项1 分值, 事项2 分值 -->
         <div>
           <div class="flex items-center justify-between mb-1.5">
-            <label class="text-xs font-bold text-slate-700 dark:text-slate-300">事项与分值 (支持多条批量)</label>
+            <label class="text-xs font-bold text-slate-700 dark:text-slate-300">事项与分值 (支持多条)</label>
             <span class="text-[10px] text-slate-400">格式: 事项 空格 分值, 事项 空格 分值</span>
           </div>
           <textarea id="quickInputContent" required rows="3"
-            placeholder="例如: 阅读原版书 10, 收拾房间 5, 拖延玩手机 5"
+            placeholder="例如: 阅读原版书 10, 收拾房间 5"
             oninput="handleBatchPreview(this.value)"
             class="w-full px-3.5 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-transparent focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-850 focus:ring-2 focus:ring-indigo-500/20 text-xs sm:text-sm font-medium transition leading-relaxed"></textarea>
           
@@ -405,7 +409,7 @@
   <div id="presetModal" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl border border-slate-200/50 dark:border-slate-800 max-h-[85vh] overflow-y-auto no-scrollbar">
       <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
-        <h3 class="text-lg font-bold">管理快捷预设</h3>
+        <h3 class="text-lg font-bold">管理自定义预设</h3>
         <button onclick="closeModal('presetModal')" class="p-1 rounded-full text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
@@ -417,18 +421,18 @@
         </div>
 
         <div class="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-3">
-          <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider">添加新快捷预设</h4>
+          <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider">手动添加新预设</h4>
           <div class="grid grid-cols-2 gap-2">
             <select id="newPresetType" class="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-semibold">
               <option value="reward">奖励 (+)</option>
               <option value="penalty">惩罚 (-)</option>
               <option value="expense">支出 (-)</option>
             </select>
-            <input type="number" id="newPresetPoints" placeholder="分值/金额 (如 10)" class="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-bold" />
+            <input type="number" id="newPresetPoints" placeholder="分值 (如 10)" class="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-bold" />
           </div>
           <div class="grid grid-cols-2 gap-2">
-            <input type="text" id="newPresetTitle" placeholder="事项名称 (如 购买乐高玩具)" class="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs" />
-            <input type="text" id="newPresetCategory" placeholder="分类 (如 愿望兑换)" class="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs" />
+            <input type="text" id="newPresetTitle" placeholder="事项名称 (如 阅读原版书)" class="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs" />
+            <input type="text" id="newPresetCategory" placeholder="分类 (选填，如 学习)" class="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs" />
           </div>
           <button onclick="addPreset()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition">添加预设</button>
         </div>
@@ -446,19 +450,13 @@
     const STORAGE_KEY = 'STAR_LEDGER_DATA_V2';
     const GITHUB_CFG_KEY = 'STAR_LEDGER_GH_CONFIG';
 
+    // No hardcoded built-in presets: pure user custom presets
     let appData = {
       config: {
         initialScore: 0,
         lastUpdated: new Date().toISOString()
       },
-      presets: [
-        { id: 'p1', type: 'reward', title: '专注阅读 30 分钟', points: 10, category: '学习' },
-        { id: 'p2', type: 'reward', title: '独立按时完成作业', points: 15, category: '学习' },
-        { id: 'p3', type: 'reward', title: '主动收拾整理房间', points: 5, category: '习惯' },
-        { id: 'p4', type: 'penalty', title: '无故拖延超过 15 分钟', points: 5, category: '习惯' },
-        { id: 'p5', type: 'expense', title: '兑换零食/冰淇淋', points: 5, category: '零用兑换' },
-        { id: 'p6', type: 'expense', title: '兑换游戏/平板时间 30分', points: 10, category: '愿望兑换' }
-      ],
+      presets: [],
       records: []
     };
 
@@ -544,9 +542,15 @@
         const savedData = localStorage.getItem(STORAGE_KEY);
         if (savedData) {
           appData = JSON.parse(savedData);
+          if (!Array.isArray(appData.presets)) {
+            appData.presets = [];
+          }
         } else {
           const v1Data = localStorage.getItem('STAR_LEDGER_DATA_V1');
-          if (v1Data) appData = JSON.parse(v1Data);
+          if (v1Data) {
+            appData = JSON.parse(v1Data);
+            if (!Array.isArray(appData.presets)) appData.presets = [];
+          }
         }
 
         const savedGh = localStorage.getItem(GITHUB_CFG_KEY);
@@ -571,8 +575,8 @@
     // Master Render
     function renderAll() {
       renderDashboard();
-      renderQuickPresets();
       renderMonthlyGroupedRecords();
+      renderModalPresetChips();
       lucide.createIcons();
     }
 
@@ -602,18 +606,23 @@
       document.getElementById('settingInitialScore').value = initial;
     }
 
-    // Render Quick Presets Horizontal Bar
-    function renderQuickPresets() {
-      const container = document.getElementById('quickPresetsContainer');
+    // Render In-Modal Preset Chips (Filtered by active modal type)
+    function renderModalPresetChips() {
+      const container = document.getElementById('modalPresetChipsContainer');
+      if (!container) return;
       container.innerHTML = '';
 
-      if (!appData.presets || appData.presets.length === 0) {
-        container.innerHTML = '<span class="text-xs text-slate-400 py-1">暂无快捷预设</span>';
+      const activeType = document.getElementById('recordType').value || 'reward';
+      const matchingPresets = (appData.presets || []).filter(p => p.type === activeType);
+
+      if (matchingPresets.length === 0) {
+        container.innerHTML = `<span class="text-[11px] text-slate-400 py-0.5">暂无该类型的常用预设，可在下方输入后点击保存</span>`;
         return;
       }
 
-      appData.presets.forEach(p => {
+      matchingPresets.forEach(p => {
         const chip = document.createElement('button');
+        chip.type = 'button';
         let styleClass = '';
         let prefix = '+';
 
@@ -628,11 +637,11 @@
           prefix = '-';
         }
 
-        chip.className = `flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border active:scale-95 transition ${styleClass}`;
+        chip.className = `flex-shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-semibold border active:scale-95 transition ${styleClass}`;
         chip.onclick = () => appendPresetToInput(p);
         chip.innerHTML = `
-          <span>${prefix}${p.points}</span>
-          <span class="font-normal text-slate-700 dark:text-slate-300">${p.title}</span>
+          <span>${p.title}</span>
+          <b class="font-mono font-bold">${prefix}${p.points}</b>
         `;
         container.appendChild(chip);
       });
@@ -640,7 +649,6 @@
 
     // Append preset into textarea as: "事项 分值"
     function appendPresetToInput(p) {
-      openRecordModal(p.type);
       const textarea = document.getElementById('quickInputContent');
       const itemText = `${p.title} ${p.points}`;
       if (!textarea.value.trim()) {
@@ -649,6 +657,43 @@
         textarea.value = textarea.value.trim() + ', ' + itemText;
       }
       handleBatchPreview(textarea.value);
+    }
+
+    // Save current typed input as a preset
+    function saveCurrentInputAsPreset() {
+      const rawText = document.getElementById('quickInputContent').value.trim();
+      const activeType = document.getElementById('recordType').value || 'reward';
+      const parsedList = parseBatchInput(rawText);
+
+      if (parsedList.length === 0) {
+        showToast('请先在输入框输入事项与分值 (如: 阅读 10)');
+        return;
+      }
+
+      let addedCount = 0;
+      parsedList.forEach(item => {
+        // Avoid exact duplicate in presets
+        const exists = appData.presets.some(p => p.type === activeType && p.title === item.title && p.points === item.points);
+        if (!exists) {
+          appData.presets.push({
+            id: 'p_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+            type: activeType,
+            title: item.title,
+            points: item.points,
+            category: ''
+          });
+          addedCount++;
+        }
+      });
+
+      if (addedCount > 0) {
+        saveLocalStorage();
+        renderModalPresetChips();
+        showToast(`✅ 已将 ${addedCount} 项存为常用预设！`);
+        triggerBackgroundSync();
+      } else {
+        showToast('该事项已存在于预设中');
+      }
     }
 
     // Render Month Grouped and Date Nested Records
@@ -942,7 +987,7 @@
         rBtn.className = "py-2 px-3 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 text-xs font-bold flex items-center justify-center gap-1";
         submitBtn.className = "w-full py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-lg shadow-emerald-600/20 active:scale-[0.98] transition";
         submitBtn.innerText = "保存全部奖励记录 (+)";
-        quickInput.placeholder = "如: 阅读英文书 10, 收拾房间 5, 独立做完作业 15";
+        quickInput.placeholder = "如: 阅读英文书 10, 收拾房间 5";
       } else if (type === 'penalty') {
         pBtn.className = "py-2 px-3 rounded-xl border-2 border-rose-500 bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 text-xs font-bold flex items-center justify-center gap-1";
         submitBtn.className = "w-full py-3.5 rounded-2xl bg-rose-600 hover:bg-rose-700 text-white font-bold shadow-lg shadow-rose-600/20 active:scale-[0.98] transition";
@@ -952,8 +997,9 @@
         eBtn.className = "py-2 px-3 rounded-xl border-2 border-blue-500 bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300 text-xs font-bold flex items-center justify-center gap-1";
         submitBtn.className = "w-full py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-lg shadow-blue-600/20 active:scale-[0.98] transition";
         submitBtn.innerText = "保存全部支出记录 (-)";
-        quickInput.placeholder = "如: 兑换零食 5, 购买文具 20, 兑换游戏时间 10";
+        quickInput.placeholder = "如: 兑换零食 5, 购买文具 20";
       }
+      renderModalPresetChips();
       handleBatchPreview(quickInput.value);
     }
 
@@ -961,20 +1007,19 @@
      * BATCH SMART INPUT PARSER
      * Parses multiple items separated by commas or line breaks.
      * Each item is: "事项 空格 分值"
-     * Example input: "阅读原版书 10, 收拾房间 5, 拖延 5"
      */
     function parseBatchInput(rawText) {
       if (!rawText || !rawText.trim()) return [];
 
-      // Split by Chinese comma, English comma, or newline
-      const segments = rawText.split(/[,，\n]+/);
+      const segments = rawText.split(/[,，
+]+/);
       const results = [];
 
       segments.forEach(seg => {
         const itemStr = seg.trim();
         if (!itemStr) return;
 
-        // Match: "事项名称 分值" (number at the end)
+        // Match: "事项名称 分值" (number at end)
         const matchTrailing = itemStr.match(/^(.*?)[\s\+\-]+(\d+(?:\.\d+)?)$/);
         if (matchTrailing) {
           const title = matchTrailing[1].trim();
@@ -985,7 +1030,7 @@
           }
         }
 
-        // Match: "分值 事项名称" (number at the beginning)
+        // Match: "分值 事项名称" (number at beginning)
         const matchLeading = itemStr.match(/^(\d+(?:\.\d+)?)[\s\+\-]+(.*?)$/);
         if (matchLeading) {
           const pts = Math.abs(parseFloat(matchLeading[1]));
@@ -1000,7 +1045,6 @@
       return results;
     }
 
-    // Live preview of parsed batch items
     function handleBatchPreview(val) {
       const parsedList = parseBatchInput(val);
       const previewBox = document.getElementById('batchParsePreviewBox');
@@ -1061,7 +1105,6 @@
       }, 100);
     }
 
-    // Submit Multiple/Single Records
     function handleBatchRecordSubmit(e) {
       e.preventDefault();
       const type = document.getElementById('recordType').value;
@@ -1080,10 +1123,8 @@
       const baseTime = timestamp ? new Date(timestamp).getTime() : Date.now();
       let totalPts = 0;
 
-      // Add each item as a discrete record
       parsedList.forEach((item, index) => {
         totalPts += item.points;
-        // slight millisecond offset to keep exact input order
         const itemIsoTime = new Date(baseTime + index * 1000).toISOString().slice(0, 16);
 
         const newRecord = {
@@ -1143,7 +1184,7 @@
       openModal('settingsModal');
     }
 
-    // Presets
+    // Presets Manager Modal
     function openPresetManagerModal() {
       renderPresetManagerList();
       openModal('presetModal');
@@ -1152,6 +1193,12 @@
     function renderPresetManagerList() {
       const container = document.getElementById('presetManagerList');
       container.innerHTML = '';
+
+      if (!appData.presets || appData.presets.length === 0) {
+        container.innerHTML = `<div class="text-xs text-slate-400 py-3 text-center">暂无自定义预设，可以在下方添加</div>`;
+        return;
+      }
+
       appData.presets.forEach(p => {
         const item = document.createElement('div');
         item.className = 'flex items-center justify-between p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs';
@@ -1183,12 +1230,12 @@
       const category = document.getElementById('newPresetCategory').value.trim();
 
       if (!title || isNaN(points) || points <= 0) {
-        showToast('请完整输入预设内容');
+        showToast('请完整输入预设内容与有效分值');
         return;
       }
 
       appData.presets.push({
-        id: 'p_' + Date.now(),
+        id: 'p_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
         type,
         points,
         title,
@@ -1197,7 +1244,7 @@
 
       saveLocalStorage();
       renderPresetManagerList();
-      renderQuickPresets();
+      renderModalPresetChips();
       document.getElementById('newPresetTitle').value = '';
       document.getElementById('newPresetPoints').value = '';
       showToast('预设添加成功');
@@ -1208,7 +1255,8 @@
       appData.presets = appData.presets.filter(p => p.id !== id);
       saveLocalStorage();
       renderPresetManagerList();
-      renderQuickPresets();
+      renderModalPresetChips();
+      showToast('预设已彻底删除');
       triggerBackgroundSync();
     }
 
@@ -1351,13 +1399,13 @@
             }
           }
 
-          // Merge Presets
+          // Merge Presets (Union of user presets)
           const presetMap = new Map();
           if (Array.isArray(remoteData.presets)) {
-            remoteData.presets.forEach(p => presetMap.set(p.title + p.type, p));
+            remoteData.presets.forEach(p => presetMap.set(p.id || (p.title + p.type), p));
           }
           if (Array.isArray(appData.presets)) {
-            appData.presets.forEach(p => presetMap.set(p.title + p.type, p));
+            appData.presets.forEach(p => presetMap.set(p.id || (p.title + p.type), p));
           }
 
           appData.records = mergedRecords;
@@ -1444,6 +1492,7 @@
           fileSha = fileData.sha;
           const content = decodeURIComponent(escape(atob(fileData.content.replace(/\n/g, ''))));
           appData = JSON.parse(content);
+          if (!Array.isArray(appData.presets)) appData.presets = [];
           saveLocalStorage();
           renderAll();
           showToast('✅ 已成功从云端恢复覆盖');
@@ -1501,6 +1550,7 @@
           const imported = JSON.parse(e.target.result);
           if (imported.records && Array.isArray(imported.records)) {
             appData = imported;
+            if (!Array.isArray(appData.presets)) appData.presets = [];
             saveLocalStorage();
             renderAll();
             showToast('✅ 成功导入数据！');
