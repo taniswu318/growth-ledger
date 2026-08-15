@@ -99,8 +99,8 @@
       
       <!-- Right Action Icons -->
       <div class="flex items-center space-x-1.5">
-        <button onclick="manualSync()" id="syncBtn" class="p-2 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 dark:text-slate-400 transition" title="云端同步">
-          <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+        <button onclick="smartSync(false)" id="syncBtn" class="p-2 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 dark:text-slate-400 transition flex items-center" title="双向智能同步">
+          <i data-lucide="refresh-cw" id="syncIcon" class="w-4 h-4"></i>
         </button>
         <button onclick="toggleDarkMode()" class="p-2 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 dark:text-slate-400 transition" title="切换暗黑模式">
           <i data-lucide="moon" id="themeIcon" class="w-4 h-4"></i>
@@ -293,11 +293,11 @@
         </button>
       </div>
 
-      <div class="space-y-6 pt-4">
+      <div class="space-y-5 pt-4">
         <!-- Initial Score -->
         <div class="p-4 rounded-2xl bg-slate-100/70 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60">
           <h4 class="text-sm font-bold mb-1">起始/继承分值 (零用钱底池)</h4>
-          <p class="text-xs text-slate-500 mb-3">历史手写记录的结余分值，在此输入作为起始基准。</p>
+          <p class="text-xs text-slate-500 mb-3">历史手写记录的结余分值，修改后会自动同步到云端。</p>
           <div class="flex space-x-2">
             <input type="number" id="settingInitialScore" placeholder="0" class="flex-1 px-4 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm font-bold" />
             <button onclick="saveInitialScore()" class="px-4 py-2 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-xl text-xs font-bold hover:opacity-90">更新分值</button>
@@ -312,7 +312,7 @@
             </h4>
           </div>
           <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-            数据保存在该仓库根目录的 <code class="bg-indigo-100 dark:bg-indigo-900/60 px-1 py-0.5 rounded text-[11px]">data.json</code> 中。Token 仅保存在本地设备。
+            保存配置后将<b>自动从 GitHub 拉取最新账本</b>，确保手机与平板数据双向统一。
           </p>
 
           <div class="space-y-2.5">
@@ -334,9 +334,23 @@
             </div>
           </div>
 
-          <div class="flex gap-2 pt-2">
-            <button onclick="saveGitHubConfig()" class="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow transition">保存配置</button>
-            <button onclick="testGitHubConnection()" class="px-4 py-2.5 bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 rounded-xl text-xs font-bold hover:opacity-90">测试连接</button>
+          <div class="space-y-2 pt-2">
+            <div class="flex gap-2">
+              <button onclick="saveAndPullGitHubConfig()" class="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow transition">
+                保存并立即从云端同步
+              </button>
+              <button onclick="testGitHubConnection()" class="px-3.5 py-2.5 bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 rounded-xl text-xs font-bold hover:opacity-90">
+                测试连接
+              </button>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="forcePullFromGitHub()" class="flex-1 py-2 bg-slate-200/80 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-[11px] font-bold transition">
+                ☁️ 强制从云端拉取覆盖本地
+              </button>
+              <button onclick="forcePushToGitHub()" class="flex-1 py-2 bg-slate-200/80 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-[11px] font-bold transition">
+                🚀 强制推送本地覆盖云端
+              </button>
+            </div>
           </div>
         </div>
 
@@ -424,6 +438,7 @@
 
     let currentTab = 'all';
     let fileSha = null;
+    let isSyncing = false;
     
     // Sets to track expanded months & days
     let expandedMonths = new Set();
@@ -434,7 +449,6 @@
     window.addEventListener('DOMContentLoaded', () => {
       loadLocalStorage();
       
-      // Default: Expand current month and current day
       const currentMonthStr = getCurrentMonthString();
       const todayStr = getLocalDateString(new Date());
       expandedMonths.add(currentMonthStr);
@@ -444,8 +458,9 @@
       initTheme();
       lucide.createIcons();
 
+      // Auto smart sync from GitHub on launch if configured
       if (ghConfig.token && ghConfig.owner && ghConfig.repo) {
-        syncFromGitHub(true);
+        smartSync(true);
       }
     });
 
@@ -564,6 +579,7 @@
       document.getElementById('todayRewardScore').innerText = '+' + todayReward;
       document.getElementById('todayPenaltyScore').innerText = '-' + todayPenalty;
       document.getElementById('todayExpenseScore').innerText = '-' + todayExpense;
+      document.getElementById('settingInitialScore').value = initial;
     }
 
     // Render Quick Presets Horizontal Bar
@@ -627,7 +643,6 @@
         emptyEl.classList.add('hidden');
       }
 
-      // Group structure: monthGroups[YYYY-MM][YYYY-MM-DD] = [records...]
       const monthGroups = {};
 
       filtered.forEach(item => {
@@ -643,14 +658,12 @@
         monthGroups[monthKey][dateKey].push(item);
       });
 
-      // Sort months descending
       const sortedMonths = Object.keys(monthGroups).sort((a, b) => b.localeCompare(a));
 
       sortedMonths.forEach(monthKey => {
         const dateMap = monthGroups[monthKey];
         const isMonthExpanded = expandedMonths.has(monthKey);
 
-        // Calculate Monthly Statistics
         let mReward = 0;
         let mPenalty = 0;
         let mExpense = 0;
@@ -668,11 +681,9 @@
 
         const mNet = mReward - mPenalty - mExpense;
 
-        // Month Container
         const monthCard = document.createElement('div');
         monthCard.className = "rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm overflow-hidden transition";
 
-        // Month Header Bar (Clickable)
         const monthHeader = document.createElement('div');
         monthHeader.className = "p-4 flex items-center justify-between cursor-pointer bg-slate-100/60 dark:bg-slate-800/40 hover:bg-slate-100 dark:hover:bg-slate-800/70 select-none transition";
         monthHeader.onclick = () => toggleMonthExpand(monthKey);
@@ -694,7 +705,6 @@
           </div>
 
           <div class="flex items-center space-x-2 flex-shrink-0">
-            <!-- Monthly mini stat pill -->
             <div class="hidden sm:flex items-center gap-1.5 text-xs font-bold font-mono">
               <span class="px-2 py-0.5 rounded-lg bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400">+${mReward}</span>
               <span class="px-2 py-0.5 rounded-lg bg-rose-50 text-rose-600 dark:bg-rose-950/50 dark:text-rose-400">-${mPenalty}</span>
@@ -707,11 +717,9 @@
           </div>
         `;
 
-        // Month Content (Days wrapper)
         const daysContainer = document.createElement('div');
         daysContainer.className = `p-3 space-y-2.5 bg-slate-50/50 dark:bg-slate-950/40 ${isMonthExpanded ? '' : 'hidden'}`;
 
-        // Sort dates in month descending
         const sortedDates = Object.keys(dateMap).sort((a, b) => b.localeCompare(a));
 
         sortedDates.forEach(dateKey => {
@@ -731,11 +739,9 @@
 
           const isDayExpanded = expandedDays.has(dateKey);
 
-          // Day Card
           const dayWrapper = document.createElement('div');
           dayWrapper.className = "glass-card rounded-2xl border border-slate-200/70 dark:border-slate-800/80 shadow-sm overflow-hidden transition";
 
-          // Day Header
           const dayHeader = document.createElement('div');
           dayHeader.className = "p-3 flex items-center justify-between cursor-pointer active:bg-slate-100/50 dark:active:bg-slate-800/50 select-none";
           dayHeader.onclick = (e) => {
@@ -766,7 +772,6 @@
             </div>
           `;
 
-          // Day Details (Items)
           const dayDetails = document.createElement('div');
           dayDetails.className = `border-t border-slate-100 dark:border-slate-800/80 px-3 py-2 space-y-1.5 bg-white/40 dark:bg-slate-900/40 ${isDayExpanded ? '' : 'hidden'}`;
 
@@ -956,7 +961,7 @@
       }
 
       const newRecord = {
-        id: 'rec_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+        id: 'rec_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
         type,
         title,
         points,
@@ -967,7 +972,6 @@
 
       appData.records.unshift(newRecord);
       
-      // Auto expand the month & date of this new record
       if (timestamp) {
         expandedMonths.add(timestamp.slice(0, 7));
         expandedDays.add(timestamp.slice(0, 10));
@@ -1082,20 +1086,30 @@
       triggerBackgroundSync();
     }
 
-    // ================= GITHUB API SYNC =================
+    // ================= ROBUST GITHUB API SYNC & MERGE =================
 
-    function saveGitHubConfig() {
+    function saveGitHubConfigOnly() {
       ghConfig.owner = document.getElementById('ghOwner').value.trim();
       ghConfig.repo = document.getElementById('ghRepo').value.trim();
       ghConfig.branch = document.getElementById('ghBranch').value.trim() || 'main';
       ghConfig.token = document.getElementById('ghToken').value.trim();
 
       localStorage.setItem(GITHUB_CFG_KEY, JSON.stringify(ghConfig));
-      showToast('GitHub 配置已保存');
+    }
+
+    async function saveAndPullGitHubConfig() {
+      saveGitHubConfigOnly();
+      if (!ghConfig.token || !ghConfig.owner || !ghConfig.repo) {
+        showToast('请先填写完整仓库与 Token');
+        return;
+      }
+      showToast('正在连接并同步云端数据...');
+      await smartSync(false);
+      closeModal('settingsModal');
     }
 
     async function testGitHubConnection() {
-      saveGitHubConfig();
+      saveGitHubConfigOnly();
       if (!ghConfig.token || !ghConfig.owner || !ghConfig.repo) {
         showToast('请先填写完整仓库与 Token');
         return;
@@ -1118,75 +1132,53 @@
       }
     }
 
-    function manualSync() {
-      if (!ghConfig.token) {
-        openSettingsModal();
-        showToast('请先配置 GitHub Token');
-        return;
-      }
-      syncToGitHub();
-    }
-
     let syncDebounceTimer = null;
     function triggerBackgroundSync() {
       if (!ghConfig.token || !ghConfig.owner || !ghConfig.repo) return;
       clearTimeout(syncDebounceTimer);
       syncDebounceTimer = setTimeout(() => {
-        syncToGitHub(true);
-      }, 1500);
+        smartSync(true);
+      }, 1200);
     }
 
     function updateSyncBadge(status, text) {
       const badge = document.getElementById('syncStatusBadge');
+      const icon = document.getElementById('syncIcon');
       if (status === 'syncing') {
         badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse inline-block"></span> ${text || '同步中...'}`;
+        if (icon) icon.classList.add('animate-spin');
       } else if (status === 'success') {
         badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span> ${text || '已同步至云端'}`;
+        if (icon) icon.classList.remove('animate-spin');
       } else {
         badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-rose-500 inline-block"></span> ${text || '同步未就绪'}`;
+        if (icon) icon.classList.remove('animate-spin');
       }
     }
 
-    // Pull from GitHub
-    async function syncFromGitHub(silent = false) {
-      if (!ghConfig.token || !ghConfig.owner || !ghConfig.repo) return;
-      updateSyncBadge('syncing', '正在从云端拉取...');
-      try {
-        const url = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/data.json?ref=${ghConfig.branch}`;
-        const res = await fetch(url, {
-          headers: {
-            'Authorization': `Bearer ${ghConfig.token}`,
-            'Accept': 'application/vnd.github.v3+json'
-          }
-        });
-
-        if (res.status === 200) {
-          const fileData = await res.json();
-          fileSha = fileData.sha;
-          const content = decodeURIComponent(escape(atob(fileData.content.replace(/\n/g, ''))));
-          const remoteJson = JSON.parse(content);
-
-          appData = remoteJson;
-          saveLocalStorage();
-          renderAll();
-          updateSyncBadge('success', '云端数据已同步');
-          if (!silent) showToast('✅ 成功拉取最新数据');
-        } else if (res.status === 404) {
-          updateSyncBadge('success', '远程尚未创建 data.json');
+    /**
+     * SMART BIDIRECTIONAL SYNC (Never lose data)
+     * 1. Fetches remote data.json from GitHub
+     * 2. Merges records by unique ID (Union of local + remote)
+     * 3. Merges initialScore and presets
+     * 4. Updates local storage & UI
+     * 5. If there are local additions or changes, pushes back to GitHub
+     */
+    async function smartSync(silent = false) {
+      if (isSyncing) return;
+      if (!ghConfig.token || !ghConfig.owner || !ghConfig.repo) {
+        if (!silent) {
+          openSettingsModal();
+          showToast('请先配置 GitHub Token');
         }
-      } catch (e) {
-        console.error(e);
-        updateSyncBadge('error', '拉取失败 (离线)');
+        return;
       }
-    }
 
-    // Push to GitHub
-    async function syncToGitHub(silent = false) {
-      if (!ghConfig.token || !ghConfig.owner || !ghConfig.repo) return;
-      updateSyncBadge('syncing', '正在推送至云端...');
+      isSyncing = true;
+      updateSyncBadge('syncing', '正在拉取与合并...');
 
       try {
-        const getUrl = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/data.json?ref=${ghConfig.branch}`;
+        const getUrl = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/data.json?ref=${ghConfig.branch}&_t=${Date.now()}`;
         const getRes = await fetch(getUrl, {
           headers: {
             'Authorization': `Bearer ${ghConfig.token}`,
@@ -1194,46 +1186,189 @@
           }
         });
 
+        let needsPush = false;
+
         if (getRes.status === 200) {
-          const remoteFile = await getRes.json();
-          fileSha = remoteFile.sha;
+          const fileData = await getRes.json();
+          fileSha = fileData.sha;
+          const content = decodeURIComponent(escape(atob(fileData.content.replace(/\n/g, ''))));
+          const remoteData = JSON.parse(content);
+
+          // === SMART MERGE RECORDS ===
+          const recordMap = new Map();
+          
+          // First add remote records
+          if (Array.isArray(remoteData.records)) {
+            remoteData.records.forEach(r => {
+              if (r && r.id) recordMap.set(r.id, r);
+            });
+          }
+
+          // Merge local records
+          let localHasNew = false;
+          if (Array.isArray(appData.records)) {
+            appData.records.forEach(r => {
+              if (r && r.id) {
+                if (!recordMap.has(r.id)) {
+                  localHasNew = true;
+                }
+                recordMap.set(r.id, r);
+              }
+            });
+          }
+
+          const mergedRecords = Array.from(recordMap.values());
+          // Sort newest first
+          mergedRecords.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+          // === MERGE INITIAL SCORE ===
+          // If remote initial score exists and local was 0 (or new device), adopt remote
+          let finalInitialScore = appData.config.initialScore;
+          if (remoteData.config && remoteData.config.initialScore !== undefined) {
+            const remoteInit = Number(remoteData.config.initialScore);
+            const localInit = Number(appData.config.initialScore);
+
+            const remoteTime = new Date(remoteData.config.lastUpdated || 0).getTime();
+            const localTime = new Date(appData.config.lastUpdated || 0).getTime();
+
+            if (localInit === 0 && remoteInit !== 0) {
+              finalInitialScore = remoteInit;
+            } else if (remoteTime > localTime) {
+              finalInitialScore = remoteInit;
+            }
+          }
+
+          // === MERGE PRESETS ===
+          const presetMap = new Map();
+          if (Array.isArray(remoteData.presets)) {
+            remoteData.presets.forEach(p => presetMap.set(p.title + p.type, p));
+          }
+          if (Array.isArray(appData.presets)) {
+            appData.presets.forEach(p => presetMap.set(p.title + p.type, p));
+          }
+
+          // Update appData
+          appData.records = mergedRecords;
+          appData.config.initialScore = finalInitialScore;
+          appData.presets = Array.from(presetMap.values());
+          appData.config.lastUpdated = new Date().toISOString();
+
+          saveLocalStorage();
+          renderAll();
+
+          // If local had records that remote didn't have, or initial score changed, push merged state to remote
+          if (localHasNew || mergedRecords.length > (remoteData.records || []).length || appData.config.initialScore !== (remoteData.config || {}).initialScore) {
+            needsPush = true;
+          }
+
+        } else if (getRes.status === 404) {
+          // File does not exist remotely yet, we must push current local
+          needsPush = true;
+        } else {
+          throw new Error(`GitHub API error: ${getRes.status}`);
         }
 
-        const contentStr = JSON.stringify(appData, null, 2);
-        const contentBase64 = btoa(unescape(encodeURIComponent(contentStr)));
-
-        const putUrl = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/data.json`;
-        const bodyPayload = {
-          message: `Update ledger: ${new Date().toLocaleString()}`,
-          content: contentBase64,
-          branch: ghConfig.branch || 'main'
-        };
-        if (fileSha) {
-          bodyPayload.sha = fileSha;
+        // If push is required to sync back merged data:
+        if (needsPush) {
+          updateSyncBadge('syncing', '正在同步至云端...');
+          await rawPushToGitHub();
         }
 
-        const putRes = await fetch(putUrl, {
-          method: 'PUT',
+        updateSyncBadge('success', '云端已同步');
+        if (!silent) showToast('✅ 成功完成双向同步！');
+
+      } catch (err) {
+        console.error("Sync error:", err);
+        updateSyncBadge('error', '同步异常 (离线)');
+        if (!silent) showToast('❌ 同步失败，请检查网络或 Token');
+      } finally {
+        isSyncing = false;
+      }
+    }
+
+    async function rawPushToGitHub() {
+      const contentStr = JSON.stringify(appData, null, 2);
+      const contentBase64 = btoa(unescape(encodeURIComponent(contentStr)));
+
+      const putUrl = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/data.json`;
+      const bodyPayload = {
+        message: `Sync ledger: ${new Date().toLocaleString()}`,
+        content: contentBase64,
+        branch: ghConfig.branch || 'main'
+      };
+      if (fileSha) {
+        bodyPayload.sha = fileSha;
+      }
+
+      const putRes = await fetch(putUrl, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${ghConfig.token}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/vnd.github.v3+json'
+        },
+        body: JSON.stringify(bodyPayload)
+      });
+
+      if (putRes.ok) {
+        const result = await putRes.json();
+        fileSha = result.content.sha;
+      } else {
+        throw new Error(`Push failed: ${putRes.status}`);
+      }
+    }
+
+    // Force pull to override local (Safe recovery)
+    async function forcePullFromGitHub() {
+      if (!confirm('确定要从云端重新拉取并覆盖当前本地记录吗？')) return;
+      try {
+        showToast('正在从云端拉取...');
+        const getUrl = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/data.json?ref=${ghConfig.branch}&_t=${Date.now()}`;
+        const getRes = await fetch(getUrl, {
           headers: {
             'Authorization': `Bearer ${ghConfig.token}`,
-            'Content-Type': 'application/json',
             'Accept': 'application/vnd.github.v3+json'
-          },
-          body: JSON.stringify(bodyPayload)
+          }
         });
-
-        if (putRes.ok) {
-          const result = await putRes.json();
-          fileSha = result.content.sha;
-          updateSyncBadge('success', '已同步至云端');
-          if (!silent) showToast('✅ 成功同步至 GitHub！');
+        if (getRes.status === 200) {
+          const fileData = await getRes.json();
+          fileSha = fileData.sha;
+          const content = decodeURIComponent(escape(atob(fileData.content.replace(/\n/g, ''))));
+          appData = JSON.parse(content);
+          saveLocalStorage();
+          renderAll();
+          showToast('✅ 已成功从云端恢复覆盖');
+          closeModal('settingsModal');
         } else {
-          updateSyncBadge('error', '推送失败');
-          if (!silent) showToast(`❌ 推送失败: HTTP ${putRes.status}`);
+          showToast(`❌ 拉取失败: HTTP ${getRes.status}`);
         }
       } catch (e) {
-        console.error(e);
-        updateSyncBadge('error', '网络异常');
+        showToast('❌ 网络请求失败');
+      }
+    }
+
+    // Force push local to cloud
+    async function forcePushToGitHub() {
+      if (!confirm('确定要用当前本地数据强制覆盖云端吗？')) return;
+      try {
+        showToast('正在推送至云端...');
+        // Refresh SHA first
+        const getUrl = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/data.json?ref=${ghConfig.branch}&_t=${Date.now()}`;
+        const getRes = await fetch(getUrl, {
+          headers: {
+            'Authorization': `Bearer ${ghConfig.token}`,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        });
+        if (getRes.status === 200) {
+          const fileData = await getRes.json();
+          fileSha = fileData.sha;
+        }
+        await rawPushToGitHub();
+        showToast('✅ 已成功强制推送到云端');
+        closeModal('settingsModal');
+      } catch (e) {
+        showToast('❌ 推送失败');
       }
     }
 
