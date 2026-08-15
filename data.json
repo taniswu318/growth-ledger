@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-15T06:26:10.269Z"
+    "lastUpdated": "2026-08-15T06:26:24.252Z"
   },
   "presets": [
     {
@@ -45,6 +45,13 @@
       "points": 1,
       "title": "做单杠",
       "category": "健康"
+    },
+    {
+      "id": "p_1786775184252_e23s",
+      "type": "reward",
+      "points": 1,
+      "title": "拖地",
+      "category": "生活"
     }
   ],
   "records": [
