@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 0,
-    "lastUpdated": "2026-08-15T05:00:08.260Z"
+    "lastUpdated": "2026-08-15T05:00:26.487Z"
   },
   "presets": [
     {
@@ -48,6 +48,15 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1786770024528_4h8swy",
+      "type": "reward",
+      "title": "看英语视频",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-07-04T13:00",
+      "note": ""
+    },
     {
       "id": "rec_1786770006129_957iw1",
       "type": "reward",
