@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-15T11:36:45.937Z"
+    "lastUpdated": "2026-08-15T11:36:52.347Z"
   },
   "presets": [
     {
@@ -18,7 +18,7 @@
       "points": 2,
       "title": "运动",
       "category": "健康",
-      "isDaily": false
+      "isDaily": true
     },
     {
       "id": "p_1786775100157_4ad6",
@@ -107,6 +107,16 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1786793812347_71ryu",
+      "presetId": "p_1786775047388_dh0b",
+      "type": "reward",
+      "title": "看英语视频30分钟",
+      "points": 1,
+      "category": "学习",
+      "timestamp": "2026-08-15T19:36",
+      "note": "每日必做打卡"
+    },
     {
       "id": "rec_1786777795634_s2pqa",
       "type": "penalty",
