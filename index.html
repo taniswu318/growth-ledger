@@ -1258,7 +1258,7 @@
       triggerBackgroundSync();
     }
 
-    // ================= ROBUST GITHUB API SYNC & MERGE =================
+    // ================= ROBUST GITHUB API SYNC (Last Write Wins) =================
 
     function saveGitHubConfigOnly() {
       ghConfig.owner = document.getElementById('ghOwner').value.trim();
@@ -1339,7 +1339,7 @@
       }
 
       isSyncing = true;
-      updateSyncBadge('syncing', '正在拉取与合并...');
+      updateSyncBadge('syncing', '正在拉取与同步...');
 
       try {
         const getUrl = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/data.json?ref=${ghConfig.branch}&_t=${Date.now()}`;
@@ -1350,87 +1350,47 @@
           }
         });
 
-        let needsPush = false;
-
         if (getRes.status === 200) {
           const fileData = await getRes.json();
           fileSha = fileData.sha;
           const content = decodeURIComponent(escape(atob(fileData.content.replace(/\n/g, ''))));
           const remoteData = JSON.parse(content);
 
-          // Merge records
-          const recordMap = new Map();
-          if (Array.isArray(remoteData.records)) {
-            remoteData.records.forEach(r => {
-              if (r && r.id) recordMap.set(r.id, r);
-            });
-          }
+          const remoteTime = new Date((remoteData.config && remoteData.config.lastUpdated) || 0).getTime();
+          const localTime = new Date((appData.config && appData.config.lastUpdated) || 0).getTime();
 
-          let localHasNew = false;
-          if (Array.isArray(appData.records)) {
-            appData.records.forEach(r => {
-              if (r && r.id) {
-                if (!recordMap.has(r.id)) {
-                  localHasNew = true;
-                }
-                recordMap.set(r.id, r);
-              }
-            });
-          }
-
-          const mergedRecords = Array.from(recordMap.values());
-          mergedRecords.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-
-          // Merge Initial Score
-          let finalInitialScore = appData.config.initialScore;
-          if (remoteData.config && remoteData.config.initialScore !== undefined) {
-            const remoteInit = Number(remoteData.config.initialScore);
-            const localInit = Number(appData.config.initialScore);
-
-            const remoteTime = new Date(remoteData.config.lastUpdated || 0).getTime();
-            const localTime = new Date(appData.config.lastUpdated || 0).getTime();
-
-            if (localInit === 0 && remoteInit !== 0) {
-              finalInitialScore = remoteInit;
-            } else if (remoteTime > localTime) {
-              finalInitialScore = remoteInit;
-            }
-          }
-
-          // Merge Presets (Union of user presets)
-          const presetMap = new Map();
-          if (Array.isArray(remoteData.presets)) {
-            remoteData.presets.forEach(p => presetMap.set(p.id || (p.title + p.type), p));
-          }
-          if (Array.isArray(appData.presets)) {
-            appData.presets.forEach(p => presetMap.set(p.id || (p.title + p.type), p));
-          }
-
-          appData.records = mergedRecords;
-          appData.config.initialScore = finalInitialScore;
-          appData.presets = Array.from(presetMap.values());
-          appData.config.lastUpdated = new Date().toISOString();
-
-          saveLocalStorage();
-          renderAll();
-
-          if (localHasNew || mergedRecords.length > (remoteData.records || []).length || appData.config.initialScore !== (remoteData.config || {}).initialScore) {
-            needsPush = true;
+          // Last Write Wins Strategy
+          if (localTime > remoteTime) {
+            // Local is newer (e.g. just added/deleted a record or preset)
+            // Push local to remote
+            updateSyncBadge('syncing', '正在推送最新更改...');
+            await rawPushToGitHub();
+            updateSyncBadge('success', '云端已同步');
+            if (!silent) showToast('✅ 成功推送至云端！');
+          } else if (remoteTime > localTime) {
+            // Remote is newer (e.g. another device made changes)
+            // Pull and overwrite local
+            appData = remoteData;
+            if (!Array.isArray(appData.presets)) appData.presets = [];
+            saveLocalStorage();
+            renderAll();
+            updateSyncBadge('success', '已拉取云端最新数据');
+            if (!silent) showToast('✅ 成功拉取云端数据！');
+          } else {
+            // Exact same time, do nothing
+            updateSyncBadge('success', '数据已是最新');
+            if (!silent) showToast('✅ 两端数据已同步');
           }
 
         } else if (getRes.status === 404) {
-          needsPush = true;
+          // No remote file, push local
+          updateSyncBadge('syncing', '正在初始化云端...');
+          await rawPushToGitHub();
+          updateSyncBadge('success', '云端已创建');
+          if (!silent) showToast('✅ 成功创建并推送到云端！');
         } else {
           throw new Error(`GitHub API error: ${getRes.status}`);
         }
-
-        if (needsPush) {
-          updateSyncBadge('syncing', '正在同步至云端...');
-          await rawPushToGitHub();
-        }
-
-        updateSyncBadge('success', '云端已同步');
-        if (!silent) showToast('✅ 成功完成双向同步！');
 
       } catch (err) {
         console.error("Sync error:", err);
