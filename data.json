@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-15T06:25:50.395Z"
+    "lastUpdated": "2026-08-15T06:26:10.269Z"
   },
   "presets": [
     {
@@ -38,6 +38,13 @@
       "points": 1,
       "title": "遛小白",
       "category": "生活"
+    },
+    {
+      "id": "p_1786775170269_d2k7",
+      "type": "reward",
+      "points": 1,
+      "title": "做单杠",
+      "category": "健康"
     }
   ],
   "records": [
