@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-15T06:35:54.618Z"
+    "lastUpdated": "2026-08-15T06:36:03.322Z"
   },
   "presets": [
     {
@@ -106,6 +106,15 @@
       "type": "reward",
       "title": "看英语视频30分钟",
       "points": 1,
+      "category": "",
+      "timestamp": "2026-07-08T06:35",
+      "note": ""
+    },
+    {
+      "id": "rec_1786775760876_5s7gg",
+      "type": "penalty",
+      "title": "未做单杠",
+      "points": 2,
       "category": "",
       "timestamp": "2026-07-08T06:35",
       "note": ""
