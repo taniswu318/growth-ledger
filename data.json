@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-15T07:06:15.829Z"
+    "lastUpdated": "2026-08-15T07:06:30.103Z"
   },
   "presets": [
     {
@@ -97,6 +97,24 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1786777590104_wltdh",
+      "type": "penalty",
+      "title": "未喝完水",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-08-06T07:06",
+      "note": ""
+    },
+    {
+      "id": "rec_1786777590103_50cgj",
+      "type": "penalty",
+      "title": "11点钟后睡觉",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-08-06T07:06",
+      "note": ""
+    },
     {
       "id": "rec_1786777575833_3qnqp",
       "type": "reward",
