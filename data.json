@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-15T05:24:54.035Z"
+    "lastUpdated": "2026-08-15T05:25:40.526Z"
   },
   "presets": [
     {
@@ -48,6 +48,24 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1786771538347_ti7zx",
+      "type": "reward",
+      "title": "运动",
+      "points": 2,
+      "category": "",
+      "timestamp": "2026-07-06T05:24",
+      "note": ""
+    },
+    {
+      "id": "rec_1786771538346_vjjga",
+      "type": "reward",
+      "title": "看英语视频",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-07-06T05:24",
+      "note": ""
+    },
     {
       "id": "rec_1786771491926_jbtai",
       "type": "reward",
