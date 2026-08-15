@@ -66,7 +66,6 @@
       -webkit-appearance: none;
       appearance: none;
     }
-    /* Fix datetime-local width on Safari */
     input[type="datetime-local"] {
       min-height: 2.6rem;
       display: block;
@@ -140,7 +139,7 @@
           <span class="text-xs text-indigo-300/70 font-medium">pts / 元</span>
         </div>
 
-        <!-- 3 Mini Sub Metrics: Cumulative Totals (总奖励 / 总惩罚 / 总支出) -->
+        <!-- 3 Mini Sub Metrics: Cumulative Totals -->
         <div class="grid grid-cols-3 gap-2 w-full mt-5 pt-4 border-t border-white/10">
           <div class="bg-white/5 rounded-2xl p-2 backdrop-blur-sm border border-white/5 flex flex-col items-center">
             <span class="text-[10px] sm:text-[11px] text-emerald-300/90 font-medium flex items-center gap-0.5">
@@ -168,22 +167,22 @@
     <div class="grid grid-cols-3 gap-2.5">
       <button onclick="openRecordModal('reward')" class="flex flex-col sm:flex-row items-center justify-center gap-1.5 py-3 px-2 rounded-2xl bg-emerald-500 hover:bg-emerald-600 active:scale-[0.98] text-white font-bold shadow-lg shadow-emerald-500/20 transition">
         <i data-lucide="plus-circle" class="w-4 h-4"></i>
-        <span class="text-xs sm:text-sm">奖励 (+)</span>
+        <span class="text-xs sm:text-sm">记录奖励 (+)</span>
       </button>
       <button onclick="openRecordModal('penalty')" class="flex flex-col sm:flex-row items-center justify-center gap-1.5 py-3 px-2 rounded-2xl bg-rose-500 hover:bg-rose-600 active:scale-[0.98] text-white font-bold shadow-lg shadow-rose-500/20 transition">
         <i data-lucide="minus-circle" class="w-4 h-4"></i>
-        <span class="text-xs sm:text-sm">惩罚 (-)</span>
+        <span class="text-xs sm:text-sm">记录惩罚 (-)</span>
       </button>
       <button onclick="openRecordModal('expense')" class="flex flex-col sm:flex-row items-center justify-center gap-1.5 py-3 px-2 rounded-2xl bg-blue-500 hover:bg-blue-600 active:scale-[0.98] text-white font-bold shadow-lg shadow-blue-500/20 transition">
         <i data-lucide="shopping-cart" class="w-4 h-4"></i>
-        <span class="text-xs sm:text-sm">支出 (-)</span>
+        <span class="text-xs sm:text-sm">记录支出 (-)</span>
       </button>
     </div>
 
     <!-- Quick Presets -->
     <div class="space-y-1.5">
       <div class="flex items-center justify-between text-xs font-semibold text-slate-400 dark:text-slate-500 px-1">
-        <span>快捷填入</span>
+        <span>快捷填入 (点击追加到输入框)</span>
         <button onclick="openPresetManagerModal()" class="text-indigo-500 hover:underline">管理预设</button>
       </div>
       <div id="quickPresetsContainer" class="flex gap-2 overflow-x-auto no-scrollbar py-1">
@@ -221,17 +220,17 @@
 
   <!-- ================= MODALS ================= -->
 
-  <!-- Modal 1: Quick Add Record Modal (Streamlined 1-step input) -->
+  <!-- Modal 1: Batch & Single Rapid Input Modal -->
   <div id="recordModal" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
-    <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 shadow-2xl border border-slate-200/50 dark:border-slate-800 animate-slide-up overflow-hidden">
+    <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 shadow-2xl border border-slate-200/50 dark:border-slate-800 animate-slide-up overflow-hidden max-h-[92vh] overflow-y-auto no-scrollbar">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-        <h3 id="recordModalTitle" class="text-lg font-bold">快速记一笔</h3>
+        <h3 id="recordModalTitle" class="text-lg font-bold">批量记账录入</h3>
         <button onclick="closeModal('recordModal')" class="p-1 rounded-full text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
 
-      <form id="recordForm" onsubmit="handleQuickRecordSubmit(event)" class="space-y-3.5 pt-3.5">
+      <form id="recordForm" onsubmit="handleBatchRecordSubmit(event)" class="space-y-3.5 pt-3.5">
         <input type="hidden" id="recordId" value="" />
         
         <!-- Type Selection Tabs -->
@@ -250,51 +249,56 @@
           <input type="hidden" id="recordType" value="reward" />
         </div>
 
-        <!-- Combined Smart Input: Item & Points -->
+        <!-- Combined Multiple/Single Smart Input: 事项1 分值, 事项2 分值 -->
         <div>
-          <div class="flex items-center justify-between mb-1">
-            <label class="text-xs font-bold text-slate-700 dark:text-slate-300" id="quickInputLabel">事项与分值 *</label>
-            <span class="text-[11px] text-slate-400 font-normal">支持用逗号隔开 (如: 英文阅读, 10)</span>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="text-xs font-bold text-slate-700 dark:text-slate-300">事项与分值 (支持多条批量)</label>
+            <span class="text-[10px] text-slate-400">格式: 事项 空格 分值, 事项 空格 分值</span>
           </div>
-          <input type="text" id="quickInputContent" required placeholder="如: 阅读原版书, 10 或 买画笔 25"
-            oninput="handleSmartPreview(this.value)"
-            class="w-full px-4 py-3 rounded-xl bg-slate-100 dark:bg-slate-800 border border-transparent focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-850 focus:ring-2 focus:ring-indigo-500/20 text-sm font-medium transition" />
+          <textarea id="quickInputContent" required rows="3"
+            placeholder="例如: 阅读原版书 10, 收拾房间 5, 拖延玩手机 5"
+            oninput="handleBatchPreview(this.value)"
+            class="w-full px-3.5 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-transparent focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-850 focus:ring-2 focus:ring-indigo-500/20 text-xs sm:text-sm font-medium transition leading-relaxed"></textarea>
           
-          <!-- Realtime Smart Parse Preview Pill -->
-          <div id="smartParsePreview" class="hidden mt-1.5 px-3 py-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 text-[11px] flex items-center justify-between">
-            <div class="flex items-center gap-1.5 min-w-0">
-              <i data-lucide="sparkles" class="w-3.5 h-3.5 flex-shrink-0"></i>
-              <span class="truncate">事项: <b id="parsedTitlePreview">-</b></span>
+          <!-- Realtime Parse Preview Box for Multi-items -->
+          <div id="batchParsePreviewBox" class="hidden mt-2 p-2.5 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/40 space-y-1.5">
+            <div class="flex items-center justify-between text-[11px] font-bold text-indigo-900 dark:text-indigo-200">
+              <span class="flex items-center gap-1">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-500"></i>
+                识别到 <b id="parsedItemCount" class="text-indigo-600 dark:text-indigo-400">0</b> 项
+              </span>
+              <span>本次合计: <b id="parsedTotalPoints" class="font-mono text-xs text-indigo-600 dark:text-indigo-400">0</b></span>
             </div>
-            <span class="font-bold font-mono text-xs flex-shrink-0 pl-2">分值: <span id="parsedPointsPreview">0</span></span>
+            <!-- Dynamic Chips -->
+            <div id="parsedItemsChipContainer" class="flex flex-wrap gap-1.5 pt-0.5">
+              <!-- Rendered by JS -->
+            </div>
           </div>
         </div>
 
-        <!-- Time Picker (Carefully styled with box-sizing & max-w-full to prevent overflow) -->
-        <div class="w-full overflow-hidden">
+        <!-- Time Picker (Safe width & padding) -->
+        <div class="w-full">
           <label class="block text-xs font-semibold text-slate-500 mb-1">记录时间 (默认为当前时间)</label>
-          <div class="relative w-full">
-            <input type="datetime-local" id="recordTimestamp" required
-              class="w-full max-w-full block px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700/60 text-xs font-medium text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-500 transition" />
-          </div>
+          <input type="datetime-local" id="recordTimestamp" required
+            class="w-full block px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700/60 text-xs font-medium text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-500 transition" />
         </div>
 
-        <!-- Optional Collapsible Details (Category & Note) -->
-        <div class="pt-1">
+        <!-- Optional Collapsible Details (Category & Note for Batch) -->
+        <div class="pt-0.5">
           <button type="button" onclick="toggleAdvancedFields()" class="text-[11px] text-slate-400 dark:text-slate-500 flex items-center gap-1 hover:text-slate-600 transition">
             <i data-lucide="sliders" class="w-3 h-3"></i>
-            <span id="advancedFieldsToggleText">展开分类与备注 (选填)</span>
+            <span id="advancedFieldsToggleText">展开分类与备注 (选填，批量应用)</span>
           </button>
           
-          <div id="advancedFieldsContainer" class="hidden space-y-2.5 pt-2.5">
+          <div id="advancedFieldsContainer" class="hidden space-y-2.5 pt-2">
             <div class="grid grid-cols-2 gap-2">
               <div>
-                <label class="block text-[11px] font-semibold text-slate-400 mb-0.5">分类标签</label>
-                <input type="text" id="recordCategory" placeholder="如: 学习、习惯"
+                <label class="block text-[11px] font-semibold text-slate-400 mb-0.5">统一分类</label>
+                <input type="text" id="recordCategory" placeholder="如: 学习、日常"
                   class="w-full px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 border-none text-xs font-medium" />
               </div>
               <div>
-                <label class="block text-[11px] font-semibold text-slate-400 mb-0.5">补充备注</label>
+                <label class="block text-[11px] font-semibold text-slate-400 mb-0.5">统一备注</label>
                 <input type="text" id="recordNote" placeholder="补充详情..."
                   class="w-full px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 border-none text-xs font-medium" />
               </div>
@@ -302,10 +306,10 @@
           </div>
         </div>
 
-        <!-- Save Button -->
+        <!-- Submit Button -->
         <div class="pt-2">
           <button type="submit" id="recordSubmitBtn" class="w-full py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold shadow-lg shadow-indigo-600/20 active:scale-[0.98] transition">
-            保存记录
+            保存全部记录
           </button>
         </div>
       </form>
@@ -625,7 +629,7 @@
         }
 
         chip.className = `flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border active:scale-95 transition ${styleClass}`;
-        chip.onclick = () => applyPreset(p);
+        chip.onclick = () => appendPresetToInput(p);
         chip.innerHTML = `
           <span>${prefix}${p.points}</span>
           <span class="font-normal text-slate-700 dark:text-slate-300">${p.title}</span>
@@ -634,11 +638,17 @@
       });
     }
 
-    function applyPreset(p) {
+    // Append preset into textarea as: "事项 分值"
+    function appendPresetToInput(p) {
       openRecordModal(p.type);
-      document.getElementById('quickInputContent').value = `${p.title}, ${p.points}`;
-      document.getElementById('recordCategory').value = p.category || '';
-      handleSmartPreview(`${p.title}, ${p.points}`);
+      const textarea = document.getElementById('quickInputContent');
+      const itemText = `${p.title} ${p.points}`;
+      if (!textarea.value.trim()) {
+        textarea.value = itemText;
+      } else {
+        textarea.value = textarea.value.trim() + ', ' + itemText;
+      }
+      handleBatchPreview(textarea.value);
     }
 
     // Render Month Grouped and Date Nested Records
@@ -931,85 +941,93 @@
       if (type === 'reward') {
         rBtn.className = "py-2 px-3 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 text-xs font-bold flex items-center justify-center gap-1";
         submitBtn.className = "w-full py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-lg shadow-emerald-600/20 active:scale-[0.98] transition";
-        quickInput.placeholder = "如: 阅读英文原版书, 10 或 自主弹琴 15";
+        submitBtn.innerText = "保存全部奖励记录 (+)";
+        quickInput.placeholder = "如: 阅读英文书 10, 收拾房间 5, 独立做完作业 15";
       } else if (type === 'penalty') {
         pBtn.className = "py-2 px-3 rounded-xl border-2 border-rose-500 bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 text-xs font-bold flex items-center justify-center gap-1";
         submitBtn.className = "w-full py-3.5 rounded-2xl bg-rose-600 hover:bg-rose-700 text-white font-bold shadow-lg shadow-rose-600/20 active:scale-[0.98] transition";
-        quickInput.placeholder = "如: 拖延玩手机超过15分钟, 5";
+        submitBtn.innerText = "保存全部惩罚记录 (-)";
+        quickInput.placeholder = "如: 拖延玩手机 5, 作业潦草 10";
       } else {
         eBtn.className = "py-2 px-3 rounded-xl border-2 border-blue-500 bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300 text-xs font-bold flex items-center justify-center gap-1";
         submitBtn.className = "w-full py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-lg shadow-blue-600/20 active:scale-[0.98] transition";
-        quickInput.placeholder = "如: 兑换零食饮料, 5 或 购买文具 20";
+        submitBtn.innerText = "保存全部支出记录 (-)";
+        quickInput.placeholder = "如: 兑换零食 5, 购买文具 20, 兑换游戏时间 10";
       }
-      handleSmartPreview(quickInput.value);
+      handleBatchPreview(quickInput.value);
     }
 
     /**
-     * SMART INPUT PARSER
-     * Parses inputs like:
-     * - "阅读英文原版书, 10" / "阅读英文原版书，10"
-     * - "拖延玩手机 5"
-     * - "买乐高玩具 120"
-     * - "10 弹钢琴"
+     * BATCH SMART INPUT PARSER
+     * Parses multiple items separated by commas or line breaks.
+     * Each item is: "事项 空格 分值"
+     * Example input: "阅读原版书 10, 收拾房间 5, 拖延 5"
      */
-    function parseSmartInput(rawText) {
-      let str = (rawText || '').trim();
-      if (!str) return null;
+    function parseBatchInput(rawText) {
+      if (!rawText || !rawText.trim()) return [];
 
-      // Replace Chinese comma with English comma
-      str = str.replace(/，/g, ',');
+      // Split by Chinese comma, English comma, or newline
+      const segments = rawText.split(/[,，\n]+/);
+      const results = [];
 
-      let title = '';
-      let points = null;
+      segments.forEach(seg => {
+        const itemStr = seg.trim();
+        if (!itemStr) return;
 
-      if (str.includes(',')) {
-        const parts = str.split(',');
-        // Check if the second part or first part is number
-        const p1 = parts[0].trim();
-        const p2 = parts.slice(1).join(',').trim();
-
-        if (!isNaN(parseFloat(p2)) && isFinite(p2)) {
-          title = p1;
-          points = Math.abs(parseFloat(p2));
-        } else if (!isNaN(parseFloat(p1)) && isFinite(p1)) {
-          title = p2;
-          points = Math.abs(parseFloat(p1));
-        } else {
-          title = str;
-        }
-      } else {
-        // Match trailing number: "阅读原版书 10" or "阅读原版书+10" or "阅读原版书10"
-        const trailingMatch = str.match(/^(.*?)[\s\+\-]+(\d+(?:\.\d+)?)$/);
-        if (trailingMatch) {
-          title = trailingMatch[1].trim();
-          points = Math.abs(parseFloat(trailingMatch[2]));
-        } else {
-          // Match leading number: "10 阅读原版书"
-          const leadingMatch = str.match(/^(\d+(?:\.\d+)?)[\s\+\-]+(.*?)$/);
-          if (leadingMatch) {
-            points = Math.abs(parseFloat(leadingMatch[1]));
-            title = leadingMatch[2].trim();
-          } else {
-            title = str;
+        // Match: "事项名称 分值" (number at the end)
+        const matchTrailing = itemStr.match(/^(.*?)[\s\+\-]+(\d+(?:\.\d+)?)$/);
+        if (matchTrailing) {
+          const title = matchTrailing[1].trim();
+          const pts = Math.abs(parseFloat(matchTrailing[2]));
+          if (title && !isNaN(pts) && pts > 0) {
+            results.push({ title, points: pts });
+            return;
           }
         }
-      }
 
-      return {
-        title: title || str,
-        points: (points !== null && !isNaN(points) && points > 0) ? points : null
-      };
+        // Match: "分值 事项名称" (number at the beginning)
+        const matchLeading = itemStr.match(/^(\d+(?:\.\d+)?)[\s\+\-]+(.*?)$/);
+        if (matchLeading) {
+          const pts = Math.abs(parseFloat(matchLeading[1]));
+          const title = matchLeading[2].trim();
+          if (title && !isNaN(pts) && pts > 0) {
+            results.push({ title, points: pts });
+            return;
+          }
+        }
+      });
+
+      return results;
     }
 
-    function handleSmartPreview(val) {
-      const parsed = parseSmartInput(val);
-      const previewEl = document.getElementById('smartParsePreview');
-      if (parsed && parsed.points !== null) {
-        document.getElementById('parsedTitlePreview').innerText = parsed.title;
-        document.getElementById('parsedPointsPreview').innerText = parsed.points;
-        previewEl.classList.remove('hidden');
+    // Live preview of parsed batch items
+    function handleBatchPreview(val) {
+      const parsedList = parseBatchInput(val);
+      const previewBox = document.getElementById('batchParsePreviewBox');
+      const countEl = document.getElementById('parsedItemCount');
+      const totalEl = document.getElementById('parsedTotalPoints');
+      const chipContainer = document.getElementById('parsedItemsChipContainer');
+
+      if (parsedList.length > 0) {
+        countEl.innerText = parsedList.length;
+        let sum = 0;
+        chipContainer.innerHTML = '';
+
+        parsedList.forEach(item => {
+          sum += item.points;
+          const chip = document.createElement('span');
+          chip.className = "inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white dark:bg-slate-800 text-[11px] font-medium border border-indigo-200 dark:border-indigo-800/60 text-slate-800 dark:text-slate-200 shadow-sm";
+          chip.innerHTML = `
+            <span>${item.title}</span>
+            <b class="text-indigo-600 dark:text-indigo-400 font-mono font-bold">${item.points}</b>
+          `;
+          chipContainer.appendChild(chip);
+        });
+
+        totalEl.innerText = sum;
+        previewBox.classList.remove('hidden');
       } else {
-        previewEl.classList.add('hidden');
+        previewBox.classList.add('hidden');
       }
     }
 
@@ -1021,7 +1039,7 @@
         textEl.innerText = '收起分类与备注';
       } else {
         el.classList.add('hidden');
-        textEl.innerText = '展开分类与备注 (选填)';
+        textEl.innerText = '展开分类与备注 (选填，批量应用)';
       }
     }
 
@@ -1031,9 +1049,8 @@
       document.getElementById('quickInputContent').value = '';
       document.getElementById('recordCategory').value = '';
       document.getElementById('recordNote').value = '';
-      document.getElementById('smartParsePreview').classList.add('hidden');
+      document.getElementById('batchParsePreviewBox').classList.add('hidden');
 
-      // Set default datetime to current local time YYYY-MM-DDTHH:mm
       const now = new Date();
       now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
       document.getElementById('recordTimestamp').value = now.toISOString().slice(0, 16);
@@ -1044,7 +1061,8 @@
       }, 100);
     }
 
-    function handleQuickRecordSubmit(e) {
+    // Submit Multiple/Single Records
+    function handleBatchRecordSubmit(e) {
       e.preventDefault();
       const type = document.getElementById('recordType').value;
       const rawContent = document.getElementById('quickInputContent').value.trim();
@@ -1052,30 +1070,35 @@
       const category = document.getElementById('recordCategory').value.trim();
       const note = document.getElementById('recordNote').value.trim();
 
-      const parsed = parseSmartInput(rawContent);
+      const parsedList = parseBatchInput(rawContent);
 
-      if (!parsed || !parsed.title) {
-        showToast('请输入事项内容');
+      if (parsedList.length === 0) {
+        showToast('未能识别出事项与分值，格式如: 阅读 10, 弹琴 15');
         return;
       }
 
-      if (!parsed.points || parsed.points <= 0) {
-        showToast('请在内容中包含分值 (如: 阅读, 10)');
-        return;
-      }
+      const baseTime = timestamp ? new Date(timestamp).getTime() : Date.now();
+      let totalPts = 0;
 
-      const newRecord = {
-        id: 'rec_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
-        type,
-        title: parsed.title,
-        points: parsed.points,
-        category: category || '',
-        timestamp: timestamp || new Date().toISOString(),
-        note: note || ''
-      };
+      // Add each item as a discrete record
+      parsedList.forEach((item, index) => {
+        totalPts += item.points;
+        // slight millisecond offset to keep exact input order
+        const itemIsoTime = new Date(baseTime + index * 1000).toISOString().slice(0, 16);
 
-      appData.records.unshift(newRecord);
-      
+        const newRecord = {
+          id: 'rec_' + (Date.now() + index) + '_' + Math.random().toString(36).substr(2, 5),
+          type,
+          title: item.title,
+          points: item.points,
+          category: category || '',
+          timestamp: itemIsoTime,
+          note: note || ''
+        };
+
+        appData.records.unshift(newRecord);
+      });
+
       if (timestamp) {
         expandedMonths.add(timestamp.slice(0, 7));
         expandedDays.add(timestamp.slice(0, 10));
@@ -1085,9 +1108,8 @@
       renderAll();
       closeModal('recordModal');
 
-      if (type === 'reward') showToast(`🎉 奖励 +${parsed.points} 已记入！`);
-      else if (type === 'penalty') showToast(`📌 惩罚 -${parsed.points} 已扣减`);
-      else showToast(`🛒 支出 -${parsed.points} 已扣除`);
+      const sign = type === 'reward' ? '+' : '-';
+      showToast(`🎉 成功记入 ${parsedList.length} 笔流水 (合计 ${sign}${totalPts})！`);
 
       triggerBackgroundSync();
     }
