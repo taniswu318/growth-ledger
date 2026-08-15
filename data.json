@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-15T06:25:36.082Z"
+    "lastUpdated": "2026-08-15T06:25:50.395Z"
   },
   "presets": [
     {
@@ -30,6 +30,13 @@
       "type": "reward",
       "points": 1,
       "title": "洗碗",
+      "category": "生活"
+    },
+    {
+      "id": "p_1786775150395_dz4w",
+      "type": "reward",
+      "points": 1,
+      "title": "遛小白",
       "category": "生活"
     }
   ],
