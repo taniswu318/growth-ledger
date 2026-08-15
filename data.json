@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-15T06:42:09.107Z"
+    "lastUpdated": "2026-08-15T06:42:53.233Z"
   },
   "presets": [
     {
@@ -87,9 +87,25 @@
       "points": 1,
       "title": "看书",
       "category": "学习"
+    },
+    {
+      "id": "p_1786776155167_sdhy",
+      "type": "penalty",
+      "points": 1,
+      "title": "未喝完水",
+      "category": "健康"
     }
   ],
   "records": [
+    {
+      "id": "rec_1786776171279_4y1pq",
+      "type": "penalty",
+      "title": "未喝完水",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-07-17T06:42",
+      "note": ""
+    },
     {
       "id": "rec_1786776126593_gab43",
       "type": "reward",
