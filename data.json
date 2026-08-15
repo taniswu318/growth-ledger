@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 0,
-    "lastUpdated": "2026-08-15T05:00:26.487Z"
+    "lastUpdated": "2026-08-15T05:00:44.612Z"
   },
   "presets": [
     {
@@ -53,6 +53,15 @@
       "type": "reward",
       "title": "看英语视频",
       "points": 1,
+      "category": "",
+      "timestamp": "2026-07-04T13:00",
+      "note": ""
+    },
+    {
+      "id": "rec_1786770042707_ez1cgg",
+      "type": "reward",
+      "title": "运动",
+      "points": 2,
       "category": "",
       "timestamp": "2026-07-04T13:00",
       "note": ""
