@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-15T11:36:52.347Z"
+    "lastUpdated": "2026-08-15T11:36:55.411Z"
   },
   "presets": [
     {
@@ -107,6 +107,16 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1786793815411_pohgd",
+      "presetId": "p_1786775070190_00c5",
+      "type": "reward",
+      "title": "运动",
+      "points": 2,
+      "category": "健康",
+      "timestamp": "2026-08-15T19:36",
+      "note": "每日必做打卡"
+    },
     {
       "id": "rec_1786793812347_71ryu",
       "presetId": "p_1786775047388_dh0b",
