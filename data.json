@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-15T06:50:51.281Z"
+    "lastUpdated": "2026-08-15T06:51:12.178Z"
   },
   "presets": [
     {
@@ -97,6 +97,51 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1786776672182_cm4gw",
+      "type": "reward",
+      "title": "遛小白",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-07-26T06:50",
+      "note": ""
+    },
+    {
+      "id": "rec_1786776672181_qnmvb",
+      "type": "reward",
+      "title": "运动",
+      "points": 2,
+      "category": "",
+      "timestamp": "2026-07-26T06:50",
+      "note": ""
+    },
+    {
+      "id": "rec_1786776672180_qbmzi",
+      "type": "reward",
+      "title": "英语跟读",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-07-26T06:50",
+      "note": ""
+    },
+    {
+      "id": "rec_1786776672179_lyfgr",
+      "type": "reward",
+      "title": "运动",
+      "points": 2,
+      "category": "",
+      "timestamp": "2026-07-26T06:50",
+      "note": ""
+    },
+    {
+      "id": "rec_1786776672178_63aje",
+      "type": "reward",
+      "title": "看英语视频30分钟",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-07-26T06:50",
+      "note": ""
+    },
     {
       "id": "rec_1786776651282_bd97y",
       "type": "reward",
