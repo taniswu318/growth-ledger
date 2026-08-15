@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-15T06:24:41.956Z"
+    "lastUpdated": "2026-08-15T06:24:52.886Z"
   },
   "presets": [
     {
@@ -17,13 +17,6 @@
       "points": 2,
       "title": "运动",
       "category": "健康"
-    },
-    {
-      "id": "p_1786775081956_z1ih",
-      "type": "reward",
-      "points": 1,
-      "title": "跟读",
-      "category": "学习"
     }
   ],
   "records": [
