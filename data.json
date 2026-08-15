@@ -1,7 +1,7 @@
 {
   "config": {
-    "initialScore": 1169,
-    "lastUpdated": "2026-08-15T04:44:03.080Z"
+    "initialScore": 0,
+    "lastUpdated": "2026-08-15T04:45:42.282Z"
   },
   "presets": [
     {
@@ -47,33 +47,5 @@
       "category": "愿望兑换"
     }
   ],
-  "records": [
-    {
-      "id": "rec_1786769043080_rkjc",
-      "type": "reward",
-      "title": "运动",
-      "points": 2,
-      "category": "",
-      "timestamp": "2026-07-04T12:43",
-      "note": ""
-    },
-    {
-      "id": "rec_1786769027362_1hos",
-      "type": "reward",
-      "title": "看英文视频",
-      "points": 1,
-      "category": "",
-      "timestamp": "2026-07-04T12:43",
-      "note": ""
-    },
-    {
-      "id": "rec_1786768986611_dlr6",
-      "type": "reward",
-      "title": "单杠",
-      "points": 1,
-      "category": "",
-      "timestamp": "2026-07-01T12:42",
-      "note": ""
-    }
-  ]
+  "records": []
 }
