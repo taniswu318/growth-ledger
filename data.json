@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-15T06:45:48.347Z"
+    "lastUpdated": "2026-08-15T06:46:26.705Z"
   },
   "presets": [
     {
@@ -97,15 +97,6 @@
     }
   ],
   "records": [
-    {
-      "id": "rec_1786776259455_6cvc6",
-      "type": "expense",
-      "title": "玩具反斗城",
-      "points": 199,
-      "category": "",
-      "timestamp": "2026-08-15T06:44",
-      "note": ""
-    },
     {
       "id": "rec_1786776290931_2hglv",
       "type": "expense",
