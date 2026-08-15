@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-15T06:46:26.705Z"
+    "lastUpdated": "2026-08-15T06:47:29.284Z"
   },
   "presets": [
     {
@@ -97,6 +97,42 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1786776449287_4xmex",
+      "type": "reward",
+      "title": "遛小白",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-07-20T06:47",
+      "note": ""
+    },
+    {
+      "id": "rec_1786776449286_ssxi7",
+      "type": "reward",
+      "title": "英语跟读",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-07-20T06:47",
+      "note": ""
+    },
+    {
+      "id": "rec_1786776449285_ezbqh",
+      "type": "reward",
+      "title": "运动",
+      "points": 2,
+      "category": "",
+      "timestamp": "2026-07-20T06:47",
+      "note": ""
+    },
+    {
+      "id": "rec_1786776449284_cjegj",
+      "type": "reward",
+      "title": "看英语视频30分钟",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-07-20T06:47",
+      "note": ""
+    },
     {
       "id": "rec_1786776290931_2hglv",
       "type": "expense",
