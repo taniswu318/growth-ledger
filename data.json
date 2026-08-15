@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-15T06:43:35.541Z"
+    "lastUpdated": "2026-08-15T06:44:06.460Z"
   },
   "presets": [
     {
@@ -97,6 +97,24 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1786776244084_zy0sb",
+      "type": "reward",
+      "title": "11点钟前睡觉",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-07-19T06:43",
+      "note": ""
+    },
+    {
+      "id": "rec_1786776244082_x8nj5",
+      "type": "reward",
+      "title": "做单杠",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-07-19T06:43",
+      "note": ""
+    },
     {
       "id": "rec_1786776213276_y3frk",
       "type": "reward",
