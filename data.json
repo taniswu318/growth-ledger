@@ -1,9 +1,17 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-15T06:23:38.862Z"
+    "lastUpdated": "2026-08-15T06:24:07.388Z"
   },
-  "presets": [],
+  "presets": [
+    {
+      "id": "p_1786775047388_dh0b",
+      "type": "reward",
+      "points": 1,
+      "title": "看英语视频30分钟",
+      "category": "学习"
+    }
+  ],
   "records": [
     {
       "id": "rec_1786771538347_ti7zx",
