@@ -50,6 +50,9 @@
   </script>
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
       padding-top: env(safe-area-inset-top);
       padding-bottom: env(safe-area-inset-bottom);
@@ -60,6 +63,14 @@
     }
     input, textarea, select {
       user-select: auto;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    /* Fix datetime-local width on Safari */
+    input[type="datetime-local"] {
+      min-height: 2.6rem;
+      display: block;
+      width: 100%;
     }
     .no-scrollbar::-webkit-scrollbar {
       display: none;
@@ -129,25 +140,25 @@
           <span class="text-xs text-indigo-300/70 font-medium">pts / 元</span>
         </div>
 
-        <!-- 3 Mini Sub Metrics for Today -->
+        <!-- 3 Mini Sub Metrics: Cumulative Totals (总奖励 / 总惩罚 / 总支出) -->
         <div class="grid grid-cols-3 gap-2 w-full mt-5 pt-4 border-t border-white/10">
           <div class="bg-white/5 rounded-2xl p-2 backdrop-blur-sm border border-white/5 flex flex-col items-center">
             <span class="text-[10px] sm:text-[11px] text-emerald-300/90 font-medium flex items-center gap-0.5">
-              <i data-lucide="arrow-up-right" class="w-3 h-3"></i> 今日奖励
+              <i data-lucide="arrow-up-right" class="w-3 h-3"></i> 累计总奖励
             </span>
-            <span id="todayRewardScore" class="text-base font-bold text-emerald-400 mt-0.5">+0</span>
+            <span id="totalRewardScore" class="text-base font-bold text-emerald-400 mt-0.5">+0</span>
           </div>
           <div class="bg-white/5 rounded-2xl p-2 backdrop-blur-sm border border-white/5 flex flex-col items-center">
             <span class="text-[10px] sm:text-[11px] text-rose-300/90 font-medium flex items-center gap-0.5">
-              <i data-lucide="arrow-down-right" class="w-3 h-3"></i> 今日惩罚
+              <i data-lucide="arrow-down-right" class="w-3 h-3"></i> 累计总惩罚
             </span>
-            <span id="todayPenaltyScore" class="text-base font-bold text-rose-400 mt-0.5">-0</span>
+            <span id="totalPenaltyScore" class="text-base font-bold text-rose-400 mt-0.5">-0</span>
           </div>
           <div class="bg-white/5 rounded-2xl p-2 backdrop-blur-sm border border-white/5 flex flex-col items-center">
             <span class="text-[10px] sm:text-[11px] text-blue-300/90 font-medium flex items-center gap-0.5">
-              <i data-lucide="shopping-bag" class="w-3 h-3"></i> 今日支出
+              <i data-lucide="shopping-bag" class="w-3 h-3"></i> 累计总支出
             </span>
-            <span id="todayExpenseScore" class="text-base font-bold text-blue-400 mt-0.5">-0</span>
+            <span id="totalExpenseScore" class="text-base font-bold text-blue-400 mt-0.5">-0</span>
           </div>
         </div>
       </div>
@@ -210,22 +221,21 @@
 
   <!-- ================= MODALS ================= -->
 
-  <!-- Modal 1: Add Record Modal -->
+  <!-- Modal 1: Quick Add Record Modal (Streamlined 1-step input) -->
   <div id="recordModal" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
-    <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl border border-slate-200/50 dark:border-slate-800 animate-slide-up">
-      <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
-        <h3 id="recordModalTitle" class="text-lg font-bold">新增记录</h3>
+    <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 shadow-2xl border border-slate-200/50 dark:border-slate-800 animate-slide-up overflow-hidden">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+        <h3 id="recordModalTitle" class="text-lg font-bold">快速记一笔</h3>
         <button onclick="closeModal('recordModal')" class="p-1 rounded-full text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
 
-      <form id="recordForm" onsubmit="handleRecordSubmit(event)" class="space-y-4 pt-4">
+      <form id="recordForm" onsubmit="handleQuickRecordSubmit(event)" class="space-y-3.5 pt-3.5">
         <input type="hidden" id="recordId" value="" />
         
-        <!-- Type Selection -->
+        <!-- Type Selection Tabs -->
         <div>
-          <label class="block text-xs font-semibold text-slate-500 mb-1.5">类型</label>
           <div class="grid grid-cols-3 gap-2">
             <button type="button" onclick="selectModalType('reward')" id="modalTypeReward" class="py-2 px-3 rounded-xl border text-xs font-bold transition flex items-center justify-center gap-1">
               <i data-lucide="plus" class="w-3.5 h-3.5"></i> 奖励 (+)
@@ -240,40 +250,59 @@
           <input type="hidden" id="recordType" value="reward" />
         </div>
 
-        <!-- Event Name -->
+        <!-- Combined Smart Input: Item & Points -->
         <div>
-          <label class="block text-xs font-semibold text-slate-500 mb-1" id="recordEventLabel">事项名称 *</label>
-          <input type="text" id="recordEventTitle" required placeholder="如：自主阅读英文书 30 分钟 / 买文具"
-            class="w-full px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium" />
-        </div>
-
-        <!-- Points & Category -->
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-semibold text-slate-500 mb-1" id="recordPointsLabel">分值 / 金额 *</label>
-            <input type="number" id="recordPoints" min="1" step="any" required placeholder="10"
-              class="w-full px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 text-sm font-bold" />
+          <div class="flex items-center justify-between mb-1">
+            <label class="text-xs font-bold text-slate-700 dark:text-slate-300" id="quickInputLabel">事项与分值 *</label>
+            <span class="text-[11px] text-slate-400 font-normal">支持用逗号隔开 (如: 英文阅读, 10)</span>
           </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-500 mb-1">分类标签</label>
-            <input type="text" id="recordCategory" placeholder="如：学习、愿望兑换、零食"
-              class="w-full px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium" />
+          <input type="text" id="quickInputContent" required placeholder="如: 阅读原版书, 10 或 买画笔 25"
+            oninput="handleSmartPreview(this.value)"
+            class="w-full px-4 py-3 rounded-xl bg-slate-100 dark:bg-slate-800 border border-transparent focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-850 focus:ring-2 focus:ring-indigo-500/20 text-sm font-medium transition" />
+          
+          <!-- Realtime Smart Parse Preview Pill -->
+          <div id="smartParsePreview" class="hidden mt-1.5 px-3 py-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 text-[11px] flex items-center justify-between">
+            <div class="flex items-center gap-1.5 min-w-0">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5 flex-shrink-0"></i>
+              <span class="truncate">事项: <b id="parsedTitlePreview">-</b></span>
+            </div>
+            <span class="font-bold font-mono text-xs flex-shrink-0 pl-2">分值: <span id="parsedPointsPreview">0</span></span>
           </div>
         </div>
 
-        <!-- DateTime & Note -->
-        <div>
-          <label class="block text-xs font-semibold text-slate-500 mb-1">记录时间</label>
-          <input type="datetime-local" id="recordTimestamp" required
-            class="w-full px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 text-xs font-medium" />
+        <!-- Time Picker (Carefully styled with box-sizing & max-w-full to prevent overflow) -->
+        <div class="w-full overflow-hidden">
+          <label class="block text-xs font-semibold text-slate-500 mb-1">记录时间 (默认为当前时间)</label>
+          <div class="relative w-full">
+            <input type="datetime-local" id="recordTimestamp" required
+              class="w-full max-w-full block px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700/60 text-xs font-medium text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-500 transition" />
+          </div>
         </div>
 
-        <div>
-          <label class="block text-xs font-semibold text-slate-500 mb-1">补充说明 (选填)</label>
-          <textarea id="recordNote" rows="2" placeholder="详情或说明..."
-            class="w-full px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500 text-xs font-medium"></textarea>
+        <!-- Optional Collapsible Details (Category & Note) -->
+        <div class="pt-1">
+          <button type="button" onclick="toggleAdvancedFields()" class="text-[11px] text-slate-400 dark:text-slate-500 flex items-center gap-1 hover:text-slate-600 transition">
+            <i data-lucide="sliders" class="w-3 h-3"></i>
+            <span id="advancedFieldsToggleText">展开分类与备注 (选填)</span>
+          </button>
+          
+          <div id="advancedFieldsContainer" class="hidden space-y-2.5 pt-2.5">
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-400 mb-0.5">分类标签</label>
+                <input type="text" id="recordCategory" placeholder="如: 学习、习惯"
+                  class="w-full px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 border-none text-xs font-medium" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-400 mb-0.5">补充备注</label>
+                <input type="text" id="recordNote" placeholder="补充详情..."
+                  class="w-full px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 border-none text-xs font-medium" />
+              </div>
+            </div>
+          </div>
         </div>
 
+        <!-- Save Button -->
         <div class="pt-2">
           <button type="submit" id="recordSubmitBtn" class="w-full py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold shadow-lg shadow-indigo-600/20 active:scale-[0.98] transition">
             保存记录
@@ -458,7 +487,6 @@
       initTheme();
       lucide.createIcons();
 
-      // Auto smart sync from GitHub on launch if configured
       if (ghConfig.token && ghConfig.owner && ghConfig.repo) {
         smartSync(true);
       }
@@ -544,41 +572,29 @@
       lucide.createIcons();
     }
 
-    // Score Dashboard
+    // Score Dashboard: Cumulative Total Rewards / Total Penalties / Total Expenses
     function renderDashboard() {
       const initial = Number(appData.config.initialScore) || 0;
       let totalReward = 0;
       let totalPenalty = 0;
       let totalExpense = 0;
 
-      let todayReward = 0;
-      let todayPenalty = 0;
-      let todayExpense = 0;
-
-      const todayStr = getLocalDateString(new Date());
-
       appData.records.forEach(r => {
         const pts = Number(r.points) || 0;
-        const recDate = r.timestamp ? r.timestamp.slice(0, 10) : '';
-        const isToday = recDate === todayStr;
-
         if (r.type === 'reward') {
           totalReward += pts;
-          if (isToday) todayReward += pts;
         } else if (r.type === 'penalty') {
           totalPenalty += pts;
-          if (isToday) todayPenalty += pts;
         } else if (r.type === 'expense') {
           totalExpense += pts;
-          if (isToday) todayExpense += pts;
         }
       });
 
       const currentTotal = initial + totalReward - totalPenalty - totalExpense;
       document.getElementById('currentTotalScore').innerText = currentTotal;
-      document.getElementById('todayRewardScore').innerText = '+' + todayReward;
-      document.getElementById('todayPenaltyScore').innerText = '-' + todayPenalty;
-      document.getElementById('todayExpenseScore').innerText = '-' + todayExpense;
+      document.getElementById('totalRewardScore').innerText = '+' + totalReward;
+      document.getElementById('totalPenaltyScore').innerText = '-' + totalPenalty;
+      document.getElementById('totalExpenseScore').innerText = '-' + totalExpense;
       document.getElementById('settingInitialScore').value = initial;
     }
 
@@ -620,9 +636,9 @@
 
     function applyPreset(p) {
       openRecordModal(p.type);
-      document.getElementById('recordEventTitle').value = p.title;
-      document.getElementById('recordPoints').value = p.points;
+      document.getElementById('quickInputContent').value = `${p.title}, ${p.points}`;
       document.getElementById('recordCategory').value = p.category || '';
+      handleSmartPreview(`${p.title}, ${p.points}`);
     }
 
     // Render Month Grouped and Date Nested Records
@@ -906,8 +922,7 @@
       const pBtn = document.getElementById('modalTypePenalty');
       const eBtn = document.getElementById('modalTypeExpense');
       const submitBtn = document.getElementById('recordSubmitBtn');
-      const eventLabel = document.getElementById('recordEventLabel');
-      const pointsLabel = document.getElementById('recordPointsLabel');
+      const quickInput = document.getElementById('quickInputContent');
 
       rBtn.className = "py-2 px-3 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-600 dark:text-slate-400 flex items-center justify-center gap-1";
       pBtn.className = "py-2 px-3 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-600 dark:text-slate-400 flex items-center justify-center gap-1";
@@ -916,58 +931,147 @@
       if (type === 'reward') {
         rBtn.className = "py-2 px-3 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 text-xs font-bold flex items-center justify-center gap-1";
         submitBtn.className = "w-full py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-lg shadow-emerald-600/20 active:scale-[0.98] transition";
-        eventLabel.innerText = "奖励事项 *";
-        pointsLabel.innerText = "奖励分值 *";
+        quickInput.placeholder = "如: 阅读英文原版书, 10 或 自主弹琴 15";
       } else if (type === 'penalty') {
         pBtn.className = "py-2 px-3 rounded-xl border-2 border-rose-500 bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 text-xs font-bold flex items-center justify-center gap-1";
         submitBtn.className = "w-full py-3.5 rounded-2xl bg-rose-600 hover:bg-rose-700 text-white font-bold shadow-lg shadow-rose-600/20 active:scale-[0.98] transition";
-        eventLabel.innerText = "惩罚原因 *";
-        pointsLabel.innerText = "扣减分值 *";
+        quickInput.placeholder = "如: 拖延玩手机超过15分钟, 5";
       } else {
         eBtn.className = "py-2 px-3 rounded-xl border-2 border-blue-500 bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300 text-xs font-bold flex items-center justify-center gap-1";
         submitBtn.className = "w-full py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-lg shadow-blue-600/20 active:scale-[0.98] transition";
-        eventLabel.innerText = "支出/兑换内容 *";
-        pointsLabel.innerText = "支出金额/分值 *";
+        quickInput.placeholder = "如: 兑换零食饮料, 5 或 购买文具 20";
+      }
+      handleSmartPreview(quickInput.value);
+    }
+
+    /**
+     * SMART INPUT PARSER
+     * Parses inputs like:
+     * - "阅读英文原版书, 10" / "阅读英文原版书，10"
+     * - "拖延玩手机 5"
+     * - "买乐高玩具 120"
+     * - "10 弹钢琴"
+     */
+    function parseSmartInput(rawText) {
+      let str = (rawText || '').trim();
+      if (!str) return null;
+
+      // Replace Chinese comma with English comma
+      str = str.replace(/，/g, ',');
+
+      let title = '';
+      let points = null;
+
+      if (str.includes(',')) {
+        const parts = str.split(',');
+        // Check if the second part or first part is number
+        const p1 = parts[0].trim();
+        const p2 = parts.slice(1).join(',').trim();
+
+        if (!isNaN(parseFloat(p2)) && isFinite(p2)) {
+          title = p1;
+          points = Math.abs(parseFloat(p2));
+        } else if (!isNaN(parseFloat(p1)) && isFinite(p1)) {
+          title = p2;
+          points = Math.abs(parseFloat(p1));
+        } else {
+          title = str;
+        }
+      } else {
+        // Match trailing number: "阅读原版书 10" or "阅读原版书+10" or "阅读原版书10"
+        const trailingMatch = str.match(/^(.*?)[\s\+\-]+(\d+(?:\.\d+)?)$/);
+        if (trailingMatch) {
+          title = trailingMatch[1].trim();
+          points = Math.abs(parseFloat(trailingMatch[2]));
+        } else {
+          // Match leading number: "10 阅读原版书"
+          const leadingMatch = str.match(/^(\d+(?:\.\d+)?)[\s\+\-]+(.*?)$/);
+          if (leadingMatch) {
+            points = Math.abs(parseFloat(leadingMatch[1]));
+            title = leadingMatch[2].trim();
+          } else {
+            title = str;
+          }
+        }
+      }
+
+      return {
+        title: title || str,
+        points: (points !== null && !isNaN(points) && points > 0) ? points : null
+      };
+    }
+
+    function handleSmartPreview(val) {
+      const parsed = parseSmartInput(val);
+      const previewEl = document.getElementById('smartParsePreview');
+      if (parsed && parsed.points !== null) {
+        document.getElementById('parsedTitlePreview').innerText = parsed.title;
+        document.getElementById('parsedPointsPreview').innerText = parsed.points;
+        previewEl.classList.remove('hidden');
+      } else {
+        previewEl.classList.add('hidden');
+      }
+    }
+
+    function toggleAdvancedFields() {
+      const el = document.getElementById('advancedFieldsContainer');
+      const textEl = document.getElementById('advancedFieldsToggleText');
+      if (el.classList.contains('hidden')) {
+        el.classList.remove('hidden');
+        textEl.innerText = '收起分类与备注';
+      } else {
+        el.classList.add('hidden');
+        textEl.innerText = '展开分类与备注 (选填)';
       }
     }
 
     function openRecordModal(type) {
       document.getElementById('recordId').value = '';
       selectModalType(type || 'reward');
-      document.getElementById('recordEventTitle').value = '';
-      document.getElementById('recordPoints').value = '';
+      document.getElementById('quickInputContent').value = '';
       document.getElementById('recordCategory').value = '';
       document.getElementById('recordNote').value = '';
+      document.getElementById('smartParsePreview').classList.add('hidden');
 
+      // Set default datetime to current local time YYYY-MM-DDTHH:mm
       const now = new Date();
       now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
       document.getElementById('recordTimestamp').value = now.toISOString().slice(0, 16);
 
       openModal('recordModal');
+      setTimeout(() => {
+        document.getElementById('quickInputContent').focus();
+      }, 100);
     }
 
-    function handleRecordSubmit(e) {
+    function handleQuickRecordSubmit(e) {
       e.preventDefault();
       const type = document.getElementById('recordType').value;
-      const title = document.getElementById('recordEventTitle').value.trim();
-      const points = Math.abs(parseFloat(document.getElementById('recordPoints').value));
-      const category = document.getElementById('recordCategory').value.trim();
+      const rawContent = document.getElementById('quickInputContent').value.trim();
       const timestamp = document.getElementById('recordTimestamp').value;
+      const category = document.getElementById('recordCategory').value.trim();
       const note = document.getElementById('recordNote').value.trim();
 
-      if (!title || isNaN(points) || points <= 0) {
-        showToast('请填写完整有效的内容与分值');
+      const parsed = parseSmartInput(rawContent);
+
+      if (!parsed || !parsed.title) {
+        showToast('请输入事项内容');
+        return;
+      }
+
+      if (!parsed.points || parsed.points <= 0) {
+        showToast('请在内容中包含分值 (如: 阅读, 10)');
         return;
       }
 
       const newRecord = {
         id: 'rec_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
         type,
-        title,
-        points,
-        category,
-        timestamp,
-        note
+        title: parsed.title,
+        points: parsed.points,
+        category: category || '',
+        timestamp: timestamp || new Date().toISOString(),
+        note: note || ''
       };
 
       appData.records.unshift(newRecord);
@@ -981,9 +1085,9 @@
       renderAll();
       closeModal('recordModal');
 
-      if (type === 'reward') showToast('🎉 奖励已记入！');
-      else if (type === 'penalty') showToast('📌 惩罚已记入');
-      else showToast('🛒 支出已扣除');
+      if (type === 'reward') showToast(`🎉 奖励 +${parsed.points} 已记入！`);
+      else if (type === 'penalty') showToast(`📌 惩罚 -${parsed.points} 已扣减`);
+      else showToast(`🛒 支出 -${parsed.points} 已扣除`);
 
       triggerBackgroundSync();
     }
@@ -1156,14 +1260,6 @@
       }
     }
 
-    /**
-     * SMART BIDIRECTIONAL SYNC (Never lose data)
-     * 1. Fetches remote data.json from GitHub
-     * 2. Merges records by unique ID (Union of local + remote)
-     * 3. Merges initialScore and presets
-     * 4. Updates local storage & UI
-     * 5. If there are local additions or changes, pushes back to GitHub
-     */
     async function smartSync(silent = false) {
       if (isSyncing) return;
       if (!ghConfig.token || !ghConfig.owner || !ghConfig.repo) {
@@ -1194,17 +1290,14 @@
           const content = decodeURIComponent(escape(atob(fileData.content.replace(/\n/g, ''))));
           const remoteData = JSON.parse(content);
 
-          // === SMART MERGE RECORDS ===
+          // Merge records
           const recordMap = new Map();
-          
-          // First add remote records
           if (Array.isArray(remoteData.records)) {
             remoteData.records.forEach(r => {
               if (r && r.id) recordMap.set(r.id, r);
             });
           }
 
-          // Merge local records
           let localHasNew = false;
           if (Array.isArray(appData.records)) {
             appData.records.forEach(r => {
@@ -1218,11 +1311,9 @@
           }
 
           const mergedRecords = Array.from(recordMap.values());
-          // Sort newest first
           mergedRecords.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
-          // === MERGE INITIAL SCORE ===
-          // If remote initial score exists and local was 0 (or new device), adopt remote
+          // Merge Initial Score
           let finalInitialScore = appData.config.initialScore;
           if (remoteData.config && remoteData.config.initialScore !== undefined) {
             const remoteInit = Number(remoteData.config.initialScore);
@@ -1238,7 +1329,7 @@
             }
           }
 
-          // === MERGE PRESETS ===
+          // Merge Presets
           const presetMap = new Map();
           if (Array.isArray(remoteData.presets)) {
             remoteData.presets.forEach(p => presetMap.set(p.title + p.type, p));
@@ -1247,7 +1338,6 @@
             appData.presets.forEach(p => presetMap.set(p.title + p.type, p));
           }
 
-          // Update appData
           appData.records = mergedRecords;
           appData.config.initialScore = finalInitialScore;
           appData.presets = Array.from(presetMap.values());
@@ -1256,19 +1346,16 @@
           saveLocalStorage();
           renderAll();
 
-          // If local had records that remote didn't have, or initial score changed, push merged state to remote
           if (localHasNew || mergedRecords.length > (remoteData.records || []).length || appData.config.initialScore !== (remoteData.config || {}).initialScore) {
             needsPush = true;
           }
 
         } else if (getRes.status === 404) {
-          // File does not exist remotely yet, we must push current local
           needsPush = true;
         } else {
           throw new Error(`GitHub API error: ${getRes.status}`);
         }
 
-        // If push is required to sync back merged data:
         if (needsPush) {
           updateSyncBadge('syncing', '正在同步至云端...');
           await rawPushToGitHub();
@@ -1318,7 +1405,7 @@
       }
     }
 
-    // Force pull to override local (Safe recovery)
+    // Force pull
     async function forcePullFromGitHub() {
       if (!confirm('确定要从云端重新拉取并覆盖当前本地记录吗？')) return;
       try {
@@ -1347,12 +1434,11 @@
       }
     }
 
-    // Force push local to cloud
+    // Force push
     async function forcePushToGitHub() {
       if (!confirm('确定要用当前本地数据强制覆盖云端吗？')) return;
       try {
         showToast('正在推送至云端...');
-        // Refresh SHA first
         const getUrl = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/data.json?ref=${ghConfig.branch}&_t=${Date.now()}`;
         const getRes = await fetch(getUrl, {
           headers: {
