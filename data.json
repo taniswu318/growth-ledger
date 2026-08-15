@@ -1,16 +1,9 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-15T05:43:10.931Z"
+    "lastUpdated": "2026-08-15T06:23:26.012Z"
   },
   "presets": [
-    {
-      "id": "p1",
-      "type": "reward",
-      "title": "专注阅读 30 分钟",
-      "points": 10,
-      "category": "学习"
-    },
     {
       "id": "p2",
       "type": "reward",
