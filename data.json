@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-15T06:41:23.846Z"
+    "lastUpdated": "2026-08-15T06:42:09.107Z"
   },
   "presets": [
     {
@@ -90,6 +90,60 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1786776126593_gab43",
+      "type": "reward",
+      "title": "11点钟前睡觉",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-07-17T06:41",
+      "note": ""
+    },
+    {
+      "id": "rec_1786776126592_06ezi",
+      "type": "reward",
+      "title": "洗碗",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-07-17T06:41",
+      "note": ""
+    },
+    {
+      "id": "rec_1786776126591_so9fu",
+      "type": "reward",
+      "title": "做单杠",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-07-17T06:41",
+      "note": ""
+    },
+    {
+      "id": "rec_1786776126590_v3zbg",
+      "type": "reward",
+      "title": "运动",
+      "points": 2,
+      "category": "",
+      "timestamp": "2026-07-17T06:41",
+      "note": ""
+    },
+    {
+      "id": "rec_1786776126589_3bww2",
+      "type": "reward",
+      "title": "英语跟读",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-07-17T06:41",
+      "note": ""
+    },
+    {
+      "id": "rec_1786776126588_u9p9r",
+      "type": "reward",
+      "title": "看英语视频30分钟",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-07-17T06:41",
+      "note": ""
+    },
     {
       "id": "rec_1786776081833_x5swv",
       "type": "reward",
