@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-15T07:04:01.913Z"
+    "lastUpdated": "2026-08-15T07:04:45.837Z"
   },
   "presets": [
     {
@@ -97,6 +97,78 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1786777485844_cwr6a",
+      "type": "reward",
+      "title": "洗碗",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-08-04T07:04",
+      "note": ""
+    },
+    {
+      "id": "rec_1786777485843_40iyf",
+      "type": "reward",
+      "title": "洗碗",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-08-04T07:04",
+      "note": ""
+    },
+    {
+      "id": "rec_1786777485842_jrkqf",
+      "type": "reward",
+      "title": "做单杠",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-08-04T07:04",
+      "note": ""
+    },
+    {
+      "id": "rec_1786777485841_0bfv1",
+      "type": "reward",
+      "title": "遛小白",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-08-04T07:04",
+      "note": ""
+    },
+    {
+      "id": "rec_1786777485840_8mm29",
+      "type": "reward",
+      "title": "运动",
+      "points": 2,
+      "category": "",
+      "timestamp": "2026-08-04T07:04",
+      "note": ""
+    },
+    {
+      "id": "rec_1786777485839_qcqbv",
+      "type": "reward",
+      "title": "运动",
+      "points": 2,
+      "category": "",
+      "timestamp": "2026-08-04T07:04",
+      "note": ""
+    },
+    {
+      "id": "rec_1786777485838_17ua6",
+      "type": "reward",
+      "title": "英语跟读",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-08-04T07:04",
+      "note": ""
+    },
+    {
+      "id": "rec_1786777485837_9rtgg",
+      "type": "reward",
+      "title": "看英语视频30分钟",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-08-04T07:04",
+      "note": ""
+    },
     {
       "id": "rec_1786777441913_9xmnc",
       "type": "penalty",
