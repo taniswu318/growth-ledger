@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-15T06:48:44.286Z"
+    "lastUpdated": "2026-08-15T06:48:57.402Z"
   },
   "presets": [
     {
@@ -97,6 +97,15 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1786776537402_b9eo9",
+      "type": "penalty",
+      "title": "未喝完水",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-07-21T06:48",
+      "note": ""
+    },
     {
       "id": "rec_1786776524289_4wo9l",
       "type": "reward",
