@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-15T06:54:23.640Z"
+    "lastUpdated": "2026-08-15T06:54:41.662Z"
   },
   "presets": [
     {
@@ -97,6 +97,15 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1786776881662_no8wq",
+      "type": "expense",
+      "title": "奶茶",
+      "points": 18,
+      "category": "",
+      "timestamp": "2026-07-26T06:54",
+      "note": ""
+    },
     {
       "id": "rec_1786776863644_06fli",
       "type": "reward",
