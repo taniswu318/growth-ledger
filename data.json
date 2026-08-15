@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-15T06:37:03.642Z"
+    "lastUpdated": "2026-08-15T06:38:48.606Z"
   },
   "presets": [
     {
@@ -80,9 +80,88 @@
       "points": 2,
       "title": "未做单杠",
       "category": "健康"
+    },
+    {
+      "id": "p_1786775888497_zfo3",
+      "type": "reward",
+      "points": 1,
+      "title": "看书",
+      "category": "学习"
     }
   ],
   "records": [
+    {
+      "id": "rec_1786775926057_48bqk",
+      "type": "reward",
+      "title": "洗碗",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-07-11T06:38",
+      "note": ""
+    },
+    {
+      "id": "rec_1786775926056_z9apj",
+      "type": "reward",
+      "title": "洗厕所",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-07-11T06:38",
+      "note": ""
+    },
+    {
+      "id": "rec_1786775926055_elyw3",
+      "type": "reward",
+      "title": "洗厕所",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-07-11T06:38",
+      "note": ""
+    },
+    {
+      "id": "rec_1786775926054_kv716",
+      "type": "reward",
+      "title": "做单杠",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-07-11T06:38",
+      "note": ""
+    },
+    {
+      "id": "rec_1786775926053_ed383",
+      "type": "reward",
+      "title": "运动",
+      "points": 2,
+      "category": "",
+      "timestamp": "2026-07-11T06:38",
+      "note": ""
+    },
+    {
+      "id": "rec_1786775926052_repxr",
+      "type": "reward",
+      "title": "看书",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-07-11T06:38",
+      "note": ""
+    },
+    {
+      "id": "rec_1786775926051_ejgiu",
+      "type": "reward",
+      "title": "英语跟读",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-07-11T06:38",
+      "note": ""
+    },
+    {
+      "id": "rec_1786775926050_a3p8c",
+      "type": "reward",
+      "title": "看英语视频30分钟",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-07-11T06:38",
+      "note": ""
+    },
     {
       "id": "rec_1786775821495_pmjdi",
       "type": "reward",
