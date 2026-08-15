@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-15T11:34:54.921Z"
+    "lastUpdated": "2026-08-15T11:34:57.662Z"
   },
   "presets": [
     {
@@ -47,7 +47,7 @@
       "points": 1,
       "title": "做单杠",
       "category": "健康",
-      "isDaily": true
+      "isDaily": false
     },
     {
       "id": "p_1786775184252_e23s",
