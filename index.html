@@ -672,7 +672,6 @@
 
       let addedCount = 0;
       parsedList.forEach(item => {
-        // Avoid exact duplicate in presets
         const exists = appData.presets.some(p => p.type === activeType && p.title === item.title && p.points === item.points);
         if (!exists) {
           appData.presets.push({
@@ -1011,8 +1010,7 @@
     function parseBatchInput(rawText) {
       if (!rawText || !rawText.trim()) return [];
 
-      const segments = rawText.split(/[,，
-]+/);
+      const segments = rawText.split(/[,，\n]+/);
       const results = [];
 
       segments.forEach(seg => {
