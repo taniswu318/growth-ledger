@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-15T06:25:00.157Z"
+    "lastUpdated": "2026-08-15T06:25:36.082Z"
   },
   "presets": [
     {
@@ -24,6 +24,13 @@
       "points": 1,
       "title": "英语跟读",
       "category": "学习"
+    },
+    {
+      "id": "p_1786775136082_4kji",
+      "type": "reward",
+      "points": 1,
+      "title": "洗碗",
+      "category": "生活"
     }
   ],
   "records": [
