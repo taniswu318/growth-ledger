@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-15T07:10:36.898Z"
+    "lastUpdated": "2026-08-15T11:34:23.332Z"
   },
   "presets": [
     {
@@ -9,14 +9,16 @@
       "type": "reward",
       "points": 1,
       "title": "看英语视频30分钟",
-      "category": "学习"
+      "category": "学习",
+      "isDaily": true
     },
     {
       "id": "p_1786775070190_00c5",
       "type": "reward",
       "points": 2,
       "title": "运动",
-      "category": "健康"
+      "category": "健康",
+      "isDaily": true
     },
     {
       "id": "p_1786775100157_4ad6",
