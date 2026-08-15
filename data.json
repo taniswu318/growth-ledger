@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-15T07:08:46.937Z"
+    "lastUpdated": "2026-08-15T07:09:00.940Z"
   },
   "presets": [
     {
@@ -104,6 +104,33 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1786777740942_yshol",
+      "type": "penalty",
+      "title": "抖音超时",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-08-10T07:08",
+      "note": ""
+    },
+    {
+      "id": "rec_1786777740941_5291b",
+      "type": "penalty",
+      "title": "抖音超时",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-08-10T07:08",
+      "note": ""
+    },
+    {
+      "id": "rec_1786777740940_na5kn",
+      "type": "penalty",
+      "title": "11点钟后睡觉",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-08-10T07:08",
+      "note": ""
+    },
     {
       "id": "rec_1786777697122_v2nzl",
       "type": "penalty",
