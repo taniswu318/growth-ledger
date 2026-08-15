@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-15T06:31:24.279Z"
+    "lastUpdated": "2026-08-15T06:32:30.224Z"
   },
   "presets": [
     {
@@ -73,9 +73,25 @@
       "points": 1,
       "title": "11点钟后睡觉",
       "category": "生活"
+    },
+    {
+      "id": "p_1786775530561_b81g",
+      "type": "penalty",
+      "points": 2,
+      "title": "未做单杠",
+      "category": "健康"
     }
   ],
   "records": [
+    {
+      "id": "rec_1786775548268_xxlxj",
+      "type": "penalty",
+      "title": "未做单杠",
+      "points": 2,
+      "category": "",
+      "timestamp": "2026-07-07T06:32",
+      "note": ""
+    },
     {
       "id": "rec_1786775482033_9nju7",
       "type": "reward",
