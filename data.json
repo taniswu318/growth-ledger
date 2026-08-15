@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-15T06:32:30.224Z"
+    "lastUpdated": "2026-08-15T06:33:48.665Z"
   },
   "presets": [
     {
@@ -88,6 +88,15 @@
       "type": "penalty",
       "title": "未做单杠",
       "points": 2,
+      "category": "",
+      "timestamp": "2026-07-07T06:32",
+      "note": ""
+    },
+    {
+      "id": "rec_1786775626516_pvlfn",
+      "type": "expense",
+      "title": "《我的世界》充值",
+      "points": 80,
       "category": "",
       "timestamp": "2026-07-07T06:32",
       "note": ""
