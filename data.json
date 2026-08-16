@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-16T03:36:44.871Z"
+    "lastUpdated": "2026-08-16T03:36:56.431Z"
   },
   "presets": [
     {
@@ -107,15 +107,6 @@
     }
   ],
   "records": [
-    {
-      "id": "rec_1786851404871_cvxvv",
-      "type": "reward",
-      "title": "看英语视频30分钟",
-      "points": 1,
-      "category": "",
-      "timestamp": "2026-08-16T11:36",
-      "note": ""
-    },
     {
       "id": "rec_1786812962252_rdn8p",
       "type": "expense",
