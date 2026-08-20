@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-20T15:10:37.708Z"
+    "lastUpdated": "2026-08-20T15:27:51.450Z"
   },
   "presets": [
     {
@@ -109,13 +109,14 @@
   ],
   "records": [
     {
-      "id": "rec_1787238601301_f9om8",
+      "id": "rec_1787239671450_3pte5",
+      "presetId": "p_1786775170269_d2k7",
       "type": "reward",
       "title": "做单杠",
       "points": 1,
-      "category": "",
-      "timestamp": "2026-08-20T23:09",
-      "note": ""
+      "category": "健康",
+      "timestamp": "2026-08-20T23:27",
+      "note": "每日必做打卡"
     },
     {
       "id": "rec_1787238571424_1p2bc",
