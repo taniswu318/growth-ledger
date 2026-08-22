@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-22T12:58:42.686Z"
+    "lastUpdated": "2026-08-22T13:00:27.630Z"
   },
   "presets": [
     {
@@ -108,6 +108,15 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1787403627630_pv81n",
+      "type": "penalty",
+      "title": "抖音超时",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-08-22T20:59",
+      "note": ""
+    },
     {
       "id": "rec_1787403522686_au8dp",
       "type": "penalty",
