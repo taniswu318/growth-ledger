@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-22T11:22:07.090Z"
+    "lastUpdated": "2026-08-22T12:58:42.686Z"
   },
   "presets": [
     {
@@ -108,6 +108,15 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1787403522686_au8dp",
+      "type": "penalty",
+      "title": "未喝完水",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-08-22T20:58",
+      "note": ""
+    },
     {
       "id": "rec_1787397727090_68oaj",
       "type": "penalty",
