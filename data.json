@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-23T14:15:59.657Z"
+    "lastUpdated": "2026-08-23T15:21:41.446Z"
   },
   "presets": [
     {
@@ -108,6 +108,15 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1787498501446_u589i",
+      "type": "reward",
+      "title": "看书",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-08-23T23:21",
+      "note": ""
+    },
     {
       "id": "rec_1787494559657_s34gi",
       "presetId": "p_1786775070190_00c5",
