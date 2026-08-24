@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-24T13:02:20.204Z"
+    "lastUpdated": "2026-08-24T13:02:55.245Z"
   },
   "presets": [
     {
@@ -108,6 +108,15 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1787576575245_c8u7q",
+      "type": "reward",
+      "title": "遛小白",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-08-24T21:02",
+      "note": ""
+    },
     {
       "id": "rec_1787576540204_uk8av",
       "presetId": "p_1786775100157_4ad6",
