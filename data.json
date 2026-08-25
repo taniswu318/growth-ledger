@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-25T14:53:46.036Z"
+    "lastUpdated": "2026-08-25T14:53:53.825Z"
   },
   "presets": [
     {
@@ -108,6 +108,26 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1787669633825_eqlc7",
+      "presetId": "p_1786775100157_4ad6",
+      "type": "reward",
+      "title": "英语跟读",
+      "points": 1,
+      "category": "学习",
+      "timestamp": "2026-08-25T22:53",
+      "note": "每日必做打卡"
+    },
+    {
+      "id": "rec_1787669630179_v0u44",
+      "presetId": "p_1786775070190_00c5",
+      "type": "reward",
+      "title": "运动",
+      "points": 2,
+      "category": "健康",
+      "timestamp": "2026-08-25T22:53",
+      "note": "每日必做打卡"
+    },
     {
       "id": "rec_1787669626036_a40pk",
       "presetId": "p_1786775047388_dh0b",
