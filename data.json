@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-25T15:06:43.908Z"
+    "lastUpdated": "2026-08-25T15:24:58.185Z"
   },
   "presets": [
     {
@@ -108,6 +108,15 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1787671498184_2kf9r",
+      "type": "penalty",
+      "title": "11点钟后睡觉",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-08-25T23:24",
+      "note": ""
+    },
     {
       "id": "rec_1787670403908_p12be",
       "type": "reward",
