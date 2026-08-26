@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-26T14:18:21.501Z"
+    "lastUpdated": "2026-08-26T14:18:25.595Z"
   },
   "presets": [
     {
@@ -108,6 +108,16 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1787753905595_hwh2c",
+      "presetId": "p_1786775100157_4ad6",
+      "type": "reward",
+      "title": "英语跟读",
+      "points": 1,
+      "category": "学习",
+      "timestamp": "2026-08-26T22:18",
+      "note": "每日必做打卡"
+    },
     {
       "id": "rec_1787753901501_zitcx",
       "presetId": "p_1786775070190_00c5",
