@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-26T14:18:25.595Z"
+    "lastUpdated": "2026-08-26T14:18:41.778Z"
   },
   "presets": [
     {
@@ -108,6 +108,33 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1787753921780_bbwhd",
+      "type": "reward",
+      "title": "遛小白",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-08-26T22:18",
+      "note": ""
+    },
+    {
+      "id": "rec_1787753921779_h5p3o",
+      "type": "reward",
+      "title": "洗碗",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-08-26T22:18",
+      "note": ""
+    },
+    {
+      "id": "rec_1787753921778_35hka",
+      "type": "reward",
+      "title": "洗碗",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-08-26T22:18",
+      "note": ""
+    },
     {
       "id": "rec_1787753905595_hwh2c",
       "presetId": "p_1786775100157_4ad6",
