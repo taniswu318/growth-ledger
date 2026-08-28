@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-08-28T13:50:16.383Z"
+    "lastUpdated": "2026-08-28T13:50:56.290Z"
   },
   "presets": [
     {
@@ -108,6 +108,15 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1787925056290_t5tiv",
+      "type": "reward",
+      "title": "洗碗",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-08-28T21:50",
+      "note": ""
+    },
     {
       "id": "rec_1787925016383_c1fyh",
       "presetId": "p_1786775070190_00c5",
