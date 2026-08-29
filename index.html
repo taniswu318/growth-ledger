@@ -16,9 +16,11 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <!-- Canvas Confetti CDN -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <!-- Chart.js CDN for Analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <script>
@@ -144,29 +146,6 @@
       </div>
     </div>
 
-    <!-- Daily Routine Checklist Card -->
-    <div id="dailyRoutinesSection" class="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-4 sm:p-5 shadow-sm space-y-3.5">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
-            <i data-lucide="check-circle-2" class="w-4 h-4"></i>
-          </div>
-          <div>
-            <h2 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              今日必做清单
-              <span id="dailyProgressBadge" class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400">0/0 完成</span>
-            </h2>
-          </div>
-        </div>
-        <button onclick="openPresetManagerModal()" class="text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-0.5">
-          <span>配置任务</span>
-          <i data-lucide="chevron-right" class="w-4 h-4"></i>
-        </button>
-      </div>
-
-      <div id="dailyTasksGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-0.5"></div>
-    </div>
-
     <!-- Quick Action Bar -->
     <div class="grid grid-cols-3 gap-2.5">
       <button onclick="openRecordModal('reward')" class="flex flex-col sm:flex-row items-center justify-center gap-1.5 py-3.5 px-2 rounded-2xl bg-emerald-500 hover:bg-emerald-600 active:scale-[0.98] text-white font-bold shadow-lg shadow-emerald-500/20 transition">
@@ -181,6 +160,55 @@
         <i data-lucide="shopping-cart" class="w-4 h-4"></i>
         <span class="text-sm">记录支出 (-)</span>
       </button>
+    </div>
+
+    <!-- RENAMED & ENHANCED: Quick Routines Checklist Card -->
+    <div id="quickRoutinesSection" class="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-4 sm:p-5 shadow-sm space-y-3.5">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+            <i data-lucide="zap" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h2 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              常用快捷清单
+              <span id="quickProgressBadge" class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400">今日 0 笔</span>
+            </h2>
+          </div>
+        </div>
+        <button onclick="openPresetManagerModal()" class="text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-0.5">
+          <span>管理清单</span>
+          <i data-lucide="chevron-right" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div id="quickTasksGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-0.5"></div>
+    </div>
+
+    <!-- NEW: Trend Analytics Card (Day / Week / Month Bar Chart) -->
+    <div class="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-4 sm:p-5 shadow-sm space-y-3.5">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+            <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h2 class="text-base font-bold text-slate-900 dark:text-white">积分收支走势</h2>
+          </div>
+        </div>
+        
+        <!-- Day / Week / Month Mode Toggle -->
+        <div class="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl text-xs font-bold">
+          <button onclick="changeChartMode('day')" id="chartBtnDay" class="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-700 shadow-sm text-indigo-600 dark:text-indigo-400 transition">日</button>
+          <button onclick="changeChartMode('week')" id="chartBtnWeek" class="px-3 py-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 transition">周</button>
+          <button onclick="changeChartMode('month')" id="chartBtnMonth" class="px-3 py-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 transition">月</button>
+        </div>
+      </div>
+
+      <!-- Chart Canvas Container -->
+      <div class="w-full h-52 relative pt-2">
+        <canvas id="analyticsChartCanvas"></canvas>
+      </div>
     </div>
 
     <!-- Filter & Monthly Stream Section -->
@@ -393,8 +421,8 @@
     <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl border border-slate-200/50 dark:border-slate-800 max-h-[88vh] overflow-y-auto no-scrollbar">
       <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
         <div>
-          <h3 class="text-xl font-bold">管理预设与必做任务</h3>
-          <p class="text-xs text-slate-400 mt-0.5">设为“每日必做”后将在主页展示快捷打卡</p>
+          <h3 class="text-xl font-bold">管理常用预设与快捷清单</h3>
+          <p class="text-xs text-slate-400 mt-0.5">设为“快捷清单”后将在主页展示快捷点击打卡</p>
         </div>
         <button onclick="closeModal('presetModal')" class="p-1.5 rounded-full text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">
           <i data-lucide="x" class="w-5 h-5"></i>
@@ -421,7 +449,7 @@
           <div class="flex items-center gap-2 px-1">
             <label class="flex items-center gap-2.5 cursor-pointer select-none text-sm font-semibold text-slate-700 dark:text-slate-300">
               <input type="checkbox" id="newPresetIsDaily" class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500" />
-              <span>设为【每日必做】任务（主页每日 24:00 重置）</span>
+              <span>加入主页【常用快捷清单】(点击一键记录)</span>
             </label>
           </div>
           <button onclick="addPreset()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold transition shadow-md shadow-indigo-600/20">
@@ -461,6 +489,8 @@
     let currentTab = 'all';
     let fileSha = null;
     let isSyncing = false;
+    let chartMode = 'day'; // 'day' | 'week' | 'month'
+    let analyticsChartInstance = null;
     
     let expandedMonths = new Set();
     let expandedDays = new Set();
@@ -679,7 +709,8 @@
     // Master Render
     function renderAll() {
       renderDashboard();
-      renderDailyRoutines();
+      renderQuickRoutines();
+      renderAnalyticsChart();
       renderMonthlyGroupedRecords();
       renderModalPresetChips();
       lucide.createIcons();
@@ -706,65 +737,72 @@
       document.getElementById('settingInitialScore').value = initial;
     }
 
-    // Daily Routines Checklist Render
-    function renderDailyRoutines() {
-      const container = document.getElementById('dailyTasksGrid');
-      const progressBadge = document.getElementById('dailyProgressBadge');
+    // ================= QUICK ROUTINES CHECKLIST (快捷清单) =================
+    function renderQuickRoutines() {
+      const container = document.getElementById('quickTasksGrid');
+      const progressBadge = document.getElementById('quickProgressBadge');
       if (!container) return;
       container.innerHTML = '';
 
-      const dailyPresets = (appData.presets || []).filter(p => p.isDaily === true);
+      const quickPresets = (appData.presets || []).filter(p => p.isDaily === true);
       const todayStr = getLocalDateString(new Date());
-
       const todayRecords = appData.records.filter(r => r.timestamp && r.timestamp.startsWith(todayStr));
 
-      if (dailyPresets.length === 0) {
+      if (quickPresets.length === 0) {
         container.innerHTML = `
           <div class="col-span-full py-4 px-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-dashed border-slate-200 dark:border-slate-800 text-center">
-            <p class="text-sm text-slate-400 mb-1.5">还没有设置每日必做任务</p>
+            <p class="text-sm text-slate-400 mb-1.5">还没有添加常用快捷事项</p>
             <button onclick="openPresetManagerModal()" class="text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:underline">
-              + 前往预设库设置每日必做
+              + 前往预设库勾选常用快捷
             </button>
           </div>
         `;
-        progressBadge.innerText = '0/0';
+        progressBadge.innerText = '0 项';
         return;
       }
 
-      let completedCount = 0;
-      let todayPointsEarned = 0;
+      let todayCompletedCount = 0;
 
-      dailyPresets.forEach(preset => {
+      quickPresets.forEach(preset => {
         const matchRecord = todayRecords.find(r => (r.presetId && r.presetId === preset.id) || (r.title === preset.title && r.type === preset.type));
         const isDone = !!matchRecord;
+        if (isDone) todayCompletedCount++;
 
-        if (isDone) {
-          completedCount++;
-          todayPointsEarned += (matchRecord.points || preset.points);
+        const isReward = preset.type === 'reward';
+        const isPenalty = preset.type === 'penalty';
+        
+        let colorTag = 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60';
+        let prefix = '+';
+        if (isPenalty) {
+          colorTag = 'text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/60';
+          prefix = '-';
+        } else if (preset.type === 'expense') {
+          colorTag = 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60';
+          prefix = '-';
         }
 
         const taskCard = document.createElement('div');
         taskCard.className = `group flex items-center justify-between p-3.5 rounded-2xl border transition active:scale-[0.98] cursor-pointer ${
           isDone 
-            ? 'bg-emerald-50/80 border-emerald-200 dark:bg-emerald-950/40 dark:border-emerald-900/60' 
+            ? 'bg-emerald-50/70 border-emerald-200/80 dark:bg-emerald-950/30 dark:border-emerald-900/50' 
             : 'bg-slate-50/90 hover:bg-slate-100 dark:bg-slate-850 dark:hover:bg-slate-800 border-slate-200/80 dark:border-slate-800'
         }`;
 
-        taskCard.onclick = (e) => toggleDailyRoutineTask(preset, isDone, matchRecord ? matchRecord.id : null, e);
+        taskCard.onclick = (e) => triggerQuickRoutineRecord(preset, isDone, matchRecord ? matchRecord.id : null, e);
 
         taskCard.innerHTML = `
           <div class="flex items-center gap-3 min-w-0">
             <div class="w-7 h-7 rounded-xl flex items-center justify-center transition-all ${
               isDone 
-                ? 'bg-emerald-500 text-white shadow-sm shadow-emerald-500/30 ring-2 ring-emerald-400/20' 
-                : 'border-2 border-slate-300 dark:border-slate-600 text-transparent group-hover:border-indigo-400'
+                ? 'bg-emerald-500 text-white shadow-sm shadow-emerald-500/30' 
+                : 'border-2 border-slate-300 dark:border-slate-600 text-slate-400 group-hover:border-indigo-400'
             }">
-              <i data-lucide="check" class="w-4 h-4 stroke-[3]"></i>
+              <i data-lucide="${isDone ? 'check' : 'zap'}" class="w-4 h-4 ${isDone ? 'stroke-[3]' : ''}"></i>
             </div>
             <div class="min-w-0">
               <span class="text-sm font-bold tracking-tight block truncate ${
                 isDone 
-                  ? 'text-emerald-900 dark:text-emerald-200 line-through opacity-80' 
+                  ? 'text-emerald-900 dark:text-emerald-200 opacity-90' 
                   : 'text-slate-800 dark:text-slate-200'
               }">${preset.title}</span>
               ${preset.category ? `<span class="text-xs text-slate-400">${preset.category}</span>` : ''}
@@ -772,27 +810,23 @@
           </div>
 
           <div class="flex items-center gap-1.5 flex-shrink-0">
-            <span class="text-sm font-extrabold font-mono px-2.5 py-1 rounded-xl ${
-              isDone 
-                ? 'bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300' 
-                : 'bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400'
-            }">
-              +${preset.points}
+            <span class="text-sm font-extrabold font-mono px-2.5 py-1 rounded-xl ${colorTag}">
+              ${prefix}${preset.points}
             </span>
           </div>
         `;
         container.appendChild(taskCard);
       });
 
-      progressBadge.innerText = `${completedCount}/${dailyPresets.length} 完成 · +${todayPointsEarned} pts`;
-      if (completedCount === dailyPresets.length && dailyPresets.length > 0) {
+      progressBadge.innerText = `今日已记 ${todayCompletedCount}/${quickPresets.length} 项`;
+      if (todayCompletedCount === quickPresets.length && quickPresets.length > 0) {
         progressBadge.className = "text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300";
       } else {
         progressBadge.className = "text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400";
       }
     }
 
-    function toggleDailyRoutineTask(preset, isDone, existingRecordId, event) {
+    function triggerQuickRoutineRecord(preset, isDone, existingRecordId, event) {
       const todayStr = getLocalDateString(new Date());
 
       if (!isDone) {
@@ -804,9 +838,9 @@
           type: preset.type || 'reward',
           title: preset.title,
           points: preset.points,
-          category: preset.category || '每日必做',
+          category: preset.category || '快捷录入',
           timestamp: nowIso,
-          note: '每日必做打卡'
+          note: '快捷清单一键记录'
         };
 
         appData.records.unshift(newRecord);
@@ -816,24 +850,21 @@
         saveLocalStorage();
         renderAll();
 
-        SoundEffects.playReward();
-        triggerConfetti(event ? event.clientX : null, event ? event.clientY : null);
-
-        const dailyPresets = (appData.presets || []).filter(p => p.isDaily === true);
-        const todayRecords = appData.records.filter(r => r.timestamp && r.timestamp.startsWith(todayStr));
-        const allDone = dailyPresets.every(p => todayRecords.some(r => (r.presetId && r.presetId === p.id) || (r.title === p.title && r.type === p.type)));
-        if (allDone) {
-          setTimeout(() => {
-            SoundEffects.playCompleteAll();
-            showToast('🌟 太棒了！今日必做任务全部完成！');
-          }, 300);
+        if (preset.type === 'reward') {
+          SoundEffects.playReward();
+          triggerConfetti(event ? event.clientX : null, event ? event.clientY : null);
+        } else if (preset.type === 'penalty') {
+          SoundEffects.playPenalty();
         } else {
-          showToast(`✅ 完成打卡：${preset.title} (+${preset.points})`);
+          SoundEffects.playExpense();
         }
 
+        const sign = preset.type === 'reward' ? '+' : '-';
+        showToast(`⚡ 快捷记录成功：${preset.title} (${sign}${preset.points})`);
         triggerBackgroundSync();
 
       } else {
+        // Tap done item to undo today's record
         if (!existingRecordId) {
           const rec = appData.records.find(r => r.timestamp && r.timestamp.startsWith(todayStr) && (r.presetId === preset.id || (r.title === preset.title && r.type === preset.type)));
           if (rec) existingRecordId = rec.id;
@@ -843,10 +874,170 @@
           appData.records = appData.records.filter(r => r.id !== existingRecordId);
           saveLocalStorage();
           renderAll();
-          showToast(`已撤销今天【${preset.title}】的打卡`);
+          showToast(`已撤销今天【${preset.title}】的记录`);
           triggerBackgroundSync();
         }
       }
+    }
+
+    // ================= CHART.JS ANALYTICS ENGINE (DAY / WEEK / MONTH) =================
+    function changeChartMode(mode) {
+      chartMode = mode;
+      ['day', 'week', 'month'].forEach(m => {
+        const btn = document.getElementById('chartBtn' + m.charAt(0).toUpperCase() + m.slice(1));
+        if (m === mode) {
+          btn.className = "px-3 py-1.5 rounded-lg bg-white dark:bg-slate-700 shadow-sm text-indigo-600 dark:text-indigo-400 font-bold transition";
+        } else {
+          btn.className = "px-3 py-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 transition";
+        }
+      });
+      renderAnalyticsChart();
+    }
+
+    function renderAnalyticsChart() {
+      const canvas = document.getElementById('analyticsChartCanvas');
+      if (!canvas) return;
+      const isDark = document.documentElement.classList.contains('dark');
+      const textColor = isDark ? '#94a3b8' : '#64748b';
+      const gridColor = isDark ? 'rgba(51, 65, 85, 0.4)' : 'rgba(226, 232, 240, 0.7)';
+
+      let labels = [];
+      let rewardData = [];
+      let deductionData = [];
+
+      if (chartMode === 'day') {
+        // Last 7 days
+        for (let i = 6; i >= 0; i--) {
+          const d = new Date();
+          d.setDate(d.getDate() - i);
+          const dateStr = getLocalDateString(d);
+          const monthDay = `${d.getMonth() + 1}/${d.getDate()}`;
+          labels.push(i === 0 ? '今天' : monthDay);
+
+          let rSum = 0;
+          let dSum = 0;
+          appData.records.forEach(r => {
+            if (r.timestamp && r.timestamp.startsWith(dateStr)) {
+              const pts = Number(r.points) || 0;
+              if (r.type === 'reward') rSum += pts;
+              else dSum += pts;
+            }
+          });
+          rewardData.push(rSum);
+          deductionData.push(dSum);
+        }
+      } else if (chartMode === 'week') {
+        // Last 6 weeks (7-day intervals)
+        for (let w = 5; w >= 0; w--) {
+          const endD = new Date();
+          endD.setDate(endD.getDate() - w * 7);
+          const startD = new Date(endD);
+          startD.setDate(startD.getDate() - 6);
+
+          const labelStr = w === 0 ? '本周' : `${startD.getMonth() + 1}.${startD.getDate()}-${endD.getMonth() + 1}.${endD.getDate()}`;
+          labels.push(labelStr);
+
+          const startStr = getLocalDateString(startD);
+          const endStr = getLocalDateString(endD);
+
+          let rSum = 0;
+          let dSum = 0;
+          appData.records.forEach(r => {
+            if (r.timestamp) {
+              const rDate = r.timestamp.slice(0, 10);
+              if (rDate >= startStr && rDate <= endStr) {
+                const pts = Number(r.points) || 0;
+                if (r.type === 'reward') rSum += pts;
+                else dSum += pts;
+              }
+            }
+          });
+          rewardData.push(rSum);
+          deductionData.push(dSum);
+        }
+      } else if (chartMode === 'month') {
+        // Last 6 calendar months
+        const now = new Date();
+        for (let m = 5; m >= 0; m--) {
+          const target = new Date(now.getFullYear(), now.getMonth() - m, 1);
+          const monthStr = `${target.getFullYear()}-${String(target.getMonth() + 1).padStart(2, '0')}`;
+          labels.push(`${target.getMonth() + 1}月`);
+
+          let rSum = 0;
+          let dSum = 0;
+          appData.records.forEach(r => {
+            if (r.timestamp && r.timestamp.startsWith(monthStr)) {
+              const pts = Number(r.points) || 0;
+              if (r.type === 'reward') rSum += pts;
+              else dSum += pts;
+            }
+          });
+          rewardData.push(rSum);
+          deductionData.push(dSum);
+        }
+      }
+
+      if (analyticsChartInstance) {
+        analyticsChartInstance.destroy();
+      }
+
+      analyticsChartInstance = new Chart(canvas, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: '奖励 (+)',
+              data: rewardData,
+              backgroundColor: '#10b981',
+              borderRadius: 6,
+              barPercentage: 0.5,
+            },
+            {
+              label: '扣除/支出 (-)',
+              data: deductionData,
+              backgroundColor: '#f43f5e',
+              borderRadius: 6,
+              barPercentage: 0.5,
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: { duration: 350 },
+          plugins: {
+            legend: {
+              position: 'top',
+              align: 'end',
+              labels: {
+                boxWidth: 10,
+                boxHeight: 10,
+                color: textColor,
+                font: { size: 11, weight: 'bold' }
+              }
+            },
+            tooltip: {
+              backgroundColor: isDark ? '#0f172a' : '#1e293b',
+              padding: 10,
+              titleFont: { size: 12, weight: 'bold' },
+              bodyFont: { size: 12 },
+              cornerRadius: 10
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { color: textColor, font: { size: 11, weight: 'bold' } }
+            },
+            y: {
+              grid: { color: gridColor },
+              ticks: { color: textColor, font: { size: 10 } },
+              beginAtZero: true
+            }
+          }
+        }
+      });
     }
 
     // Modal Preset Chips
@@ -921,7 +1112,7 @@
             title: item.title,
             points: item.points,
             category: '',
-            isDaily: false
+            isDaily: true
           });
           addedCount++;
         }
@@ -930,7 +1121,7 @@
       if (addedCount > 0) {
         saveLocalStorage();
         renderAll();
-        showToast(`✅ 已将 ${addedCount} 项存为常用预设！`);
+        showToast(`✅ 已将 ${addedCount} 项存为常用预设并加入快捷清单！`);
         triggerBackgroundSync();
       } else {
         showToast('该事项已存在于预设中');
@@ -1441,9 +1632,9 @@
               p.isDaily 
                 ? 'bg-amber-500 text-white shadow-xs' 
                 : 'bg-slate-200 dark:bg-slate-700 text-slate-500 hover:bg-slate-300'
-            }" title="切换是否为每日必做任务">
-              <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
-              <span>${p.isDaily ? '每日必做' : '设为必做'}</span>
+            }" title="切换是否加入主页常用快捷清单">
+              <i data-lucide="zap" class="w-3.5 h-3.5"></i>
+              <span>${p.isDaily ? '快捷清单' : '设为快捷'}</span>
             </button>
             <button onclick="deletePreset('${p.id}')" class="text-slate-400 hover:text-rose-500 p-1.5">
               <i data-lucide="trash-2" class="w-4 h-4"></i>
@@ -1461,7 +1652,7 @@
         p.isDaily = !p.isDaily;
         saveLocalStorage();
         renderPresetManagerList();
-        renderDailyRoutines();
+        renderQuickRoutines();
         triggerBackgroundSync();
       }
     }
@@ -1782,6 +1973,7 @@
         document.getElementById('themeIcon').setAttribute('data-lucide', 'sun');
       }
       lucide.createIcons();
+      renderAnalyticsChart(); // Re-render chart colors for theme change
     }
 
     function showToast(msg) {
