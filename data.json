@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-09-08T15:03:08.137Z"
+    "lastUpdated": "2026-09-09T14:36:46.336Z"
   },
   "presets": [
     {
@@ -114,6 +114,35 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1788964606336_20jq9",
+      "type": "penalty",
+      "title": "抖音超时",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-09-09T22:36",
+      "note": ""
+    },
+    {
+      "id": "rec_1788964602495_cpxjg",
+      "presetId": "p_1786775070190_00c5",
+      "type": "reward",
+      "title": "运动",
+      "points": 2,
+      "category": "健康",
+      "timestamp": "2026-09-09T22:36",
+      "note": "快捷清单一键记录"
+    },
+    {
+      "id": "rec_1788964601583_7gkfh",
+      "presetId": "p_1786775047388_dh0b",
+      "type": "reward",
+      "title": "看英语视频30分钟",
+      "points": 1,
+      "category": "学习",
+      "timestamp": "2026-09-09T22:36",
+      "note": "快捷清单一键记录"
+    },
     {
       "id": "rec_1788879788137_56yoj",
       "type": "penalty",
