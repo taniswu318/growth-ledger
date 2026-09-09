@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-09-09T14:36:46.336Z"
+    "lastUpdated": "2026-09-09T14:37:35.357Z"
   },
   "presets": [
     {
@@ -114,6 +114,16 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1788964655357_6wgzv",
+      "presetId": "p_1786775136082_4kji",
+      "type": "reward",
+      "title": "洗碗",
+      "points": 1,
+      "category": "生活",
+      "timestamp": "2026-09-09T22:37",
+      "note": "快捷清单一键记录"
+    },
     {
       "id": "rec_1788964606336_20jq9",
       "type": "penalty",
