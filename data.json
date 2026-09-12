@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-09-11T15:54:11.138Z"
+    "lastUpdated": "2026-09-12T10:20:02.236Z"
   },
   "presets": [
     {
@@ -111,6 +111,14 @@
       "title": "抖音超时",
       "points": 1,
       "category": ""
+    },
+    {
+      "id": "p_1789208402236_nyhd",
+      "type": "reward",
+      "points": 2,
+      "title": "看英语视频60分钟",
+      "category": "学习",
+      "isDaily": false
     }
   ],
   "records": [
