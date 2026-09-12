@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-09-12T10:20:02.236Z"
+    "lastUpdated": "2026-09-12T10:20:10.207Z"
   },
   "presets": [
     {
@@ -118,10 +118,20 @@
       "points": 2,
       "title": "看英语视频60分钟",
       "category": "学习",
-      "isDaily": false
+      "isDaily": true
     }
   ],
   "records": [
+    {
+      "id": "rec_1789208410207_qnlae",
+      "presetId": "p_1789208402236_nyhd",
+      "type": "reward",
+      "title": "看英语视频60分钟",
+      "points": 2,
+      "category": "学习",
+      "timestamp": "2026-09-12T18:20",
+      "note": "快捷清单一键记录"
+    },
     {
       "id": "rec_1789142051138_qlwh0",
       "type": "penalty",
