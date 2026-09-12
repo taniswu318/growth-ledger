@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-09-12T16:24:53.315Z"
+    "lastUpdated": "2026-09-12T16:25:24.672Z"
   },
   "presets": [
     {
@@ -122,6 +122,15 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1789230324672_an74i",
+      "type": "reward",
+      "title": "做单杠",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-09-12T23:25",
+      "note": ""
+    },
     {
       "id": "rec_1789230293315_zjbtq",
       "type": "penalty",
