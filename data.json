@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-09-12T16:25:24.672Z"
+    "lastUpdated": "2026-09-13T05:30:46.349Z"
   },
   "presets": [
     {
@@ -122,6 +122,16 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1789277446349_rzpjb",
+      "presetId": "p_1786775184252_e23s",
+      "type": "reward",
+      "title": "拖地",
+      "points": 1,
+      "category": "生活",
+      "timestamp": "2026-09-13T13:30",
+      "note": "快捷清单一键记录"
+    },
     {
       "id": "rec_1789230324672_an74i",
       "type": "reward",
