@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-09-13T14:15:40.700Z"
+    "lastUpdated": "2026-09-13T15:04:31.033Z"
   },
   "presets": [
     {
@@ -81,7 +81,8 @@
       "type": "penalty",
       "points": 1,
       "title": "11点钟后睡觉",
-      "category": "生活"
+      "category": "生活",
+      "isDaily": true
     },
     {
       "id": "p_1786775530561_b81g",
