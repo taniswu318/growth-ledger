@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-09-14T14:09:43.350Z"
+    "lastUpdated": "2026-09-14T14:09:47.466Z"
   },
   "presets": [
     {
@@ -123,6 +123,16 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1789394987466_d83yt",
+      "presetId": "p_1786775100157_4ad6",
+      "type": "reward",
+      "title": "英语跟读",
+      "points": 1,
+      "category": "学习",
+      "timestamp": "2026-09-14T22:09",
+      "note": "快捷清单一键记录"
+    },
     {
       "id": "rec_1789394983350_mob32",
       "presetId": "p_1786775150395_dz4w",
