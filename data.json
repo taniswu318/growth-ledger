@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-09-16T16:37:54.567Z"
+    "lastUpdated": "2026-09-16T16:38:04.868Z"
   },
   "presets": [
     {
@@ -73,14 +73,6 @@
       "type": "reward",
       "points": 1,
       "title": "11点钟前睡觉",
-      "category": "生活",
-      "isDaily": true
-    },
-    {
-      "id": "p_1786775292694_ohr6",
-      "type": "penalty",
-      "points": 1,
-      "title": "11点钟后睡觉",
       "category": "生活",
       "isDaily": true
     },
