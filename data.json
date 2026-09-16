@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-09-16T16:19:22.423Z"
+    "lastUpdated": "2026-09-16T16:37:37.093Z"
   },
   "presets": [
     {
@@ -120,6 +120,14 @@
       "title": "看英语视频60分钟",
       "category": "学习",
       "isDaily": true
+    },
+    {
+      "id": "p_1789576657093_w8t8",
+      "type": "penalty",
+      "points": 1,
+      "title": "超过11点睡觉",
+      "category": "生活",
+      "isDaily": false
     }
   ],
   "records": [
