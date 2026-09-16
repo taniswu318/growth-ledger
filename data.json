@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-09-16T16:07:26.573Z"
+    "lastUpdated": "2026-09-16T16:19:22.423Z"
   },
   "presets": [
     {
@@ -123,6 +123,15 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1789575562423_o4lez",
+      "type": "reward",
+      "title": "洗碗",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-09-16T23:19",
+      "note": ""
+    },
     {
       "id": "rec_1789574846573_mquxy",
       "type": "penalty",
