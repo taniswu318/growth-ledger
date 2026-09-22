@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-09-22T13:28:43.974Z"
+    "lastUpdated": "2026-09-22T14:16:02.451Z"
   },
   "presets": [
     {
@@ -131,6 +131,16 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1790086562451_ekm5n",
+      "presetId": "p_1786775888497_zfo3",
+      "type": "reward",
+      "title": "看书",
+      "points": 1,
+      "category": "学习",
+      "timestamp": "2026-09-22T22:16",
+      "note": "快捷清单一键记录"
+    },
     {
       "id": "rec_1790083723974_nswbq",
       "presetId": "p_1789208402236_nyhd",
