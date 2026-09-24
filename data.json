@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-09-23T15:13:10.563Z"
+    "lastUpdated": "2026-09-24T13:20:22.938Z"
   },
   "presets": [
     {
@@ -131,6 +131,24 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1790256022939_7vgh7",
+      "type": "reward",
+      "title": "看英语视频60分钟",
+      "points": 2,
+      "category": "",
+      "timestamp": "2026-09-24T21:19",
+      "note": ""
+    },
+    {
+      "id": "rec_1790256022938_e10sr",
+      "type": "reward",
+      "title": "运动",
+      "points": 3,
+      "category": "",
+      "timestamp": "2026-09-24T21:19",
+      "note": ""
+    },
     {
       "id": "rec_1790176390563_n5hui",
       "presetId": "p_1789576657093_w8t8",
