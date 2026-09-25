@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-09-24T15:35:37.054Z"
+    "lastUpdated": "2026-09-25T13:20:09.926Z"
   },
   "presets": [
     {
@@ -131,6 +131,26 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1790342409926_sogze",
+      "presetId": "p_1789208402236_nyhd",
+      "type": "reward",
+      "title": "看英语视频60分钟",
+      "points": 2,
+      "category": "学习",
+      "timestamp": "2026-09-25T21:20",
+      "note": "快捷清单一键记录"
+    },
+    {
+      "id": "rec_1790342408514_77s93",
+      "presetId": "p_1786775070190_00c5",
+      "type": "reward",
+      "title": "运动",
+      "points": 2,
+      "category": "健康",
+      "timestamp": "2026-09-25T21:20",
+      "note": "快捷清单一键记录"
+    },
     {
       "id": "rec_1790264137054_9pbzx",
       "presetId": "p_1786775170269_d2k7",
