@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-09-25T13:20:09.926Z"
+    "lastUpdated": "2026-09-25T14:36:53.269Z"
   },
   "presets": [
     {
@@ -131,6 +131,15 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1790347013269_ukvld",
+      "type": "penalty",
+      "title": "叫洗澡不听",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-09-25T22:35",
+      "note": ""
+    },
     {
       "id": "rec_1790342409926_sogze",
       "presetId": "p_1789208402236_nyhd",
