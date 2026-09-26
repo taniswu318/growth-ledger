@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-09-26T15:45:00.281Z"
+    "lastUpdated": "2026-09-26T15:45:16.876Z"
   },
   "presets": [
     {
@@ -131,6 +131,15 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1790437516876_01wm6",
+      "type": "expense",
+      "title": "《我的世界》充值",
+      "points": 80,
+      "category": "",
+      "timestamp": "2026-09-26T23:45",
+      "note": ""
+    },
     {
       "id": "rec_1790437344273_hf5lt",
       "presetId": "p_1786775170269_d2k7",
