@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-09-25T15:39:05.896Z"
+    "lastUpdated": "2026-09-26T05:17:12.857Z"
   },
   "presets": [
     {
@@ -131,6 +131,16 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1790399832857_3tmg8",
+      "presetId": "p_1786775150395_dz4w",
+      "type": "reward",
+      "title": "遛小白",
+      "points": 1,
+      "category": "生活",
+      "timestamp": "2026-09-26T13:17",
+      "note": "快捷清单一键记录"
+    },
     {
       "id": "rec_1790350745896_6e664",
       "type": "penalty",
