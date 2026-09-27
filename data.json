@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-09-27T11:59:44.831Z"
+    "lastUpdated": "2026-09-27T11:59:50.746Z"
   },
   "presets": [
     {
@@ -77,20 +77,20 @@
       "isDaily": true
     },
     {
-      "id": "p_1789576657093_w8t8",
-      "type": "penalty",
-      "points": 1,
-      "title": "超过11点睡觉",
-      "category": "生活",
-      "isDaily": true
-    },
-    {
       "id": "p_1790510367866_qa6f",
       "type": "reward",
       "points": 0.5,
       "title": "遛小白",
       "category": "生活",
       "isDaily": false
+    },
+    {
+      "id": "p_1789576657093_w8t8",
+      "type": "penalty",
+      "points": 1,
+      "title": "超过11点睡觉",
+      "category": "生活",
+      "isDaily": true
     },
     {
       "id": "p_1789576669785_xxyp",
