@@ -75,7 +75,6 @@
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
     }
-    /* Drag and drop sorting helper classes */
     .sortable-ghost {
       opacity: 0.35;
       transform: scale(0.97);
@@ -98,7 +97,13 @@
           ✦
         </div>
         <div>
-          <h1 class="text-lg font-bold tracking-tight text-slate-900 dark:text-white leading-tight">成长零用积分本</h1>
+          <div class="flex items-center gap-1.5">
+            <h1 class="text-lg font-bold tracking-tight text-slate-900 dark:text-white leading-tight">成长零用积分本</h1>
+            <!-- Header Version Badge -->
+            <span id="appVersionHeaderBadge" class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-md bg-slate-200/70 dark:bg-slate-800 text-slate-500 dark:text-slate-400">
+              v...
+            </span>
+          </div>
           <p id="syncStatusBadge" class="text-xs text-slate-400 dark:text-slate-500 font-medium flex items-center gap-1 mt-0.5">
             <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span> 本地就绪
           </p>
@@ -427,6 +432,19 @@
             <input type="file" id="importFileInput" accept=".json" class="hidden" onchange="importDataJson(event)" />
           </div>
         </div>
+
+        <!-- NEW: System Information & Build Version Display -->
+        <div class="p-4 rounded-2xl bg-slate-100/70 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60 flex items-center justify-between">
+          <div>
+            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider">系统版本 / Build Version</h4>
+            <p id="appVersionSettingsText" class="text-sm font-mono font-bold text-slate-800 dark:text-slate-200 mt-0.5">
+              v...
+            </p>
+          </div>
+          <span class="text-xs font-semibold px-2.5 py-1 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900/40">
+            最新构建
+          </span>
+        </div>
       </div>
     </div>
   </div>
@@ -445,7 +463,6 @@
       </div>
 
       <div class="space-y-4 pt-4">
-        <!-- Drag Container for Presets -->
         <div id="presetManagerList" class="space-y-2.5 max-h-64 overflow-y-auto pr-1"></div>
 
         <div class="pt-3.5 border-t border-slate-100 dark:border-slate-800 space-y-3.5">
@@ -483,6 +500,9 @@
 
   <!-- ================= JAVASCRIPT LOGIC ================= -->
   <script>
+    // Build version generated based on current release timestamp
+    const APP_VERSION = "2026.09.27.2020";
+
     const STORAGE_KEY = 'STAR_LEDGER_DATA_V2';
     const GITHUB_CFG_KEY = 'STAR_LEDGER_GH_CONFIG';
 
@@ -638,6 +658,7 @@
       expandedMonths.add(currentMonthStr);
       expandedDays.add(todayStr);
 
+      renderVersionInfo();
       renderAll();
       initTheme();
       lucide.createIcons();
@@ -646,6 +667,14 @@
         smartSync(true);
       }
     });
+
+    // Render Version Info to UI
+    function renderVersionInfo() {
+      const headerBadge = document.getElementById('appVersionHeaderBadge');
+      const settingsText = document.getElementById('appVersionSettingsText');
+      if (headerBadge) headerBadge.innerText = 'v' + APP_VERSION;
+      if (settingsText) settingsText.innerText = 'v' + APP_VERSION;
+    }
 
     function formatMonthTitle(monthKey) {
       const [year, month] = monthKey.split('-');
@@ -797,7 +826,6 @@
 
         taskCard.innerHTML = `
           <div class="flex items-center gap-2.5 min-w-0 flex-1 cursor-pointer" onclick="handleCardClick('${preset.id}', ${isDone}, '${matchRecord ? matchRecord.id : ''}', event)">
-            <!-- Drag Handle Icon -->
             <div class="drag-handle text-slate-300 hover:text-slate-600 dark:text-slate-600 dark:hover:text-slate-300 p-1 -ml-1 cursor-grab active:cursor-grabbing flex-shrink-0" onclick="event.stopPropagation()">
               <i data-lucide="grip-vertical" class="w-4 h-4"></i>
             </div>
@@ -836,10 +864,8 @@
         progressBadge.className = "text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400";
       }
 
-      // Re-trigger Lucide icon parsing for dynamic cards
       lucide.createIcons();
 
-      // Initialize or refresh SortableJS on Quick Tasks Grid
       if (quickSortable) quickSortable.destroy();
       quickSortable = new Sortable(container, {
         handle: '.drag-handle',
@@ -1701,10 +1727,8 @@
         container.appendChild(item);
       });
 
-      // Ensure all drag handles and icons convert to SVG immediately
       lucide.createIcons();
 
-      // Initialize SortableJS on Presets Manager list
       if (presetSortable) presetSortable.destroy();
       presetSortable = new Sortable(container, {
         handle: '.drag-handle',
