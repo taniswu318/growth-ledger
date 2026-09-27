@@ -1,16 +1,16 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-09-27T11:28:42.710Z"
+    "lastUpdated": "2026-09-27T11:57:32.045Z"
   },
   "presets": [
     {
-      "id": "p_1786775047388_dh0b",
+      "id": "p_1789208402236_nyhd",
       "type": "reward",
-      "points": 1,
-      "title": "看英语视频30分钟",
+      "points": 2,
+      "title": "看英语视频60分钟",
       "category": "学习",
-      "isDaily": false
+      "isDaily": true
     },
     {
       "id": "p_1786775070190_00c5",
@@ -77,39 +77,10 @@
       "isDaily": true
     },
     {
-      "id": "p_1786775530561_b81g",
-      "type": "penalty",
-      "points": 2,
-      "title": "未做单杠",
-      "category": "健康"
-    },
-    {
       "id": "p_1786775888497_zfo3",
       "type": "reward",
       "points": 1,
       "title": "看书",
-      "category": "学习",
-      "isDaily": true
-    },
-    {
-      "id": "p_1786776155167_sdhy",
-      "type": "penalty",
-      "points": 1,
-      "title": "未喝完水",
-      "category": "健康"
-    },
-    {
-      "id": "p_1786777726937_k50c",
-      "type": "penalty",
-      "title": "抖音超时",
-      "points": 1,
-      "category": ""
-    },
-    {
-      "id": "p_1789208402236_nyhd",
-      "type": "reward",
-      "points": 2,
-      "title": "看英语视频60分钟",
       "category": "学习",
       "isDaily": true
     },
@@ -128,6 +99,35 @@
       "title": "超过12点睡觉",
       "category": "生活",
       "isDaily": true
+    },
+    {
+      "id": "p_1786775047388_dh0b",
+      "type": "reward",
+      "points": 1,
+      "title": "看英语视频30分钟",
+      "category": "学习",
+      "isDaily": false
+    },
+    {
+      "id": "p_1786775530561_b81g",
+      "type": "penalty",
+      "points": 2,
+      "title": "未做单杠",
+      "category": "健康"
+    },
+    {
+      "id": "p_1786776155167_sdhy",
+      "type": "penalty",
+      "points": 1,
+      "title": "未喝完水",
+      "category": "健康"
+    },
+    {
+      "id": "p_1786777726937_k50c",
+      "type": "penalty",
+      "title": "抖音超时",
+      "points": 1,
+      "category": ""
     }
   ],
   "records": [
