@@ -1,0 +1,2083 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>星轨积分本 · Ledger</title>
+  <!-- iOS PWA meta -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="成长积分本" />
+  <meta name="theme-color" content="#0f172a" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <!-- Chart.js CDN for Analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <!-- SortableJS CDN for Touch & Drag Reordering -->
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+          },
+          colors: {
+            brand: { 50: '#f0fdf4', 500: '#10b981', 600: '#059669' },
+            danger: { 50: '#fef2f2', 500: '#ef4444', 600: '#dc2626' },
+            expense: { 50: '#eff6ff', 500: '#3b82f6', 600: '#2563eb' }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    input, textarea, select {
+      user-select: auto;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    input[type="datetime-local"] {
+      min-height: 2.8rem;
+      display: block;
+      width: 100%;
+    }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+    .dark .glass-card {
+      background: rgba(30, 41, 59, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+    /* Drag and drop sorting helper classes */
+    .sortable-ghost {
+      opacity: 0.35;
+      transform: scale(0.97);
+    }
+    .sortable-chosen {
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    }
+    .drag-handle {
+      touch-action: none;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans transition-colors duration-200 text-sm">
+
+  <!-- Top App Bar -->
+  <header class="sticky top-0 z-30 px-4 pt-3 pb-3 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200/60 dark:border-slate-800/60 transition-colors">
+    <div class="max-w-2xl mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-2.5">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-indigo-600 flex items-center justify-center text-white shadow-sm font-bold text-lg">
+          ✦
+        </div>
+        <div>
+          <h1 class="text-lg font-bold tracking-tight text-slate-900 dark:text-white leading-tight">成长零用积分本</h1>
+          <p id="syncStatusBadge" class="text-xs text-slate-400 dark:text-slate-500 font-medium flex items-center gap-1 mt-0.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span> 本地就绪
+          </p>
+        </div>
+      </div>
+      
+      <div class="flex items-center space-x-2">
+        <button onclick="smartSync(false)" id="syncBtn" class="p-2.5 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 dark:text-slate-400 transition flex items-center" title="双向智能同步">
+          <i data-lucide="refresh-cw" id="syncIcon" class="w-4 h-4"></i>
+        </button>
+        <button onclick="toggleDarkMode()" class="p-2.5 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 dark:text-slate-400 transition" title="切换暗黑模式">
+          <i data-lucide="moon" id="themeIcon" class="w-4 h-4"></i>
+        </button>
+        <button onclick="openSettingsModal()" class="p-2.5 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 dark:text-slate-400 transition" title="设置">
+          <i data-lucide="settings" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-2xl w-full mx-auto px-4 py-4 space-y-4">
+    
+    <!-- Hero Score & Balance Dashboard -->
+    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white p-5 sm:p-6 shadow-xl shadow-indigo-950/15 border border-indigo-900/30">
+      <div class="absolute -right-8 -top-8 w-40 h-40 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -left-8 -bottom-8 w-32 h-32 bg-amber-500/15 rounded-full blur-2xl pointer-events-none"></div>
+
+      <div class="relative z-10 flex flex-col items-center text-center">
+        <span class="text-sm font-semibold uppercase tracking-wider text-indigo-300/80 mb-1">当前可用结余 / Current Balance</span>
+        <div class="flex items-baseline space-x-2">
+          <span id="currentTotalScore" class="text-5xl sm:text-6xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-amber-200 via-white to-indigo-100">
+            0
+          </span>
+          <span class="text-sm text-indigo-300/80 font-medium">pts / 元</span>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2 w-full mt-5 pt-4 border-t border-white/10">
+          <div class="bg-white/5 rounded-2xl p-2.5 backdrop-blur-sm border border-white/5 flex flex-col items-center">
+            <span class="text-xs text-emerald-300 font-medium flex items-center gap-1">
+              <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i> 累计总奖励
+            </span>
+            <span id="totalRewardScore" class="text-lg font-extrabold text-emerald-400 mt-0.5">+0</span>
+          </div>
+          <div class="bg-white/5 rounded-2xl p-2.5 backdrop-blur-sm border border-white/5 flex flex-col items-center">
+            <span class="text-xs text-rose-300 font-medium flex items-center gap-1">
+              <i data-lucide="arrow-down-right" class="w-3.5 h-3.5"></i> 累计总惩罚
+            </span>
+            <span id="totalPenaltyScore" class="text-lg font-extrabold text-rose-400 mt-0.5">-0</span>
+          </div>
+          <div class="bg-white/5 rounded-2xl p-2.5 backdrop-blur-sm border border-white/5 flex flex-col items-center">
+            <span class="text-xs text-blue-300 font-medium flex items-center gap-1">
+              <i data-lucide="shopping-bag" class="w-3.5 h-3.5"></i> 累计总支出
+            </span>
+            <span id="totalExpenseScore" class="text-lg font-extrabold text-blue-400 mt-0.5">-0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Action Bar -->
+    <div class="grid grid-cols-3 gap-2.5">
+      <button onclick="openRecordModal('reward')" class="flex flex-col sm:flex-row items-center justify-center gap-1.5 py-3.5 px-2 rounded-2xl bg-emerald-500 hover:bg-emerald-600 active:scale-[0.98] text-white font-bold shadow-lg shadow-emerald-500/20 transition">
+        <i data-lucide="plus-circle" class="w-4 h-4"></i>
+        <span class="text-sm">记录奖励 (+)</span>
+      </button>
+      <button onclick="openRecordModal('penalty')" class="flex flex-col sm:flex-row items-center justify-center gap-1.5 py-3.5 px-2 rounded-2xl bg-rose-500 hover:bg-rose-600 active:scale-[0.98] text-white font-bold shadow-lg shadow-rose-500/20 transition">
+        <i data-lucide="minus-circle" class="w-4 h-4"></i>
+        <span class="text-sm">记录惩罚 (-)</span>
+      </button>
+      <button onclick="openRecordModal('expense')" class="flex flex-col sm:flex-row items-center justify-center gap-1.5 py-3.5 px-2 rounded-2xl bg-blue-500 hover:bg-blue-600 active:scale-[0.98] text-white font-bold shadow-lg shadow-blue-500/20 transition">
+        <i data-lucide="shopping-cart" class="w-4 h-4"></i>
+        <span class="text-sm">记录支出 (-)</span>
+      </button>
+    </div>
+
+    <!-- Quick Routines Checklist Card (with Drag & Drop Reorder) -->
+    <div id="quickRoutinesSection" class="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-4 sm:p-5 shadow-sm space-y-3.5">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+            <i data-lucide="zap" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h2 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              常用快捷清单
+              <span id="quickProgressBadge" class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400">今日 0 笔</span>
+            </h2>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-[11px] text-slate-400 hidden sm:inline">长按抓手可拖拽排序</span>
+          <button onclick="openPresetManagerModal()" class="text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-0.5">
+            <span>管理清单</span>
+            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Drag Container -->
+      <div id="quickTasksGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-0.5"></div>
+    </div>
+
+    <!-- Trend Analytics Card (Day / Week / Month Bar Chart) -->
+    <div class="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-4 sm:p-5 shadow-sm space-y-3.5">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+            <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h2 class="text-base font-bold text-slate-900 dark:text-white">积分收支走势</h2>
+          </div>
+        </div>
+        
+        <div class="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl text-xs font-bold">
+          <button onclick="changeChartMode('day')" id="chartBtnDay" class="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-700 shadow-sm text-indigo-600 dark:text-indigo-400 transition">日</button>
+          <button onclick="changeChartMode('week')" id="chartBtnWeek" class="px-3 py-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 transition">周</button>
+          <button onclick="changeChartMode('month')" id="chartBtnMonth" class="px-3 py-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 transition">月</button>
+        </div>
+      </div>
+
+      <div class="w-full h-52 relative pt-2">
+        <canvas id="analyticsChartCanvas"></canvas>
+      </div>
+    </div>
+
+    <!-- Filter & Monthly Stream Section -->
+    <div class="pt-2">
+      <div class="flex items-center justify-between mb-3 px-1">
+        <div class="flex space-x-1.5 bg-slate-200/70 dark:bg-slate-800/70 p-1 rounded-xl text-sm font-medium">
+          <button onclick="switchTab('all')" id="tabAll" class="px-3.5 py-1.5 rounded-lg bg-white dark:bg-slate-700 font-bold shadow-sm transition">全部</button>
+          <button onclick="switchTab('reward')" id="tabReward" class="px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 transition">奖励</button>
+          <button onclick="switchTab('penalty')" id="tabPenalty" class="px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 transition">惩罚</button>
+          <button onclick="switchTab('expense')" id="tabExpense" class="px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 transition">支出</button>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="openPresetManagerModal()" class="text-xs text-slate-500 dark:text-slate-400 font-medium hover:underline">常用预设</button>
+          <span class="text-slate-300 dark:text-slate-700">|</span>
+          <button onclick="toggleExpandAllMonths()" id="toggleAllMonthsBtn" class="text-xs text-indigo-500 font-medium hover:underline">展开全部月份</button>
+        </div>
+      </div>
+
+      <div id="monthlyGroupedList" class="space-y-4 pb-20"></div>
+
+      <div id="emptyState" class="hidden py-14 text-center text-slate-400">
+        <i data-lucide="inbox" class="w-12 h-12 mx-auto stroke-[1.5] mb-2 opacity-50"></i>
+        <p class="text-base font-medium">暂无记录</p>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Modal 1: Batch Record Modal (Supports Decimals) -->
+  <div id="recordModal" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 shadow-2xl border border-slate-200/50 dark:border-slate-800 animate-slide-up overflow-hidden max-h-[92vh] overflow-y-auto no-scrollbar">
+      <div class="flex items-center justify-between pb-3.5 border-b border-slate-100 dark:border-slate-800">
+        <h3 id="recordModalTitle" class="text-xl font-bold">记账录入</h3>
+        <button onclick="closeModal('recordModal')" class="p-1.5 rounded-full text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="recordForm" onsubmit="handleBatchRecordSubmit(event)" class="space-y-4 pt-4">
+        <input type="hidden" id="recordId" value="" />
+        
+        <div>
+          <div class="grid grid-cols-3 gap-2">
+            <button type="button" onclick="selectModalType('reward')" id="modalTypeReward" class="py-2.5 px-3 rounded-xl border text-sm font-bold transition flex items-center justify-center gap-1.5">
+              <i data-lucide="plus" class="w-4 h-4"></i> 奖励 (+)
+            </button>
+            <button type="button" onclick="selectModalType('penalty')" id="modalTypePenalty" class="py-2.5 px-3 rounded-xl border text-sm font-bold transition flex items-center justify-center gap-1.5">
+              <i data-lucide="minus" class="w-4 h-4"></i> 惩罚 (-)
+            </button>
+            <button type="button" onclick="selectModalType('expense')" id="modalTypeExpense" class="py-2.5 px-3 rounded-xl border text-sm font-bold transition flex items-center justify-center gap-1.5">
+              <i data-lucide="shopping-bag" class="w-4 h-4"></i> 支出 (-)
+            </button>
+          </div>
+          <input type="hidden" id="recordType" value="reward" />
+        </div>
+
+        <div class="space-y-2 bg-slate-50 dark:bg-slate-850/60 p-3 rounded-2xl border border-slate-100 dark:border-slate-800">
+          <div class="flex items-center justify-between text-xs font-semibold text-slate-500">
+            <span>常用预设 (点击快速填充)：</span>
+            <button type="button" onclick="saveCurrentInputAsPreset()" class="text-indigo-600 dark:text-indigo-400 font-bold hover:underline">
+              + 存为预设
+            </button>
+          </div>
+          <div id="modalPresetChipsContainer" class="flex flex-wrap gap-2 pt-0.5"></div>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="text-sm font-bold text-slate-700 dark:text-slate-300">事项与金额 (支持小数与多条)</label>
+            <span class="text-xs text-slate-400">格式: 事项 空格 金额, 事项 空格 金额</span>
+          </div>
+          <textarea id="quickInputContent" required rows="3"
+            placeholder="例如: 整理书桌 2.5, 阅读英文书 10.5"
+            oninput="handleBatchPreview(this.value)"
+            class="w-full px-4 py-3 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-transparent focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-850 focus:ring-2 focus:ring-indigo-500/20 text-sm font-medium transition leading-relaxed"></textarea>
+          
+          <div id="batchParsePreviewBox" class="hidden mt-2.5 p-3 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/40 space-y-2">
+            <div class="flex items-center justify-between text-xs font-bold text-indigo-900 dark:text-indigo-200">
+              <span class="flex items-center gap-1.5">
+                <i data-lucide="sparkles" class="w-4 h-4 text-indigo-500"></i>
+                识别到 <b id="parsedItemCount" class="text-sm text-indigo-600 dark:text-indigo-400">0</b> 项
+              </span>
+              <span class="text-xs">本次合计: <b id="parsedTotalPoints" class="font-mono text-sm text-indigo-600 dark:text-indigo-400">0</b></span>
+            </div>
+            <div id="parsedItemsChipContainer" class="flex flex-wrap gap-2 pt-0.5"></div>
+          </div>
+        </div>
+
+        <div class="w-full">
+          <label class="block text-xs font-semibold text-slate-500 mb-1.5">记录时间 (默认为当前时间)</label>
+          <input type="datetime-local" id="recordTimestamp" required
+            class="w-full block px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700/60 text-sm font-medium text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-500 transition" />
+        </div>
+
+        <div class="pt-0.5">
+          <button type="button" onclick="toggleAdvancedFields()" class="text-xs text-slate-400 dark:text-slate-500 flex items-center gap-1.5 hover:text-slate-600 transition">
+            <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
+            <span id="advancedFieldsToggleText">展开分类与备注 (选填，批量应用)</span>
+          </button>
+          
+          <div id="advancedFieldsContainer" class="hidden space-y-2.5 pt-2">
+            <div class="grid grid-cols-2 gap-2.5">
+              <div>
+                <label class="block text-xs font-semibold text-slate-400 mb-1">统一分类</label>
+                <input type="text" id="recordCategory" placeholder="如: 学习、日常"
+                  class="w-full px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border-none text-sm font-medium" />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-400 mb-1">统一备注</label>
+                <input type="text" id="recordNote" placeholder="补充详情..."
+                  class="w-full px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border-none text-sm font-medium" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-2">
+          <button type="submit" id="recordSubmitBtn" class="w-full py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white text-base font-bold shadow-lg shadow-indigo-600/20 active:scale-[0.98] transition">
+            保存全部记录
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 2: Settings & GitHub Sync -->
+  <div id="settingsModal" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl border border-slate-200/50 dark:border-slate-800 max-h-[90vh] overflow-y-auto no-scrollbar">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+        <h3 class="text-xl font-bold">系统设置与同步</h3>
+        <button onclick="closeModal('settingsModal')" class="p-1.5 rounded-full text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-5 pt-4">
+        <div class="p-4 rounded-2xl bg-slate-100/70 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60">
+          <h4 class="text-base font-bold mb-1">起始/继承金额 (零用钱底池)</h4>
+          <p class="text-xs text-slate-500 mb-3">历史结余金额，支持小数（如 100.5）。修改后会自动同步到云端。</p>
+          <div class="flex space-x-2">
+            <input type="number" step="0.01" id="settingInitialScore" placeholder="0.00" class="flex-1 px-4 py-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-base font-bold" />
+            <button onclick="saveInitialScore()" class="px-5 py-2.5 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-xl text-sm font-bold hover:opacity-90">更新金额</button>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-indigo-50/50 dark:bg-indigo-950/30 border border-indigo-100 dark:border-indigo-900/40 space-y-3.5">
+          <div class="flex items-center justify-between">
+            <h4 class="text-base font-bold text-indigo-950 dark:text-indigo-200 flex items-center gap-2">
+              <i data-lucide="github" class="w-4 h-4"></i> GitHub 仓库同步配置
+            </h4>
+          </div>
+          <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+            保存配置后将<b>自动从 GitHub 拉取最新账本</b>，确保多设备数据双向统一。
+          </p>
+
+          <div class="space-y-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 mb-1">GitHub 用户名 (Owner)</label>
+              <input type="text" id="ghOwner" placeholder="例如: yourname" class="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 mb-1">仓库名称 (Repo Name)</label>
+              <input type="text" id="ghRepo" placeholder="例如: score-ledger" class="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 mb-1">分支 (Branch)</label>
+              <input type="text" id="ghBranch" value="main" placeholder="main" class="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 mb-1">Personal Access Token</label>
+              <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxx" class="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm font-mono" />
+            </div>
+          </div>
+
+          <div class="space-y-2 pt-2">
+            <div class="flex gap-2">
+              <button onclick="saveAndPullGitHubConfig()" class="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold shadow transition">
+                保存并立即从云端同步
+              </button>
+              <button onclick="testGitHubConnection()" class="px-4 py-3 bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 rounded-xl text-sm font-bold hover:opacity-90">
+                测试连接
+              </button>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="forcePullFromGitHub()" class="flex-1 py-2.5 bg-slate-200/80 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-bold transition">
+                ☁️ 强制从云端拉取覆盖本地
+              </button>
+              <button onclick="forcePushToGitHub()" class="flex-1 py-2.5 bg-slate-200/80 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-bold transition">
+                🚀 强制推送本地覆盖云端
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-100/70 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60 space-y-2">
+          <h4 class="text-base font-bold">本地文件导入 / 导出</h4>
+          <p class="text-xs text-slate-500">可下载完整数据 JSON 文件进行离线冷备份。</p>
+          <div class="flex gap-2 pt-1.5">
+            <button onclick="exportDataJson()" class="flex-1 py-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50">导出 JSON</button>
+            <button onclick="document.getElementById('importFileInput').click()" class="flex-1 py-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50">导入 JSON</button>
+            <input type="file" id="importFileInput" accept=".json" class="hidden" onchange="importDataJson(event)" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 3: Presets & Routines Manager (With Drag & Drop Reorder) -->
+  <div id="presetModal" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl border border-slate-200/50 dark:border-slate-800 max-h-[88vh] overflow-y-auto no-scrollbar">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+        <div>
+          <h3 class="text-xl font-bold">管理常用预设与快捷清单</h3>
+          <p class="text-xs text-slate-400 mt-0.5">可长按左侧抓手上下拖拽调整显示顺序</p>
+        </div>
+        <button onclick="closeModal('presetModal')" class="p-1.5 rounded-full text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4 pt-4">
+        <!-- Drag Container for Presets -->
+        <div id="presetManagerList" class="space-y-2.5 max-h-64 overflow-y-auto pr-1"></div>
+
+        <div class="pt-3.5 border-t border-slate-100 dark:border-slate-800 space-y-3.5">
+          <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider">手动添加新预设</h4>
+          <div class="grid grid-cols-2 gap-2.5">
+            <select id="newPresetType" class="px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-sm font-semibold">
+              <option value="reward">奖励 (+)</option>
+              <option value="penalty">惩罚 (-)</option>
+              <option value="expense">支出 (-)</option>
+            </select>
+            <input type="number" step="0.01" id="newPresetPoints" placeholder="金额 (如 5 或 2.5)" class="px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-sm font-bold" />
+          </div>
+          <div class="grid grid-cols-2 gap-2.5">
+            <input type="text" id="newPresetTitle" placeholder="事项名称 (如 整理房间)" class="px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-sm" />
+            <input type="text" id="newPresetCategory" placeholder="分类 (选填，如 家务)" class="px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-sm" />
+          </div>
+          <div class="flex items-center gap-2 px-1">
+            <label class="flex items-center gap-2.5 cursor-pointer select-none text-sm font-semibold text-slate-700 dark:text-slate-300">
+              <input type="checkbox" id="newPresetIsDaily" class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500" />
+              <span>加入主页【常用快捷清单】(点击一键记录)</span>
+            </label>
+          </div>
+          <button onclick="addPreset()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold transition shadow-md shadow-indigo-600/20">
+            添加预设
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-2xl bg-slate-900/95 dark:bg-white/95 text-white dark:text-slate-900 text-sm font-bold shadow-xl backdrop-blur-md transition-all duration-300 opacity-0 pointer-events-none transform translate-y-4">
+    提示内容
+  </div>
+
+  <!-- ================= JAVASCRIPT LOGIC ================= -->
+  <script>
+    const STORAGE_KEY = 'STAR_LEDGER_DATA_V2';
+    const GITHUB_CFG_KEY = 'STAR_LEDGER_GH_CONFIG';
+
+    let appData = {
+      config: {
+        initialScore: 0,
+        lastUpdated: new Date().toISOString()
+      },
+      presets: [],
+      records: []
+    };
+
+    let ghConfig = {
+      owner: '',
+      repo: '',
+      branch: 'main',
+      token: ''
+    };
+
+    let currentTab = 'all';
+    let fileSha = null;
+    let isSyncing = false;
+    let chartMode = 'day';
+    let analyticsChartInstance = null;
+    let quickSortable = null;
+    let presetSortable = null;
+    
+    let expandedMonths = new Set();
+    let expandedDays = new Set();
+    let isAllMonthsExpanded = false;
+
+    // Decimal Number Formatter: Cleans floating precision errors, e.g. 10 -> "10", 10.50 -> "10.5", 9.99 -> "9.99"
+    function formatPoints(num) {
+      const val = Number(num) || 0;
+      return Number(val.toFixed(2)).toString();
+    }
+
+    // Local Timezone Formatter
+    function formatToLocalISO(d) {
+      const date = d instanceof Date ? d : new Date(d);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      return `${year}-${month}-${day}T${hours}:${minutes}`;
+    }
+
+    function getCurrentMonthString() {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+    }
+
+    function getLocalDateString(d) {
+      const date = d instanceof Date ? d : new Date(d);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    // Web Audio Synthesizer
+    const SoundEffects = {
+      ctx: null,
+      init() {
+        if (!this.ctx) {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (AudioCtx) this.ctx = new AudioCtx();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      },
+      playReward() {
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const now = this.ctx.currentTime;
+          [1046.5, 1318.5, 1567.98].forEach((freq, i) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, now + i * 0.07);
+            gain.gain.setValueAtTime(0.12, now + i * 0.07);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.07 + 0.3);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(now + i * 0.07);
+            osc.stop(now + i * 0.07 + 0.3);
+          });
+        } catch (e) {}
+      },
+      playPenalty() {
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(260, now);
+          osc.frequency.exponentialRampToValueAtTime(130, now + 0.22);
+          gain.gain.setValueAtTime(0.1, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.22);
+        } catch (e) {}
+      },
+      playExpense() {
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const now = this.ctx.currentTime;
+          [987.77, 1975.53].forEach((freq, i) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now + i * 0.08);
+            gain.gain.setValueAtTime(0.1, now + i * 0.08);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.25);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(now + i * 0.08);
+            osc.stop(now + i * 0.08 + 0.25);
+          });
+        } catch (e) {}
+      }
+    };
+
+    function triggerConfetti(clientX, clientY) {
+      if (typeof confetti === 'function') {
+        const x = clientX ? clientX / window.innerWidth : 0.5;
+        const y = clientY ? clientY / window.innerHeight : 0.6;
+        confetti({
+          particleCount: 45,
+          spread: 60,
+          origin: { x, y },
+          colors: ['#10b981', '#6366f1', '#f59e0b', '#ec4899', '#3b82f6'],
+          ticks: 180,
+          disableForReducedMotion: true
+        });
+      }
+    }
+
+    // Initialize App
+    window.addEventListener('DOMContentLoaded', () => {
+      loadLocalStorage();
+      
+      const currentMonthStr = getCurrentMonthString();
+      const todayStr = getLocalDateString(new Date());
+      expandedMonths.add(currentMonthStr);
+      expandedDays.add(todayStr);
+
+      renderAll();
+      initTheme();
+      lucide.createIcons();
+
+      if (ghConfig.token && ghConfig.owner && ghConfig.repo) {
+        smartSync(true);
+      }
+    });
+
+    function formatMonthTitle(monthKey) {
+      const [year, month] = monthKey.split('-');
+      const currentYear = String(new Date().getFullYear());
+      if (year === currentYear) {
+        return `${parseInt(month, 10)}月`;
+      }
+      return `${year}年 ${parseInt(month, 10)}月`;
+    }
+
+    function formatDisplayDate(dateStr) {
+      const todayStr = getLocalDateString(new Date());
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayStr = getLocalDateString(yesterday);
+
+      const parts = dateStr.split('-');
+      const monthDay = `${parseInt(parts[1], 10)}月${parseInt(parts[2], 10)}日`;
+
+      const d = new Date(dateStr.replace(/-/g, '/') + ' 00:00:00');
+      const weekDays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+      const weekStr = weekDays[d.getDay()];
+
+      if (dateStr === todayStr) {
+        return `<span class="text-indigo-600 dark:text-indigo-400 font-extrabold text-base">今天</span> · <span class="text-sm font-semibold">${monthDay} (${weekStr})</span>`;
+      } else if (dateStr === yesterdayStr) {
+        return `<span class="text-slate-600 dark:text-slate-400 font-bold text-base">昨天</span> · <span class="text-sm font-semibold">${monthDay} (${weekStr})</span>`;
+      }
+      return `<span class="text-sm font-bold text-slate-800 dark:text-slate-200">${monthDay} · ${weekStr}</span>`;
+    }
+
+    // Local Storage Operations
+    function loadLocalStorage() {
+      try {
+        const savedData = localStorage.getItem(STORAGE_KEY);
+        if (savedData) {
+          appData = JSON.parse(savedData);
+          if (!Array.isArray(appData.presets)) appData.presets = [];
+        } else {
+          const v1Data = localStorage.getItem('STAR_LEDGER_DATA_V1');
+          if (v1Data) {
+            appData = JSON.parse(v1Data);
+            if (!Array.isArray(appData.presets)) appData.presets = [];
+          }
+        }
+
+        const savedGh = localStorage.getItem(GITHUB_CFG_KEY);
+        if (savedGh) {
+          ghConfig = JSON.parse(savedGh);
+          document.getElementById('ghOwner').value = ghConfig.owner || '';
+          document.getElementById('ghRepo').value = ghConfig.repo || '';
+          document.getElementById('ghBranch').value = ghConfig.branch || 'main';
+          document.getElementById('ghToken').value = ghConfig.token || '';
+        }
+        document.getElementById('settingInitialScore').value = formatPoints(appData.config.initialScore);
+      } catch (e) {
+        console.error("Failed to load storage", e);
+      }
+    }
+
+    function saveLocalStorage() {
+      appData.config.lastUpdated = new Date().toISOString();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+    }
+
+    // Master Render
+    function renderAll() {
+      renderDashboard();
+      renderQuickRoutines();
+      renderAnalyticsChart();
+      renderMonthlyGroupedRecords();
+      renderModalPresetChips();
+      lucide.createIcons();
+    }
+
+    function renderDashboard() {
+      const initial = Number(appData.config.initialScore) || 0;
+      let totalReward = 0;
+      let totalPenalty = 0;
+      let totalExpense = 0;
+
+      appData.records.forEach(r => {
+        const pts = Number(r.points) || 0;
+        if (r.type === 'reward') totalReward += pts;
+        else if (r.type === 'penalty') totalPenalty += pts;
+        else if (r.type === 'expense') totalExpense += pts;
+      });
+
+      const currentTotal = initial + totalReward - totalPenalty - totalExpense;
+      document.getElementById('currentTotalScore').innerText = formatPoints(currentTotal);
+      document.getElementById('totalRewardScore').innerText = '+' + formatPoints(totalReward);
+      document.getElementById('totalPenaltyScore').innerText = '-' + formatPoints(totalPenalty);
+      document.getElementById('totalExpenseScore').innerText = '-' + formatPoints(totalExpense);
+      document.getElementById('settingInitialScore').value = formatPoints(initial);
+    }
+
+    // ================= QUICK ROUTINES CHECKLIST (WITH TOUCH DRAG REORDER) =================
+    function renderQuickRoutines() {
+      const container = document.getElementById('quickTasksGrid');
+      const progressBadge = document.getElementById('quickProgressBadge');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const quickPresets = (appData.presets || []).filter(p => p.isDaily === true);
+      const todayStr = getLocalDateString(new Date());
+      const todayRecords = appData.records.filter(r => r.timestamp && r.timestamp.startsWith(todayStr));
+
+      if (quickPresets.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full py-4 px-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-dashed border-slate-200 dark:border-slate-800 text-center">
+            <p class="text-sm text-slate-400 mb-1.5">还没有添加常用快捷事项</p>
+            <button onclick="openPresetManagerModal()" class="text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:underline">
+              + 前往预设库勾选常用快捷
+            </button>
+          </div>
+        `;
+        progressBadge.innerText = '0 项';
+        return;
+      }
+
+      let todayCompletedCount = 0;
+
+      quickPresets.forEach(preset => {
+        const matchRecord = todayRecords.find(r => (r.presetId && r.presetId === preset.id) || (r.title === preset.title && r.type === preset.type));
+        const isDone = !!matchRecord;
+        if (isDone) todayCompletedCount++;
+
+        const isReward = preset.type === 'reward';
+        const isPenalty = preset.type === 'penalty';
+        
+        let colorTag = 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60';
+        let prefix = '+';
+        if (isPenalty) {
+          colorTag = 'text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/60';
+          prefix = '-';
+        } else if (preset.type === 'expense') {
+          colorTag = 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60';
+          prefix = '-';
+        }
+
+        const taskCard = document.createElement('div');
+        taskCard.setAttribute('data-id', preset.id);
+        taskCard.className = `group flex items-center justify-between p-3.5 rounded-2xl border transition select-none ${
+          isDone 
+            ? 'bg-emerald-50/70 border-emerald-200/80 dark:bg-emerald-950/30 dark:border-emerald-900/50' 
+            : 'bg-slate-50/90 hover:bg-slate-100 dark:bg-slate-850 dark:hover:bg-slate-800 border-slate-200/80 dark:border-slate-800'
+        }`;
+
+        taskCard.innerHTML = `
+          <div class="flex items-center gap-2.5 min-w-0 flex-1 cursor-pointer" onclick="handleCardClick('${preset.id}', ${isDone}, '${matchRecord ? matchRecord.id : ''}', event)">
+            <!-- Drag Handle Icon -->
+            <div class="drag-handle text-slate-300 hover:text-slate-600 dark:text-slate-600 dark:hover:text-slate-300 p-1 -ml-1 cursor-grab active:cursor-grabbing flex-shrink-0" onclick="event.stopPropagation()">
+              <i data-lucide="grip-vertical" class="w-4 h-4"></i>
+            </div>
+            
+            <div class="w-7 h-7 rounded-xl flex items-center justify-center transition-all flex-shrink-0 ${
+              isDone 
+                ? 'bg-emerald-500 text-white shadow-sm shadow-emerald-500/30' 
+                : 'border-2 border-slate-300 dark:border-slate-600 text-slate-400 group-hover:border-indigo-400'
+            }">
+              <i data-lucide="${isDone ? 'check' : 'zap'}" class="w-4 h-4 ${isDone ? 'stroke-[3]' : ''}"></i>
+            </div>
+            
+            <div class="min-w-0 pr-1">
+              <span class="text-sm font-bold tracking-tight block truncate ${
+                isDone 
+                  ? 'text-emerald-900 dark:text-emerald-200 opacity-90' 
+                  : 'text-slate-800 dark:text-slate-200'
+              }">${preset.title}</span>
+              ${preset.category ? `<span class="text-xs text-slate-400">${preset.category}</span>` : ''}
+            </div>
+          </div>
+
+          <div class="flex items-center gap-1.5 flex-shrink-0" onclick="handleCardClick('${preset.id}', ${isDone}, '${matchRecord ? matchRecord.id : ''}', event)">
+            <span class="text-sm font-extrabold font-mono px-2.5 py-1 rounded-xl cursor-pointer ${colorTag}">
+              ${prefix}${formatPoints(preset.points)}
+            </span>
+          </div>
+        `;
+        container.appendChild(taskCard);
+      });
+
+      progressBadge.innerText = `今日已记 ${todayCompletedCount}/${quickPresets.length} 项`;
+      if (todayCompletedCount === quickPresets.length && quickPresets.length > 0) {
+        progressBadge.className = "text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300";
+      } else {
+        progressBadge.className = "text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400";
+      }
+
+      // Initialize or refresh SortableJS on Quick Tasks Grid
+      if (quickSortable) quickSortable.destroy();
+      quickSortable = new Sortable(container, {
+        handle: '.drag-handle',
+        animation: 200,
+        ghostClass: 'sortable-ghost',
+        chosenClass: 'sortable-chosen',
+        delay: 50,
+        delayOnTouchOnly: true,
+        onEnd: () => {
+          saveQuickRoutinesOrder();
+        }
+      });
+    }
+
+    function handleCardClick(presetId, isDone, matchRecordId, event) {
+      const preset = appData.presets.find(p => p.id === presetId);
+      if (!preset) return;
+      triggerQuickRoutineRecord(preset, isDone, matchRecordId, event);
+    }
+
+    // Save reordered quick items order back to presets array
+    function saveQuickRoutinesOrder() {
+      const container = document.getElementById('quickTasksGrid');
+      const itemEls = container.querySelectorAll('[data-id]');
+      const orderedQuickIds = Array.from(itemEls).map(el => el.getAttribute('data-id'));
+
+      // Re-sort presets based on this order for items marked isDaily
+      const nonQuickPresets = appData.presets.filter(p => !p.isDaily);
+      const quickPresetsMap = new Map(appData.presets.filter(p => p.isDaily).map(p => [p.id, p]));
+
+      const reorderedQuickPresets = [];
+      orderedQuickIds.forEach(id => {
+        if (quickPresetsMap.has(id)) {
+          reorderedQuickPresets.push(quickPresetsMap.get(id));
+        }
+      });
+
+      appData.presets = [...reorderedQuickPresets, ...nonQuickPresets];
+      saveLocalStorage();
+      triggerBackgroundSync();
+      showToast('✅ 快捷清单排序已更新');
+    }
+
+    function triggerQuickRoutineRecord(preset, isDone, existingRecordId, event) {
+      const todayStr = getLocalDateString(new Date());
+
+      if (!isDone) {
+        const nowIso = formatToLocalISO(new Date());
+
+        const newRecord = {
+          id: 'rec_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+          presetId: preset.id,
+          type: preset.type || 'reward',
+          title: preset.title,
+          points: Number(preset.points) || 0,
+          category: preset.category || '快捷录入',
+          timestamp: nowIso,
+          note: '快捷清单一键记录'
+        };
+
+        appData.records.unshift(newRecord);
+        expandedMonths.add(todayStr.slice(0, 7));
+        expandedDays.add(todayStr);
+
+        saveLocalStorage();
+        renderAll();
+
+        if (preset.type === 'reward') {
+          SoundEffects.playReward();
+          triggerConfetti(event ? event.clientX : null, event ? event.clientY : null);
+        } else if (preset.type === 'penalty') {
+          SoundEffects.playPenalty();
+        } else {
+          SoundEffects.playExpense();
+        }
+
+        const sign = preset.type === 'reward' ? '+' : '-';
+        showToast(`⚡ 快捷记录成功：${preset.title} (${sign}${formatPoints(preset.points)})`);
+        triggerBackgroundSync();
+
+      } else {
+        if (!existingRecordId) {
+          const rec = appData.records.find(r => r.timestamp && r.timestamp.startsWith(todayStr) && (r.presetId === preset.id || (r.title === preset.title && r.type === preset.type)));
+          if (rec) existingRecordId = rec.id;
+        }
+
+        if (existingRecordId) {
+          appData.records = appData.records.filter(r => r.id !== existingRecordId);
+          saveLocalStorage();
+          renderAll();
+          showToast(`已撤销今天【${preset.title}】的记录`);
+          triggerBackgroundSync();
+        }
+      }
+    }
+
+    // ================= CHART.JS ANALYTICS ENGINE (DAY / WEEK / MONTH) =================
+    function changeChartMode(mode) {
+      chartMode = mode;
+      ['day', 'week', 'month'].forEach(m => {
+        const btn = document.getElementById('chartBtn' + m.charAt(0).toUpperCase() + m.slice(1));
+        if (m === mode) {
+          btn.className = "px-3 py-1.5 rounded-lg bg-white dark:bg-slate-700 shadow-sm text-indigo-600 dark:text-indigo-400 font-bold transition";
+        } else {
+          btn.className = "px-3 py-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 transition";
+        }
+      });
+      renderAnalyticsChart();
+    }
+
+    function renderAnalyticsChart() {
+      const canvas = document.getElementById('analyticsChartCanvas');
+      if (!canvas) return;
+      const isDark = document.documentElement.classList.contains('dark');
+      const textColor = isDark ? '#94a3b8' : '#64748b';
+      const gridColor = isDark ? 'rgba(51, 65, 85, 0.4)' : 'rgba(226, 232, 240, 0.7)';
+
+      let labels = [];
+      let rewardData = [];
+      let deductionData = [];
+
+      if (chartMode === 'day') {
+        for (let i = 6; i >= 0; i--) {
+          const d = new Date();
+          d.setDate(d.getDate() - i);
+          const dateStr = getLocalDateString(d);
+          const monthDay = `${d.getMonth() + 1}/${d.getDate()}`;
+          labels.push(i === 0 ? '今天' : monthDay);
+
+          let rSum = 0;
+          let dSum = 0;
+          appData.records.forEach(r => {
+            if (r.timestamp && r.timestamp.startsWith(dateStr)) {
+              const pts = Number(r.points) || 0;
+              if (r.type === 'reward') rSum += pts;
+              else dSum += pts;
+            }
+          });
+          rewardData.push(Number(formatPoints(rSum)));
+          deductionData.push(Number(formatPoints(dSum)));
+        }
+      } else if (chartMode === 'week') {
+        for (let w = 5; w >= 0; w--) {
+          const endD = new Date();
+          endD.setDate(endD.getDate() - w * 7);
+          const startD = new Date(endD);
+          startD.setDate(startD.getDate() - 6);
+
+          const labelStr = w === 0 ? '本周' : `${startD.getMonth() + 1}.${startD.getDate()}-${endD.getMonth() + 1}.${endD.getDate()}`;
+          labels.push(labelStr);
+
+          const startStr = getLocalDateString(startD);
+          const endStr = getLocalDateString(endD);
+
+          let rSum = 0;
+          let dSum = 0;
+          appData.records.forEach(r => {
+            if (r.timestamp) {
+              const rDate = r.timestamp.slice(0, 10);
+              if (rDate >= startStr && rDate <= endStr) {
+                const pts = Number(r.points) || 0;
+                if (r.type === 'reward') rSum += pts;
+                else dSum += pts;
+              }
+            }
+          });
+          rewardData.push(Number(formatPoints(rSum)));
+          deductionData.push(Number(formatPoints(dSum)));
+        }
+      } else if (chartMode === 'month') {
+        const now = new Date();
+        for (let m = 5; m >= 0; m--) {
+          const target = new Date(now.getFullYear(), now.getMonth() - m, 1);
+          const monthStr = `${target.getFullYear()}-${String(target.getMonth() + 1).padStart(2, '0')}`;
+          labels.push(`${target.getMonth() + 1}月`);
+
+          let rSum = 0;
+          let dSum = 0;
+          appData.records.forEach(r => {
+            if (r.timestamp && r.timestamp.startsWith(monthStr)) {
+              const pts = Number(r.points) || 0;
+              if (r.type === 'reward') rSum += pts;
+              else dSum += pts;
+            }
+          });
+          rewardData.push(Number(formatPoints(rSum)));
+          deductionData.push(Number(formatPoints(dSum)));
+        }
+      }
+
+      if (analyticsChartInstance) {
+        analyticsChartInstance.destroy();
+      }
+
+      analyticsChartInstance = new Chart(canvas, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: '奖励 (+)',
+              data: rewardData,
+              backgroundColor: '#10b981',
+              borderRadius: 6,
+              barPercentage: 0.5,
+            },
+            {
+              label: '扣除/支出 (-)',
+              data: deductionData,
+              backgroundColor: '#f43f5e',
+              borderRadius: 6,
+              barPercentage: 0.5,
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: { duration: 350 },
+          plugins: {
+            legend: {
+              position: 'top',
+              align: 'end',
+              labels: {
+                boxWidth: 10,
+                boxHeight: 10,
+                color: textColor,
+                font: { size: 11, weight: 'bold' }
+              }
+            },
+            tooltip: {
+              backgroundColor: isDark ? '#0f172a' : '#1e293b',
+              padding: 10,
+              titleFont: { size: 12, weight: 'bold' },
+              bodyFont: { size: 12 },
+              cornerRadius: 10
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { color: textColor, font: { size: 11, weight: 'bold' } }
+            },
+            y: {
+              grid: { color: gridColor },
+              ticks: { color: textColor, font: { size: 10 } },
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+
+    // Modal Preset Chips
+    function renderModalPresetChips() {
+      const container = document.getElementById('modalPresetChipsContainer');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const activeType = document.getElementById('recordType').value || 'reward';
+      const matchingPresets = (appData.presets || []).filter(p => p.type === activeType);
+
+      if (matchingPresets.length === 0) {
+        container.innerHTML = `<span class="text-xs text-slate-400 py-1">暂无该类型的常用预设，可在下方输入后点击保存</span>`;
+        return;
+      }
+
+      matchingPresets.forEach(p => {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        let styleClass = '';
+        let prefix = '+';
+
+        if (p.type === 'reward') {
+          styleClass = 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800';
+          prefix = '+';
+        } else if (p.type === 'penalty') {
+          styleClass = 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800';
+          prefix = '-';
+        } else {
+          styleClass = 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/40 dark:text-blue-300 dark:border-blue-800';
+          prefix = '-';
+        }
+
+        chip.className = `flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold border active:scale-95 transition ${styleClass}`;
+        chip.onclick = () => appendPresetToInput(p);
+        chip.innerHTML = `
+          <span>${p.title}</span>
+          <b class="font-mono font-bold">${prefix}${formatPoints(p.points)}</b>
+        `;
+        container.appendChild(chip);
+      });
+    }
+
+    function appendPresetToInput(p) {
+      const textarea = document.getElementById('quickInputContent');
+      const itemText = `${p.title} ${formatPoints(p.points)}`;
+      if (!textarea.value.trim()) {
+        textarea.value = itemText;
+      } else {
+        textarea.value = textarea.value.trim() + ', ' + itemText;
+      }
+      handleBatchPreview(textarea.value);
+    }
+
+    function saveCurrentInputAsPreset() {
+      const rawText = document.getElementById('quickInputContent').value.trim();
+      const activeType = document.getElementById('recordType').value || 'reward';
+      const parsedList = parseBatchInput(rawText);
+
+      if (parsedList.length === 0) {
+        showToast('请先在输入框输入事项与金额 (如: 整理 5.5)');
+        return;
+      }
+
+      let addedCount = 0;
+      parsedList.forEach(item => {
+        const exists = appData.presets.some(p => p.type === activeType && p.title === item.title && Number(p.points) === Number(item.points));
+        if (!exists) {
+          appData.presets.push({
+            id: 'p_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+            type: activeType,
+            title: item.title,
+            points: item.points,
+            category: '',
+            isDaily: true
+          });
+          addedCount++;
+        }
+      });
+
+      if (addedCount > 0) {
+        saveLocalStorage();
+        renderAll();
+        showToast(`✅ 已将 ${addedCount} 项存为预设并加入快捷清单！`);
+        triggerBackgroundSync();
+      } else {
+        showToast('该事项已存在于预设中');
+      }
+    }
+
+    // Monthly & Daily Records List
+    function renderMonthlyGroupedRecords() {
+      const container = document.getElementById('monthlyGroupedList');
+      const emptyEl = document.getElementById('emptyState');
+      container.innerHTML = '';
+
+      let filtered = appData.records;
+      if (currentTab !== 'all') {
+        filtered = appData.records.filter(r => r.type === currentTab);
+      }
+
+      if (filtered.length === 0) {
+        emptyEl.classList.remove('hidden');
+        return;
+      } else {
+        emptyEl.classList.add('hidden');
+      }
+
+      const monthGroups = {};
+
+      filtered.forEach(item => {
+        const monthKey = item.timestamp ? item.timestamp.slice(0, 7) : '未知月份';
+        const dateKey = item.timestamp ? item.timestamp.slice(0, 10) : '未知日期';
+
+        if (!monthGroups[monthKey]) monthGroups[monthKey] = {};
+        if (!monthGroups[monthKey][dateKey]) monthGroups[monthKey][dateKey] = [];
+        monthGroups[monthKey][dateKey].push(item);
+      });
+
+      const sortedMonths = Object.keys(monthGroups).sort((a, b) => b.localeCompare(a));
+
+      sortedMonths.forEach(monthKey => {
+        const dateMap = monthGroups[monthKey];
+        const isMonthExpanded = expandedMonths.has(monthKey);
+
+        let mReward = 0;
+        let mPenalty = 0;
+        let mExpense = 0;
+        let mCount = 0;
+
+        Object.values(dateMap).forEach(records => {
+          records.forEach(r => {
+            const pts = Number(r.points) || 0;
+            mCount++;
+            if (r.type === 'reward') mReward += pts;
+            else if (r.type === 'penalty') mPenalty += pts;
+            else if (r.type === 'expense') mExpense += pts;
+          });
+        });
+
+        const mNet = mReward - mPenalty - mExpense;
+
+        const monthCard = document.createElement('div');
+        monthCard.className = "rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm overflow-hidden transition";
+
+        const monthHeader = document.createElement('div');
+        monthHeader.className = "p-4 sm:p-5 flex items-center justify-between cursor-pointer bg-slate-100/60 dark:bg-slate-800/40 hover:bg-slate-100 dark:hover:bg-slate-800/70 select-none transition";
+        monthHeader.onclick = () => toggleMonthExpand(monthKey);
+
+        monthHeader.innerHTML = `
+          <div class="flex items-center space-x-3 min-w-0">
+            <div class="w-9 h-9 rounded-xl bg-indigo-500/10 dark:bg-indigo-400/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center flex-shrink-0">
+              <i data-lucide="calendar" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <div class="flex items-baseline space-x-2">
+                <span class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white tracking-tight">${formatMonthTitle(monthKey)}</span>
+                <span class="text-xs text-slate-400 font-semibold">(${mCount} 笔)</span>
+              </div>
+              <div class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 flex items-center gap-1.5">
+                <span>净结余: <b class="${mNet >= 0 ? 'text-emerald-500' : 'text-rose-500'} font-bold font-mono text-sm">${mNet >= 0 ? '+' : ''}${formatPoints(mNet)}</b></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center space-x-2 flex-shrink-0">
+            <div class="hidden sm:flex items-center gap-1.5 text-xs font-bold font-mono">
+              <span class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400">+${formatPoints(mReward)}</span>
+              <span class="px-2.5 py-1 rounded-lg bg-rose-50 text-rose-600 dark:bg-rose-950/50 dark:text-rose-400">-${formatPoints(mPenalty)}</span>
+              <span class="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-600 dark:bg-blue-950/50 dark:text-blue-400">-${formatPoints(mExpense)}</span>
+            </div>
+            <div class="sm:hidden text-sm font-bold font-mono">
+              <span class="${mNet >= 0 ? 'text-emerald-500' : 'text-rose-500'}">${mNet >= 0 ? '+' : ''}${formatPoints(mNet)}</span>
+            </div>
+            <i data-lucide="${isMonthExpanded ? 'chevron-up' : 'chevron-down'}" class="w-5 h-5 text-slate-400 transition-transform"></i>
+          </div>
+        `;
+
+        const daysContainer = document.createElement('div');
+        daysContainer.className = `p-3 space-y-3 bg-slate-50/50 dark:bg-slate-950/40 ${isMonthExpanded ? '' : 'hidden'}`;
+
+        const sortedDates = Object.keys(dateMap).sort((a, b) => b.localeCompare(a));
+
+        sortedDates.forEach(dateKey => {
+          const dayItems = dateMap[dateKey];
+          dayItems.sort((a, b) => new Date(b.timestamp.replace(/-/g, '/')) - new Date(a.timestamp.replace(/-/g, '/')));
+
+          let dayReward = 0;
+          let dayPenalty = 0;
+          let dayExpense = 0;
+
+          dayItems.forEach(r => {
+            const pts = Number(r.points) || 0;
+            if (r.type === 'reward') dayReward += pts;
+            else if (r.type === 'penalty') dayPenalty += pts;
+            else if (r.type === 'expense') dayExpense += pts;
+          });
+
+          const isDayExpanded = expandedDays.has(dateKey);
+
+          const dayWrapper = document.createElement('div');
+          dayWrapper.className = "glass-card rounded-2xl border border-slate-200/70 dark:border-slate-800/80 shadow-sm overflow-hidden transition";
+
+          const dayHeader = document.createElement('div');
+          dayHeader.className = "p-3.5 flex items-center justify-between cursor-pointer active:bg-slate-100/50 dark:active:bg-slate-800/50 select-none";
+          dayHeader.onclick = (e) => {
+            e.stopPropagation();
+            toggleDayExpand(dateKey);
+          };
+
+          dayHeader.innerHTML = `
+            <div class="flex items-center space-x-2.5 min-w-0">
+              <div class="w-2 h-2 rounded-full ${dateKey === getLocalDateString(new Date()) ? 'bg-indigo-500 ring-4 ring-indigo-500/20' : 'bg-slate-300 dark:bg-slate-600'}"></div>
+              <div class="min-w-0">
+                <div class="text-sm font-bold text-slate-800 dark:text-slate-200 tracking-tight">
+                  ${formatDisplayDate(dateKey)}
+                </div>
+                <div class="text-xs text-slate-400 mt-0.5">
+                  ${dayItems.length} 笔记录
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center space-x-2.5 flex-shrink-0">
+              <div class="flex items-center gap-1.5 text-xs font-bold font-mono">
+                ${dayReward > 0 ? `<span class="px-2 py-0.5 rounded-lg bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400">+${formatPoints(dayReward)}</span>` : ''}
+                ${dayPenalty > 0 ? `<span class="px-2 py-0.5 rounded-lg bg-rose-50 text-rose-600 dark:bg-rose-950/50 dark:text-rose-400">-${formatPoints(dayPenalty)}</span>` : ''}
+                ${dayExpense > 0 ? `<span class="px-2 py-0.5 rounded-lg bg-blue-50 text-blue-600 dark:bg-blue-950/50 dark:text-blue-400">-${formatPoints(dayExpense)}</span>` : ''}
+              </div>
+              <i data-lucide="${isDayExpanded ? 'chevron-up' : 'chevron-down'}" class="w-4 h-4 text-slate-400"></i>
+            </div>
+          `;
+
+          const dayDetails = document.createElement('div');
+          dayDetails.className = `border-t border-slate-100 dark:border-slate-800/80 px-3.5 py-2.5 space-y-2 bg-white/40 dark:bg-slate-900/40 ${isDayExpanded ? '' : 'hidden'}`;
+
+          dayItems.forEach(item => {
+            const isReward = item.type === 'reward';
+            const isPenalty = item.type === 'penalty';
+
+            let iconName = 'arrow-up-right';
+            let iconBg = 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400';
+            let scoreColor = 'text-emerald-600 dark:text-emerald-400';
+            let prefix = '+';
+
+            if (isPenalty) {
+              iconName = 'arrow-down-right';
+              iconBg = 'bg-rose-100 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400';
+              scoreColor = 'text-rose-600 dark:text-rose-400';
+              prefix = '-';
+            } else if (item.type === 'expense') {
+              iconName = 'shopping-bag';
+              iconBg = 'bg-blue-100 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400';
+              scoreColor = 'text-blue-600 dark:text-blue-400';
+              prefix = '-';
+            }
+
+            const timeOnly = item.timestamp ? item.timestamp.slice(11, 16) : '';
+
+            const itemRow = document.createElement('div');
+            itemRow.className = "flex items-center justify-between py-2 border-b border-slate-100/60 dark:border-slate-800/40 last:border-none gap-2.5";
+            itemRow.innerHTML = `
+              <div class="flex items-center gap-2.5 min-w-0">
+                <div class="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 ${iconBg}">
+                  <i data-lucide="${iconName}" class="w-3.5 h-3.5"></i>
+                </div>
+                <div class="min-w-0">
+                  <div class="flex items-center gap-2">
+                    <span class="font-bold text-sm text-slate-800 dark:text-slate-200 truncate">${item.title}</span>
+                    ${item.category ? `<span class="text-xs font-semibold px-2 py-0.5 rounded-md bg-slate-200/70 dark:bg-slate-800 text-slate-600 dark:text-slate-400">${item.category}</span>` : ''}
+                  </div>
+                  <div class="text-xs text-slate-400 mt-0.5 flex items-center gap-2">
+                    <span>${timeOnly || '全天'}</span>
+                    ${item.note ? `<span class="truncate max-w-[180px] text-slate-500 dark:text-slate-400">· ${item.note}</span>` : ''}
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex items-center space-x-2.5 flex-shrink-0">
+                <span class="text-sm sm:text-base font-extrabold font-mono ${scoreColor}">
+                  ${prefix}${formatPoints(item.points)}
+                </span>
+                <button onclick="deleteRecord('${item.id}')" class="p-1.5 rounded text-slate-300 hover:text-rose-500 dark:text-slate-600 dark:hover:text-rose-400 transition" title="删除">
+                  <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+              </div>
+            `;
+            dayDetails.appendChild(itemRow);
+          });
+
+          dayWrapper.appendChild(dayHeader);
+          dayWrapper.appendChild(dayDetails);
+          daysContainer.appendChild(dayWrapper);
+        });
+
+        monthCard.appendChild(monthHeader);
+        monthCard.appendChild(daysContainer);
+        container.appendChild(monthCard);
+      });
+    }
+
+    function toggleMonthExpand(monthKey) {
+      if (expandedMonths.has(monthKey)) expandedMonths.delete(monthKey);
+      else expandedMonths.add(monthKey);
+      renderMonthlyGroupedRecords();
+      lucide.createIcons();
+    }
+
+    function toggleDayExpand(dateKey) {
+      if (expandedDays.has(dateKey)) expandedDays.delete(dateKey);
+      else expandedDays.add(dateKey);
+      renderMonthlyGroupedRecords();
+      lucide.createIcons();
+    }
+
+    function toggleExpandAllMonths() {
+      const btn = document.getElementById('toggleAllMonthsBtn');
+      if (isAllMonthsExpanded) {
+        expandedMonths.clear();
+        btn.innerText = '展开全部月份';
+        isAllMonthsExpanded = false;
+      } else {
+        appData.records.forEach(r => {
+          if (r.timestamp) {
+            expandedMonths.add(r.timestamp.slice(0, 7));
+            expandedDays.add(r.timestamp.slice(0, 10));
+          }
+        });
+        btn.innerText = '折叠全部月份';
+        isAllMonthsExpanded = true;
+      }
+      renderMonthlyGroupedRecords();
+      lucide.createIcons();
+    }
+
+    function switchTab(tab) {
+      currentTab = tab;
+      const tabs = ['all', 'reward', 'penalty', 'expense'];
+      tabs.forEach(t => {
+        const btn = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
+        if (t === tab) {
+          btn.className = "px-3.5 py-1.5 rounded-lg bg-white dark:bg-slate-700 font-bold shadow-sm text-slate-900 dark:text-white transition";
+        } else {
+          btn.className = "px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 transition font-medium";
+        }
+      });
+      renderMonthlyGroupedRecords();
+      lucide.createIcons();
+    }
+
+    function selectModalType(type) {
+      document.getElementById('recordType').value = type;
+      const rBtn = document.getElementById('modalTypeReward');
+      const pBtn = document.getElementById('modalTypePenalty');
+      const eBtn = document.getElementById('modalTypeExpense');
+      const submitBtn = document.getElementById('recordSubmitBtn');
+      const quickInput = document.getElementById('quickInputContent');
+
+      rBtn.className = "py-2.5 px-3 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-bold text-slate-600 dark:text-slate-400 flex items-center justify-center gap-1.5";
+      pBtn.className = "py-2.5 px-3 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-bold text-slate-600 dark:text-slate-400 flex items-center justify-center gap-1.5";
+      eBtn.className = "py-2.5 px-3 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-bold text-slate-600 dark:text-slate-400 flex items-center justify-center gap-1.5";
+
+      if (type === 'reward') {
+        rBtn.className = "py-2.5 px-3 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 text-sm font-bold flex items-center justify-center gap-1.5";
+        submitBtn.className = "w-full py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-lg shadow-emerald-600/20 active:scale-[0.98] transition";
+        submitBtn.innerText = "保存全部奖励记录 (+)";
+        quickInput.placeholder = "如: 阅读英文书 10.5, 收拾房间 5";
+      } else if (type === 'penalty') {
+        pBtn.className = "py-2.5 px-3 rounded-xl border-2 border-rose-500 bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 text-sm font-bold flex items-center justify-center gap-1.5";
+        submitBtn.className = "w-full py-3.5 rounded-2xl bg-rose-600 hover:bg-rose-700 text-white font-bold shadow-lg shadow-rose-600/20 active:scale-[0.98] transition";
+        submitBtn.innerText = "保存全部惩罚记录 (-)";
+        quickInput.placeholder = "如: 拖延玩手机 5.5, 作业潦草 10";
+      } else {
+        eBtn.className = "py-2.5 px-3 rounded-xl border-2 border-blue-500 bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300 text-sm font-bold flex items-center justify-center gap-1.5";
+        submitBtn.className = "w-full py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-lg shadow-blue-600/20 active:scale-[0.98] transition";
+        submitBtn.innerText = "保存全部支出记录 (-)";
+        quickInput.placeholder = "如: 兑换零食 5.5, 购买文具 20";
+      }
+      renderModalPresetChips();
+      handleBatchPreview(quickInput.value);
+    }
+
+    /**
+     * BATCH INPUT PARSER (Supports Decimals like 5.5, 0.5)
+     */
+    function parseBatchInput(rawText) {
+      if (!rawText || !rawText.trim()) return [];
+      const segments = rawText.split(/[,，\n]+/);
+      const results = [];
+
+      segments.forEach(seg => {
+        const itemStr = seg.trim();
+        if (!itemStr) return;
+
+        // Match: "事项名称 分值" (with optional decimals at end)
+        const matchTrailing = itemStr.match(/^(.*?)[\s\+\-]+(\d+(?:\.\d+)?)$/);
+        if (matchTrailing) {
+          const title = matchTrailing[1].trim();
+          const pts = Math.abs(parseFloat(matchTrailing[2]));
+          if (title && !isNaN(pts) && pts > 0) {
+            results.push({ title, points: pts });
+            return;
+          }
+        }
+
+        // Match: "分值 事项名称" (with optional decimals at beginning)
+        const matchLeading = itemStr.match(/^(\d+(?:\.\d+)?)[\s\+\-]+(.*?)$/);
+        if (matchLeading) {
+          const pts = Math.abs(parseFloat(matchLeading[1]));
+          const title = matchLeading[2].trim();
+          if (title && !isNaN(pts) && pts > 0) {
+            results.push({ title, points: pts });
+            return;
+          }
+        }
+      });
+      return results;
+    }
+
+    function handleBatchPreview(val) {
+      const parsedList = parseBatchInput(val);
+      const previewBox = document.getElementById('batchParsePreviewBox');
+      const countEl = document.getElementById('parsedItemCount');
+      const totalEl = document.getElementById('parsedTotalPoints');
+      const chipContainer = document.getElementById('parsedItemsChipContainer');
+
+      if (parsedList.length > 0) {
+        countEl.innerText = parsedList.length;
+        let sum = 0;
+        chipContainer.innerHTML = '';
+
+        parsedList.forEach(item => {
+          sum += item.points;
+          const chip = document.createElement('span');
+          chip.className = "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white dark:bg-slate-800 text-xs font-semibold border border-indigo-200 dark:border-indigo-800/60 text-slate-800 dark:text-slate-200 shadow-sm";
+          chip.innerHTML = `
+            <span>${item.title}</span>
+            <b class="text-indigo-600 dark:text-indigo-400 font-mono font-bold">${formatPoints(item.points)}</b>
+          `;
+          chipContainer.appendChild(chip);
+        });
+
+        totalEl.innerText = formatPoints(sum);
+        previewBox.classList.remove('hidden');
+      } else {
+        previewBox.classList.add('hidden');
+      }
+    }
+
+    function toggleAdvancedFields() {
+      const el = document.getElementById('advancedFieldsContainer');
+      const textEl = document.getElementById('advancedFieldsToggleText');
+      if (el.classList.contains('hidden')) {
+        el.classList.remove('hidden');
+        textEl.innerText = '收起分类与备注';
+      } else {
+        el.classList.add('hidden');
+        textEl.innerText = '展开分类与备注 (选填，批量应用)';
+      }
+    }
+
+    function openRecordModal(type) {
+      document.getElementById('recordId').value = '';
+      selectModalType(type || 'reward');
+      document.getElementById('quickInputContent').value = '';
+      document.getElementById('recordCategory').value = '';
+      document.getElementById('recordNote').value = '';
+      document.getElementById('batchParsePreviewBox').classList.add('hidden');
+
+      document.getElementById('recordTimestamp').value = formatToLocalISO(new Date());
+
+      openModal('recordModal');
+      setTimeout(() => {
+        document.getElementById('quickInputContent').focus();
+      }, 100);
+    }
+
+    function handleBatchRecordSubmit(e) {
+      e.preventDefault();
+      const type = document.getElementById('recordType').value;
+      const rawContent = document.getElementById('quickInputContent').value.trim();
+      const timestampVal = document.getElementById('recordTimestamp').value;
+      const category = document.getElementById('recordCategory').value.trim();
+      const note = document.getElementById('recordNote').value.trim();
+
+      const parsedList = parseBatchInput(rawContent);
+
+      if (parsedList.length === 0) {
+        showToast('未能识别出事项与金额，格式如: 整理 2.5, 弹琴 15');
+        return;
+      }
+
+      const baseDate = timestampVal ? new Date(timestampVal.replace('T', ' ').replace(/-/g, '/')) : new Date();
+      let totalPts = 0;
+
+      parsedList.forEach((item, index) => {
+        totalPts += item.points;
+        const itemDate = new Date(baseDate.getTime() + index * 1000);
+        const itemLocalTime = formatToLocalISO(itemDate);
+
+        const newRecord = {
+          id: 'rec_' + (Date.now() + index) + '_' + Math.random().toString(36).substr(2, 5),
+          type,
+          title: item.title,
+          points: Number(item.points) || 0,
+          category: category || '',
+          timestamp: itemLocalTime,
+          note: note || ''
+        };
+
+        appData.records.unshift(newRecord);
+      });
+
+      const recordDateStr = formatToLocalISO(baseDate).slice(0, 10);
+      expandedMonths.add(recordDateStr.slice(0, 7));
+      expandedDays.add(recordDateStr);
+
+      saveLocalStorage();
+      renderAll();
+      closeModal('recordModal');
+
+      if (type === 'reward') {
+        SoundEffects.playReward();
+        triggerConfetti(window.innerWidth / 2, window.innerHeight * 0.4);
+      } else if (type === 'penalty') {
+        SoundEffects.playPenalty();
+      } else {
+        SoundEffects.playExpense();
+      }
+
+      const sign = type === 'reward' ? '+' : '-';
+      showToast(`🎉 成功记入 ${parsedList.length} 笔流水 (合计 ${sign}${formatPoints(totalPts)})！`);
+      triggerBackgroundSync();
+    }
+
+    function deleteRecord(id) {
+      if (!confirm('确定要删除这条记录吗？')) return;
+      appData.records = appData.records.filter(r => r.id !== id);
+      saveLocalStorage();
+      renderAll();
+      showToast('记录已删除');
+      triggerBackgroundSync();
+    }
+
+    function saveInitialScore() {
+      const val = parseFloat(document.getElementById('settingInitialScore').value) || 0;
+      appData.config.initialScore = val;
+      saveLocalStorage();
+      renderDashboard();
+      showToast('起始底池金额已更新');
+      triggerBackgroundSync();
+    }
+
+    // Modal Helpers
+    function openModal(id) {
+      document.getElementById(id).classList.remove('hidden');
+    }
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+    function openSettingsModal() {
+      openModal('settingsModal');
+    }
+
+    function openPresetManagerModal() {
+      renderPresetManagerList();
+      openModal('presetModal');
+    }
+
+    // ================= PRESETS MANAGER LIST (WITH DRAG & DROP REORDER) =================
+    function renderPresetManagerList() {
+      const container = document.getElementById('presetManagerList');
+      container.innerHTML = '';
+
+      if (!appData.presets || appData.presets.length === 0) {
+        container.innerHTML = `<div class="text-sm text-slate-400 py-4 text-center">暂无自定义预设，可以在下方添加</div>`;
+        return;
+      }
+
+      appData.presets.forEach(p => {
+        const item = document.createElement('div');
+        item.setAttribute('data-id', p.id);
+        item.className = 'flex items-center justify-between p-3 rounded-2xl bg-slate-100 dark:bg-slate-800 text-sm gap-2 select-none';
+        
+        let colorClass = 'text-emerald-500';
+        let sign = '+';
+        if (p.type === 'penalty') { colorClass = 'text-rose-500'; sign = '-'; }
+        else if (p.type === 'expense') { colorClass = 'text-blue-500'; sign = '-'; }
+
+        item.innerHTML = `
+          <div class="flex items-center gap-2 min-w-0 flex-1">
+            <div class="drag-handle text-slate-300 hover:text-slate-600 dark:text-slate-600 dark:hover:text-slate-300 p-1 cursor-grab active:cursor-grabbing flex-shrink-0">
+              <i data-lucide="grip-vertical" class="w-4 h-4"></i>
+            </div>
+            <span class="font-extrabold ${colorClass} flex-shrink-0 text-base font-mono">${sign}${formatPoints(p.points)}</span>
+            <span class="font-bold text-slate-800 dark:text-slate-200 truncate">${p.title}</span>
+            ${p.category ? `<span class="text-xs text-slate-400 flex-shrink-0">(${p.category})</span>` : ''}
+          </div>
+          
+          <div class="flex items-center gap-1.5 flex-shrink-0">
+            <button onclick="togglePresetDaily('${p.id}')" class="px-2.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1 ${
+              p.isDaily 
+                ? 'bg-amber-500 text-white shadow-xs' 
+                : 'bg-slate-200 dark:bg-slate-700 text-slate-500 hover:bg-slate-300'
+            }" title="切换是否加入主页常用快捷清单">
+              <i data-lucide="zap" class="w-3.5 h-3.5"></i>
+              <span>${p.isDaily ? '快捷清单' : '设为快捷'}</span>
+            </button>
+            <button onclick="deletePreset('${p.id}')" class="text-slate-400 hover:text-rose-500 p-1.5">
+              <i data-lucide="trash-2" class="w-4 h-4"></i>
+            </button>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+      lucide.createIcons();
+
+      // Initialize SortableJS on Presets Manager list
+      if (presetSortable) presetSortable.destroy();
+      presetSortable = new Sortable(container, {
+        handle: '.drag-handle',
+        animation: 200,
+        ghostClass: 'sortable-ghost',
+        chosenClass: 'sortable-chosen',
+        delay: 50,
+        delayOnTouchOnly: true,
+        onEnd: () => {
+          savePresetsManagerOrder();
+        }
+      });
+    }
+
+    function savePresetsManagerOrder() {
+      const container = document.getElementById('presetManagerList');
+      const itemEls = container.querySelectorAll('[data-id]');
+      const orderedIds = Array.from(itemEls).map(el => el.getAttribute('data-id'));
+
+      const map = new Map(appData.presets.map(p => [p.id, p]));
+      const newPresets = [];
+      orderedIds.forEach(id => {
+        if (map.has(id)) newPresets.push(map.get(id));
+      });
+
+      appData.presets = newPresets;
+      saveLocalStorage();
+      renderQuickRoutines();
+      renderModalPresetChips();
+      triggerBackgroundSync();
+      showToast('✅ 预设排序已更新');
+    }
+
+    function togglePresetDaily(presetId) {
+      const p = appData.presets.find(item => item.id === presetId);
+      if (p) {
+        p.isDaily = !p.isDaily;
+        saveLocalStorage();
+        renderPresetManagerList();
+        renderQuickRoutines();
+        triggerBackgroundSync();
+      }
+    }
+
+    function addPreset() {
+      const type = document.getElementById('newPresetType').value;
+      const points = parseFloat(document.getElementById('newPresetPoints').value);
+      const title = document.getElementById('newPresetTitle').value.trim();
+      const category = document.getElementById('newPresetCategory').value.trim();
+      const isDaily = document.getElementById('newPresetIsDaily').checked;
+
+      if (!title || isNaN(points) || points <= 0) {
+        showToast('请完整输入预设内容与有效金额');
+        return;
+      }
+
+      appData.presets.push({
+        id: 'p_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+        type,
+        points: Number(points) || 0,
+        title,
+        category,
+        isDaily: !!isDaily
+      });
+
+      saveLocalStorage();
+      renderPresetManagerList();
+      renderAll();
+      document.getElementById('newPresetTitle').value = '';
+      document.getElementById('newPresetPoints').value = '';
+      document.getElementById('newPresetIsDaily').checked = false;
+      showToast('预设添加成功');
+      triggerBackgroundSync();
+    }
+
+    function deletePreset(id) {
+      appData.presets = appData.presets.filter(p => p.id !== id);
+      saveLocalStorage();
+      renderPresetManagerList();
+      renderAll();
+      showToast('预设已彻底删除');
+      triggerBackgroundSync();
+    }
+
+    // GitHub API Sync
+    function saveGitHubConfigOnly() {
+      ghConfig.owner = document.getElementById('ghOwner').value.trim();
+      ghConfig.repo = document.getElementById('ghRepo').value.trim();
+      ghConfig.branch = document.getElementById('ghBranch').value.trim() || 'main';
+      ghConfig.token = document.getElementById('ghToken').value.trim();
+
+      localStorage.setItem(GITHUB_CFG_KEY, JSON.stringify(ghConfig));
+    }
+
+    async function saveAndPullGitHubConfig() {
+      saveGitHubConfigOnly();
+      if (!ghConfig.token || !ghConfig.owner || !ghConfig.repo) {
+        showToast('请先填写完整仓库与 Token');
+        return;
+      }
+      showToast('正在连接并同步云端数据...');
+      await smartSync(false);
+      closeModal('settingsModal');
+    }
+
+    async function testGitHubConnection() {
+      saveGitHubConfigOnly();
+      if (!ghConfig.token || !ghConfig.owner || !ghConfig.repo) {
+        showToast('请先填写完整仓库与 Token');
+        return;
+      }
+      showToast('正在测试连接 GitHub...');
+      try {
+        const res = await fetch(`https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}`, {
+          headers: {
+            'Authorization': `Bearer ${ghConfig.token}`,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        });
+        if (res.ok) {
+          showToast('✅ 连接成功！仓库正常访问');
+        } else {
+          showToast(`❌ 连接失败: HTTP ${res.status}`);
+        }
+      } catch (e) {
+        showToast('❌ 网络请求失败，请检查网络/代理');
+      }
+    }
+
+    let syncDebounceTimer = null;
+    function triggerBackgroundSync() {
+      if (!ghConfig.token || !ghConfig.owner || !ghConfig.repo) return;
+      clearTimeout(syncDebounceTimer);
+      syncDebounceTimer = setTimeout(() => {
+        smartSync(true);
+      }, 1200);
+    }
+
+    function updateSyncBadge(status, text) {
+      const badge = document.getElementById('syncStatusBadge');
+      const icon = document.getElementById('syncIcon');
+      if (status === 'syncing') {
+        badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse inline-block"></span> ${text || '同步中...'}`;
+        if (icon) icon.classList.add('animate-spin');
+      } else if (status === 'success') {
+        badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span> ${text || '已同步至云端'}`;
+        if (icon) icon.classList.remove('animate-spin');
+      } else {
+        badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500 inline-block"></span> ${text || '同步未就绪'}`;
+        if (icon) icon.classList.remove('animate-spin');
+      }
+    }
+
+    async function smartSync(silent = false) {
+      if (isSyncing) return;
+      if (!ghConfig.token || !ghConfig.owner || !ghConfig.repo) {
+        if (!silent) {
+          openSettingsModal();
+          showToast('请先配置 GitHub Token');
+        }
+        return;
+      }
+
+      isSyncing = true;
+      updateSyncBadge('syncing', '正在拉取与同步...');
+
+      try {
+        const getUrl = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/data.json?ref=${ghConfig.branch}&_t=${Date.now()}`;
+        const getRes = await fetch(getUrl, {
+          headers: {
+            'Authorization': `Bearer ${ghConfig.token}`,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        });
+
+        if (getRes.status === 200) {
+          const fileData = await getRes.json();
+          fileSha = fileData.sha;
+          const content = decodeURIComponent(escape(atob(fileData.content.replace(/\n/g, ''))));
+          const remoteData = JSON.parse(content);
+
+          const remoteTime = new Date((remoteData.config && remoteData.config.lastUpdated) || 0).getTime();
+          const localTime = new Date((appData.config && appData.config.lastUpdated) || 0).getTime();
+
+          if (localTime > remoteTime) {
+            updateSyncBadge('syncing', '正在推送最新更改...');
+            await rawPushToGitHub();
+            updateSyncBadge('success', '云端已同步');
+            if (!silent) showToast('✅ 成功推送至云端！');
+          } else if (remoteTime > localTime) {
+            appData = remoteData;
+            if (!Array.isArray(appData.presets)) appData.presets = [];
+            saveLocalStorage();
+            renderAll();
+            updateSyncBadge('success', '已拉取云端最新数据');
+            if (!silent) showToast('✅ 成功拉取云端数据！');
+          } else {
+            updateSyncBadge('success', '数据已是最新');
+            if (!silent) showToast('✅ 两端数据已同步');
+          }
+
+        } else if (getRes.status === 404) {
+          updateSyncBadge('syncing', '正在初始化云端...');
+          await rawPushToGitHub();
+          updateSyncBadge('success', '云端已创建');
+          if (!silent) showToast('✅ 成功创建并推送到云端！');
+        } else {
+          throw new Error(`GitHub API error: ${getRes.status}`);
+        }
+
+      } catch (err) {
+        console.error("Sync error:", err);
+        updateSyncBadge('error', '同步异常 (离线)');
+        if (!silent) showToast('❌ 同步失败，请检查网络或 Token');
+      } finally {
+        isSyncing = false;
+      }
+    }
+
+    async function rawPushToGitHub() {
+      const contentStr = JSON.stringify(appData, null, 2);
+      const contentBase64 = btoa(unescape(encodeURIComponent(contentStr)));
+
+      const putUrl = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/data.json`;
+      const bodyPayload = {
+        message: `Sync ledger: ${new Date().toLocaleString()}`,
+        content: contentBase64,
+        branch: ghConfig.branch || 'main'
+      };
+      if (fileSha) {
+        bodyPayload.sha = fileSha;
+      }
+
+      const putRes = await fetch(putUrl, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${ghConfig.token}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/vnd.github.v3+json'
+        },
+        body: JSON.stringify(bodyPayload)
+      });
+
+      if (putRes.ok) {
+        const result = await putRes.json();
+        fileSha = result.content.sha;
+      } else {
+        throw new Error(`Push failed: ${putRes.status}`);
+      }
+    }
+
+    async function forcePullFromGitHub() {
+      if (!confirm('确定要从云端重新拉取并覆盖当前本地记录吗？')) return;
+      try {
+        showToast('正在从云端拉取...');
+        const getUrl = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/data.json?ref=${ghConfig.branch}&_t=${Date.now()}`;
+        const getRes = await fetch(getUrl, {
+          headers: {
+            'Authorization': `Bearer ${ghConfig.token}`,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        });
+        if (getRes.status === 200) {
+          const fileData = await getRes.json();
+          fileSha = fileData.sha;
+          const content = decodeURIComponent(escape(atob(fileData.content.replace(/\n/g, ''))));
+          appData = JSON.parse(content);
+          if (!Array.isArray(appData.presets)) appData.presets = [];
+          saveLocalStorage();
+          renderAll();
+          showToast('✅ 已成功从云端恢复覆盖');
+          closeModal('settingsModal');
+        } else {
+          showToast(`❌ 拉取失败: HTTP ${getRes.status}`);
+        }
+      } catch (e) {
+        showToast('❌ 网络请求失败');
+      }
+    }
+
+    async function forcePushToGitHub() {
+      if (!confirm('确定要用当前本地数据强制覆盖云端吗？')) return;
+      try {
+        showToast('正在推送至云端...');
+        const getUrl = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/data.json?ref=${ghConfig.branch}&_t=${Date.now()}`;
+        const getRes = await fetch(getUrl, {
+          headers: {
+            'Authorization': `Bearer ${ghConfig.token}`,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        });
+        if (getRes.status === 200) {
+          const fileData = await getRes.json();
+          fileSha = fileData.sha;
+        }
+        await rawPushToGitHub();
+        showToast('✅ 已成功强制推送到云端');
+        closeModal('settingsModal');
+      } catch (e) {
+        showToast('❌ 推送失败');
+      }
+    }
+
+    function exportDataJson() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appData, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `star_ledger_backup_${new Date().toISOString().slice(0,10)}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast('备份文件已下载');
+    }
+
+    function importDataJson(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (imported.records && Array.isArray(imported.records)) {
+            appData = imported;
+            if (!Array.isArray(appData.presets)) appData.presets = [];
+            saveLocalStorage();
+            renderAll();
+            showToast('✅ 成功导入数据！');
+            triggerBackgroundSync();
+          } else {
+            showToast('❌ JSON 格式不匹配');
+          }
+        } catch (err) {
+          showToast('❌ 无法解析该 JSON 文件');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    // Theme Toggle
+    function initTheme() {
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+        document.getElementById('themeIcon').setAttribute('data-lucide', 'sun');
+      } else {
+        document.documentElement.classList.remove('dark');
+        document.getElementById('themeIcon').setAttribute('data-lucide', 'moon');
+      }
+    }
+
+    function toggleDarkMode() {
+      if (document.documentElement.classList.contains('dark')) {
+        document.documentElement.classList.remove('dark');
+        localStorage.theme = 'light';
+        document.getElementById('themeIcon').setAttribute('data-lucide', 'moon');
+      } else {
+        document.documentElement.classList.add('dark');
+        localStorage.theme = 'dark';
+        document.getElementById('themeIcon').setAttribute('data-lucide', 'sun');
+      }
+      lucide.createIcons();
+      renderAnalyticsChart();
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.innerText = msg;
+      toast.classList.remove('opacity-0', 'translate-y-4');
+      toast.classList.add('opacity-100', 'translate-y-0');
+      setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-4');
+      }, 2500);
+    }
+  </script>
+</body>
+</html>
