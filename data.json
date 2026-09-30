@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-09-30T13:36:18.544Z"
+    "lastUpdated": "2026-09-30T14:46:28.830Z"
   },
   "presets": [
     {
@@ -131,6 +131,15 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1790779588830_r9xaa",
+      "type": "penalty",
+      "title": "《哈利波特》第三本没看到11章",
+      "points": 50,
+      "category": "",
+      "timestamp": "2026-09-30T22:45",
+      "note": ""
+    },
     {
       "id": "rec_1790775378544_loxi3",
       "presetId": "p_1786775136082_4kji",
