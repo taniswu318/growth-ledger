@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-09-30T14:46:28.830Z"
+    "lastUpdated": "2026-09-30T15:13:39.732Z"
   },
   "presets": [
     {
@@ -131,6 +131,15 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1790781219731_a4ida",
+      "type": "expense",
+      "title": "买车模",
+      "points": 86.7,
+      "category": "",
+      "timestamp": "2026-09-30T23:13",
+      "note": ""
+    },
     {
       "id": "rec_1790779588830_r9xaa",
       "type": "penalty",
