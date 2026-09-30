@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-09-30T13:32:30.006Z"
+    "lastUpdated": "2026-09-30T13:32:49.201Z"
   },
   "presets": [
     {
@@ -131,6 +131,15 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1790775169201_6pabm",
+      "type": "reward",
+      "title": "运动",
+      "points": 3,
+      "category": "",
+      "timestamp": "2026-09-30T21:32",
+      "note": ""
+    },
     {
       "id": "rec_1790775150006_1k1bf",
       "presetId": "p_1789208402236_nyhd",
