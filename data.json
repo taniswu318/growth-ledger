@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-09-29T15:19:02.008Z"
+    "lastUpdated": "2026-09-30T13:32:30.006Z"
   },
   "presets": [
     {
@@ -131,6 +131,16 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1790775150006_1k1bf",
+      "presetId": "p_1789208402236_nyhd",
+      "type": "reward",
+      "title": "看英语视频60分钟",
+      "points": 2,
+      "category": "学习",
+      "timestamp": "2026-09-30T21:32",
+      "note": "快捷清单一键记录"
+    },
     {
       "id": "rec_1790695142008_t746d",
       "presetId": "p_1786775170269_d2k7",
