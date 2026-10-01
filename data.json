@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-10-01T03:57:10.932Z"
+    "lastUpdated": "2026-10-01T03:58:22.806Z"
   },
   "presets": [
     {
@@ -131,6 +131,15 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1790827102806_70te3",
+      "type": "reward",
+      "title": "洗厕所",
+      "points": 2,
+      "category": "",
+      "timestamp": "2026-10-01T11:58",
+      "note": ""
+    },
     {
       "id": "rec_1790827030932_zd35f",
       "presetId": "p_1789208402236_nyhd",
