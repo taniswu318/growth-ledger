@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-10-03T14:42:32.591Z"
+    "lastUpdated": "2026-10-04T04:26:06.046Z"
   },
   "presets": [
     {
@@ -131,6 +131,15 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1791087966046_wmhfj",
+      "type": "reward",
+      "title": "11点钟前睡觉",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-10-03T23:00",
+      "note": ""
+    },
     {
       "id": "rec_1791038552591_fqmma",
       "presetId": "p_1786775100157_4ad6",
