@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-10-05T14:06:36.465Z"
+    "lastUpdated": "2026-10-05T14:07:42.693Z"
   },
   "presets": [
     {
@@ -144,6 +144,14 @@
       "title": "抖音超时",
       "points": 1,
       "category": ""
+    },
+    {
+      "id": "p_1791209262693_fu5a",
+      "type": "penalty",
+      "points": 2,
+      "title": "没看英语动画60分钟",
+      "category": "学习",
+      "isDaily": false
     }
   ],
   "records": [
