@@ -354,6 +354,78 @@
     </div>
   </div>
 
+  <!-- Modal 1b: Edit Single Record Modal -->
+  <div id="editRecordModal" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 shadow-2xl border border-slate-200/50 dark:border-slate-800 animate-slide-up overflow-hidden max-h-[92vh] overflow-y-auto no-scrollbar">
+      <div class="flex items-center justify-between pb-3.5 border-b border-slate-100 dark:border-slate-800">
+        <h3 class="text-xl font-bold">修改记录</h3>
+        <button onclick="closeModal('editRecordModal')" class="p-1.5 rounded-full text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="editRecordForm" onsubmit="handleEditRecordSubmit(event)" class="space-y-4 pt-4">
+        <input type="hidden" id="editRecordId" value="" />
+
+        <div>
+          <div class="grid grid-cols-3 gap-2">
+            <button type="button" onclick="selectEditType('reward')" id="editTypeReward" class="py-2.5 px-3 rounded-xl border text-sm font-bold transition flex items-center justify-center gap-1.5">
+              <i data-lucide="plus" class="w-4 h-4"></i> 奖励 (+)
+            </button>
+            <button type="button" onclick="selectEditType('penalty')" id="editTypePenalty" class="py-2.5 px-3 rounded-xl border text-sm font-bold transition flex items-center justify-center gap-1.5">
+              <i data-lucide="minus" class="w-4 h-4"></i> 惩罚 (-)
+            </button>
+            <button type="button" onclick="selectEditType('expense')" id="editTypeExpense" class="py-2.5 px-3 rounded-xl border text-sm font-bold transition flex items-center justify-center gap-1.5">
+              <i data-lucide="shopping-bag" class="w-4 h-4"></i> 支出 (-)
+            </button>
+          </div>
+          <input type="hidden" id="editRecordType" value="reward" />
+        </div>
+
+        <div class="grid grid-cols-3 gap-2.5">
+          <div class="col-span-2">
+            <label class="block text-xs font-semibold text-slate-500 mb-1">事项名称</label>
+            <input type="text" id="editRecordTitle" required placeholder="如: 整理书桌"
+              class="w-full px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-transparent focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 text-sm font-medium transition" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">金额</label>
+            <input type="number" step="0.01" min="0.01" id="editRecordPoints" required placeholder="0.00"
+              class="w-full px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-transparent focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 text-sm font-bold font-mono transition" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">分类 (选填)</label>
+            <input type="text" id="editRecordCategory" placeholder="如: 学习、日常"
+              class="w-full px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border-none text-sm font-medium" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">备注 (选填)</label>
+            <input type="text" id="editRecordNote" placeholder="补充详情..."
+              class="w-full px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border-none text-sm font-medium" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-500 mb-1.5">记录时间</label>
+          <input type="datetime-local" id="editRecordTimestamp" required
+            class="w-full block px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700/60 text-sm font-medium text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-500 transition" />
+        </div>
+
+        <div class="flex gap-2 pt-2">
+          <button type="button" onclick="closeModal('editRecordModal')" class="px-5 py-3.5 rounded-2xl bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-base font-bold hover:bg-slate-300 dark:hover:bg-slate-700 transition">
+            取消
+          </button>
+          <button type="submit" id="editRecordSubmitBtn" class="flex-1 py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white text-base font-bold shadow-lg shadow-indigo-600/20 active:scale-[0.98] transition">
+            保存修改
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Modal 2: Settings & GitHub Sync -->
   <div id="settingsModal" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl border border-slate-200/50 dark:border-slate-800 max-h-[90vh] overflow-y-auto no-scrollbar">
@@ -466,7 +538,7 @@
         <div id="presetManagerList" class="space-y-2.5 max-h-64 overflow-y-auto pr-1"></div>
 
         <div class="pt-3.5 border-t border-slate-100 dark:border-slate-800 space-y-3.5">
-          <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider">手动添加新预设</h4>
+          <h4 id="presetFormTitle" class="text-xs font-bold text-slate-500 uppercase tracking-wider">手动添加新预设</h4>
           <div class="grid grid-cols-2 gap-2.5">
             <select id="newPresetType" class="px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-sm font-semibold">
               <option value="reward">奖励 (+)</option>
@@ -485,9 +557,14 @@
               <span>加入主页【常用快捷清单】(点击一键记录)</span>
             </label>
           </div>
-          <button onclick="addPreset()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold transition shadow-md shadow-indigo-600/20">
-            添加预设
-          </button>
+          <div class="flex gap-2">
+            <button onclick="addPreset()" id="presetFormSubmitBtn" class="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold transition shadow-md shadow-indigo-600/20">
+              添加预设
+            </button>
+            <button type="button" onclick="cancelPresetEdit()" id="presetFormCancelBtn" class="hidden px-5 py-3 bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl text-sm font-bold hover:bg-slate-300 dark:hover:bg-slate-700 transition">
+              取消修改
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -501,7 +578,7 @@
   <!-- ================= JAVASCRIPT LOGIC ================= -->
   <script>
     // Build version generated based on current release timestamp
-    const APP_VERSION = "2026.09.27.2020";
+    const APP_VERSION = "2026.10.05.2222";
 
     const STORAGE_KEY = 'STAR_LEDGER_DATA_V2';
     const GITHUB_CFG_KEY = 'STAR_LEDGER_GH_CONFIG';
@@ -533,6 +610,7 @@
     let expandedMonths = new Set();
     let expandedDays = new Set();
     let isAllMonthsExpanded = false;
+    let editingPresetId = null;
 
     // Decimal Number Formatter
     function formatPoints(num) {
@@ -1397,6 +1475,9 @@
                 <span class="text-sm sm:text-base font-extrabold font-mono ${scoreColor}">
                   ${prefix}${formatPoints(item.points)}
                 </span>
+                <button onclick="openEditRecordModal('${item.id}')" class="p-1.5 rounded text-slate-300 hover:text-indigo-500 dark:text-slate-600 dark:hover:text-indigo-400 transition" title="修改">
+                  <i data-lucide="pencil" class="w-4 h-4"></i>
+                </button>
                 <button onclick="deleteRecord('${item.id}')" class="p-1.5 rounded text-slate-300 hover:text-rose-500 dark:text-slate-600 dark:hover:text-rose-400 transition" title="删除">
                   <i data-lucide="trash-2" class="w-4 h-4"></i>
                 </button>
@@ -1654,6 +1735,88 @@
       triggerBackgroundSync();
     }
 
+    function openEditRecordModal(id) {
+      const rec = appData.records.find(r => r.id === id);
+      if (!rec) return;
+
+      document.getElementById('editRecordId').value = rec.id;
+      document.getElementById('editRecordTitle').value = rec.title || '';
+      document.getElementById('editRecordPoints').value = formatPoints(rec.points);
+      document.getElementById('editRecordCategory').value = rec.category || '';
+      document.getElementById('editRecordNote').value = rec.note || '';
+      document.getElementById('editRecordTimestamp').value = rec.timestamp
+        ? rec.timestamp.slice(0, 16)
+        : formatToLocalISO(new Date());
+      selectEditType(rec.type || 'reward');
+
+      openModal('editRecordModal');
+      setTimeout(() => {
+        document.getElementById('editRecordTitle').focus();
+      }, 100);
+    }
+
+    function selectEditType(type) {
+      document.getElementById('editRecordType').value = type;
+      const rBtn = document.getElementById('editTypeReward');
+      const pBtn = document.getElementById('editTypePenalty');
+      const eBtn = document.getElementById('editTypeExpense');
+      const submitBtn = document.getElementById('editRecordSubmitBtn');
+
+      const baseClass = "py-2.5 px-3 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-bold text-slate-600 dark:text-slate-400 flex items-center justify-center gap-1.5";
+      rBtn.className = baseClass;
+      pBtn.className = baseClass;
+      eBtn.className = baseClass;
+
+      if (type === 'reward') {
+        rBtn.className = "py-2.5 px-3 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 text-sm font-bold flex items-center justify-center gap-1.5";
+        submitBtn.className = "flex-1 py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-base font-bold shadow-lg shadow-emerald-600/20 active:scale-[0.98] transition";
+      } else if (type === 'penalty') {
+        pBtn.className = "py-2.5 px-3 rounded-xl border-2 border-rose-500 bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 text-sm font-bold flex items-center justify-center gap-1.5";
+        submitBtn.className = "flex-1 py-3.5 rounded-2xl bg-rose-600 hover:bg-rose-700 text-white text-base font-bold shadow-lg shadow-rose-600/20 active:scale-[0.98] transition";
+      } else {
+        eBtn.className = "py-2.5 px-3 rounded-xl border-2 border-blue-500 bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300 text-sm font-bold flex items-center justify-center gap-1.5";
+        submitBtn.className = "flex-1 py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white text-base font-bold shadow-lg shadow-blue-600/20 active:scale-[0.98] transition";
+      }
+    }
+
+    function handleEditRecordSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('editRecordId').value;
+      const rec = appData.records.find(r => r.id === id);
+      if (!rec) {
+        showToast('未找到该记录，请刷新后重试');
+        closeModal('editRecordModal');
+        return;
+      }
+
+      const type = document.getElementById('editRecordType').value;
+      const title = document.getElementById('editRecordTitle').value.trim();
+      const points = parseFloat(document.getElementById('editRecordPoints').value);
+      const category = document.getElementById('editRecordCategory').value.trim();
+      const note = document.getElementById('editRecordNote').value.trim();
+      const timestampVal = document.getElementById('editRecordTimestamp').value;
+
+      if (!title || isNaN(points) || points <= 0) {
+        showToast('请填写有效的事项名称与金额');
+        return;
+      }
+
+      rec.type = type;
+      rec.title = title;
+      rec.points = Number(points) || 0;
+      rec.category = category;
+      rec.note = note;
+      if (timestampVal) {
+        rec.timestamp = formatToLocalISO(new Date(timestampVal.replace('T', ' ').replace(/-/g, '/')));
+      }
+
+      saveLocalStorage();
+      renderAll();
+      closeModal('editRecordModal');
+      showToast('✅ 记录已修改保存');
+      triggerBackgroundSync();
+    }
+
     function saveInitialScore() {
       const val = parseFloat(document.getElementById('settingInitialScore').value) || 0;
       appData.config.initialScore = val;
@@ -1675,6 +1838,7 @@
     }
 
     function openPresetManagerModal() {
+      cancelPresetEdit();
       renderPresetManagerList();
       openModal('presetModal');
     }
@@ -1719,7 +1883,10 @@
               <i data-lucide="zap" class="w-3.5 h-3.5"></i>
               <span>${p.isDaily ? '快捷清单' : '设为快捷'}</span>
             </button>
-            <button onclick="deletePreset('${p.id}')" class="text-slate-400 hover:text-rose-500 p-1.5">
+            <button onclick="editPreset('${p.id}')" class="text-slate-400 hover:text-indigo-500 p-1.5" title="修改预设">
+              <i data-lucide="pencil" class="w-4 h-4"></i>
+            </button>
+            <button onclick="deletePreset('${p.id}')" class="text-slate-400 hover:text-rose-500 p-1.5" title="删除预设">
               <i data-lucide="trash-2" class="w-4 h-4"></i>
             </button>
           </div>
@@ -1773,6 +1940,40 @@
       }
     }
 
+    function editPreset(id) {
+      const p = appData.presets.find(item => item.id === id);
+      if (!p) return;
+
+      editingPresetId = id;
+      document.getElementById('newPresetType').value = p.type || 'reward';
+      document.getElementById('newPresetPoints').value = formatPoints(p.points);
+      document.getElementById('newPresetTitle').value = p.title || '';
+      document.getElementById('newPresetCategory').value = p.category || '';
+      document.getElementById('newPresetIsDaily').checked = !!p.isDaily;
+
+      document.getElementById('presetFormTitle').innerText = '修改预设内容';
+      const submitBtn = document.getElementById('presetFormSubmitBtn');
+      submitBtn.innerText = '保存修改';
+      submitBtn.className = 'flex-1 py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-sm font-bold transition shadow-md shadow-amber-500/20';
+      document.getElementById('presetFormCancelBtn').classList.remove('hidden');
+      document.getElementById('presetFormTitle').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function cancelPresetEdit() {
+      editingPresetId = null;
+      document.getElementById('newPresetType').value = 'reward';
+      document.getElementById('newPresetPoints').value = '';
+      document.getElementById('newPresetTitle').value = '';
+      document.getElementById('newPresetCategory').value = '';
+      document.getElementById('newPresetIsDaily').checked = false;
+
+      document.getElementById('presetFormTitle').innerText = '手动添加新预设';
+      const submitBtn = document.getElementById('presetFormSubmitBtn');
+      submitBtn.innerText = '添加预设';
+      submitBtn.className = 'flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold transition shadow-md shadow-indigo-600/20';
+      document.getElementById('presetFormCancelBtn').classList.add('hidden');
+    }
+
     function addPreset() {
       const type = document.getElementById('newPresetType').value;
       const points = parseFloat(document.getElementById('newPresetPoints').value);
@@ -1782,6 +1983,24 @@
 
       if (!title || isNaN(points) || points <= 0) {
         showToast('请完整输入预设内容与有效金额');
+        return;
+      }
+
+      if (editingPresetId) {
+        const target = appData.presets.find(item => item.id === editingPresetId);
+        if (target) {
+          target.type = type;
+          target.points = Number(points) || 0;
+          target.title = title;
+          target.category = category;
+          target.isDaily = !!isDaily;
+        }
+        saveLocalStorage();
+        cancelPresetEdit();
+        renderPresetManagerList();
+        renderAll();
+        showToast('✅ 预设修改成功');
+        triggerBackgroundSync();
         return;
       }
 
@@ -1805,6 +2024,7 @@
     }
 
     function deletePreset(id) {
+      if (editingPresetId === id) cancelPresetEdit();
       appData.presets = appData.presets.filter(p => p.id !== id);
       saveLocalStorage();
       renderPresetManagerList();
