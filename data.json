@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-10-05T04:21:34.647Z"
+    "lastUpdated": "2026-10-05T04:22:14.541Z"
   },
   "presets": [
     {
@@ -135,7 +135,7 @@
       "points": 1,
       "title": "没有跟读",
       "category": "学习",
-      "isDaily": false
+      "isDaily": true
     }
   ],
   "records": [
