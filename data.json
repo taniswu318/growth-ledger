@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-10-05T14:14:53.559Z"
+    "lastUpdated": "2026-10-05T14:54:47.589Z"
   },
   "presets": [
     {
@@ -149,7 +149,7 @@
       "id": "p_1791209262693_fu5a",
       "type": "penalty",
       "points": 2,
-      "title": "没看英语动画60分钟",
+      "title": "没看英语视频60分钟",
       "category": "学习",
       "isDaily": false
     }
