@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-10-05T04:22:39.566Z"
+    "lastUpdated": "2026-10-05T14:06:36.465Z"
   },
   "presets": [
     {
@@ -109,6 +109,22 @@
       "isDaily": true
     },
     {
+      "id": "p_1791174094647_0a2v",
+      "type": "penalty",
+      "points": 1,
+      "title": "没有跟读",
+      "category": "学习",
+      "isDaily": true
+    },
+    {
+      "id": "p_1791174157591_8sz7",
+      "type": "penalty",
+      "points": 1,
+      "title": "没看书",
+      "category": "学习",
+      "isDaily": true
+    },
+    {
       "id": "p_1786775530561_b81g",
       "type": "penalty",
       "points": 2,
@@ -128,22 +144,6 @@
       "title": "抖音超时",
       "points": 1,
       "category": ""
-    },
-    {
-      "id": "p_1791174094647_0a2v",
-      "type": "penalty",
-      "points": 1,
-      "title": "没有跟读",
-      "category": "学习",
-      "isDaily": true
-    },
-    {
-      "id": "p_1791174157591_8sz7",
-      "type": "penalty",
-      "points": 1,
-      "title": "没看书",
-      "category": "学习",
-      "isDaily": true
     }
   ],
   "records": [
