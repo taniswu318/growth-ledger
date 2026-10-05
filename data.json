@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-10-05T04:22:14.541Z"
+    "lastUpdated": "2026-10-05T04:22:39.566Z"
   },
   "presets": [
     {
@@ -134,6 +134,14 @@
       "type": "penalty",
       "points": 1,
       "title": "没有跟读",
+      "category": "学习",
+      "isDaily": true
+    },
+    {
+      "id": "p_1791174157591_8sz7",
+      "type": "penalty",
+      "points": 1,
+      "title": "没看书",
       "category": "学习",
       "isDaily": true
     }
