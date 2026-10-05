@@ -240,6 +240,28 @@
       </div>
     </div>
 
+    <!-- Item Ranking Stats Card (Reward / Penalty) -->
+    <div id="statsRankCard" class="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-4 sm:p-5 shadow-sm space-y-3.5">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center">
+            <i data-lucide="trophy" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h2 class="text-base font-bold text-slate-900 dark:text-white">事项统计排行</h2>
+            <p class="text-[11px] text-slate-400">按累计分数从多到少排列</p>
+          </div>
+        </div>
+
+        <div class="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl text-xs font-bold flex-shrink-0">
+          <button onclick="changeStatsMode('reward')" id="statsBtnReward" class="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-700 shadow-sm text-emerald-600 dark:text-emerald-400 transition">奖励榜</button>
+          <button onclick="changeStatsMode('penalty')" id="statsBtnPenalty" class="px-3 py-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 transition">惩罚榜</button>
+        </div>
+      </div>
+
+      <div id="statsRankList" class="space-y-2.5 pt-0.5"></div>
+    </div>
+
     <!-- Filter & Monthly Stream Section -->
     <div class="pt-2">
       <div class="flex items-center justify-between mb-3 px-1">
@@ -590,7 +612,7 @@
   <!-- ================= JAVASCRIPT LOGIC ================= -->
   <script>
     // Build version generated based on current release timestamp
-    const APP_VERSION = "2026.10.06.0146";
+    const APP_VERSION = "2026.10.06.0210";
 
     const STORAGE_KEY = 'STAR_LEDGER_DATA_V2';
     const GITHUB_CFG_KEY = 'STAR_LEDGER_GH_CONFIG';
@@ -616,6 +638,7 @@
     let isSyncing = false;
     let chartMode = 'day';
     let analyticsChartInstance = null;
+    let statsMode = 'reward';
     let quickSortable = null;
     let presetSortable = null;
     
@@ -835,6 +858,7 @@
       renderDashboard();
       renderQuickRoutines();
       renderAnalyticsChart();
+      renderStatsRank();
       renderMonthlyGroupedRecords();
       renderModalPresetChips();
       lucide.createIcons();
@@ -1204,6 +1228,91 @@
             }
           }
         }
+      });
+    }
+
+    // ================= ITEM RANKING STATS (REWARD / PENALTY) =================
+    function changeStatsMode(mode) {
+      statsMode = mode;
+      ['reward', 'penalty'].forEach(m => {
+        const btn = document.getElementById('statsBtn' + m.charAt(0).toUpperCase() + m.slice(1));
+        if (!btn) return;
+        if (m === mode) {
+          btn.className = "px-3 py-1.5 rounded-lg bg-white dark:bg-slate-700 shadow-sm transition " +
+            (m === 'reward' ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400');
+        } else {
+          btn.className = "px-3 py-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 transition";
+        }
+      });
+      renderStatsRank();
+    }
+
+    // Aggregate records by title within the current type, then rank high -> low
+    function renderStatsRank() {
+      const container = document.getElementById('statsRankList');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const isReward = statsMode === 'reward';
+      const accentText = isReward ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400';
+      const accentBar = isReward ? 'bg-emerald-500' : 'bg-rose-500';
+      const accentSoft = isReward ? 'bg-emerald-50 dark:bg-emerald-950/40' : 'bg-rose-50 dark:bg-rose-950/40';
+      const sign = isReward ? '+' : '-';
+
+      const grouped = {};
+      (appData.records || []).forEach(r => {
+        if (r.type !== statsMode) return;
+        const key = (r.title || '未命名').trim() || '未命名';
+        if (!grouped[key]) grouped[key] = { title: key, category: r.category || '', points: 0, count: 0 };
+        grouped[key].points += Number(r.points) || 0;
+        grouped[key].count += 1;
+        if (!grouped[key].category && r.category) grouped[key].category = r.category;
+      });
+
+      const list = Object.values(grouped).sort((a, b) =>
+        b.points - a.points || b.count - a.count || a.title.localeCompare(b.title)
+      );
+
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="py-6 text-center">
+            <i data-lucide="${isReward ? 'smile' : 'frown'}" class="w-8 h-8 mx-auto mb-1.5 opacity-40 text-slate-400"></i>
+            <p class="text-sm text-slate-400">暂无${isReward ? '奖励' : '惩罚'}记录</p>
+          </div>`;
+        lucide.createIcons();
+        return;
+      }
+
+      const maxPoints = Math.max(...list.map(i => i.points)) || 1;
+
+      list.forEach((item, idx) => {
+        const pct = Math.max(4, Math.round((item.points / maxPoints) * 100));
+        const rank = idx + 1;
+        let rankClass = 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400';
+        if (rank === 1) rankClass = 'bg-amber-400 text-white shadow-sm shadow-amber-400/30';
+        else if (rank === 2) rankClass = 'bg-slate-300 text-slate-700';
+        else if (rank === 3) rankClass = 'bg-orange-300 text-orange-900';
+
+        const row = document.createElement('div');
+        row.className = 'flex items-center gap-2.5';
+        row.innerHTML = `
+          <span class="w-6 h-6 rounded-lg flex items-center justify-center text-xs font-extrabold flex-shrink-0 ${rankClass}">${rank}</span>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between gap-2">
+              <div class="min-w-0 flex items-center gap-1.5">
+                <span class="text-sm font-bold text-slate-800 dark:text-slate-200 truncate">${item.title}</span>
+                ${item.category ? `<span class="text-[10px] font-semibold px-1.5 py-0.5 rounded-md ${accentSoft} ${accentText} flex-shrink-0">${item.category}</span>` : ''}
+              </div>
+              <span class="text-sm font-extrabold font-mono ${accentText} flex-shrink-0">${sign}${formatPoints(item.points)}
+                <span class="text-[11px] font-bold text-slate-400">×${item.count}</span>
+              </span>
+            </div>
+            <div class="h-1.5 rounded-full bg-slate-100 dark:bg-slate-800 mt-1 overflow-hidden">
+              <div class="h-full rounded-full ${accentBar}" style="width:${pct}%"></div>
+            </div>
+          </div>
+        `;
+        container.appendChild(row);
       });
     }
 
