@@ -91,7 +91,7 @@
 
   <!-- Top App Bar -->
   <header class="sticky top-0 z-30 px-4 pt-3 pb-3 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200/60 dark:border-slate-800/60 transition-colors">
-    <div class="max-w-2xl mx-auto flex items-center justify-between">
+    <div class="max-w-2xl lg:max-w-6xl xl:max-w-7xl mx-auto flex items-center justify-between">
       <div class="flex items-center space-x-2.5">
         <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-indigo-600 flex items-center justify-center text-white shadow-sm font-bold text-lg">
           ✦
@@ -125,8 +125,13 @@
   </header>
 
   <!-- Main Container -->
-  <main class="flex-1 max-w-2xl w-full mx-auto px-4 py-4 space-y-4">
-    
+  <main class="flex-1 w-full max-w-2xl lg:max-w-6xl xl:max-w-7xl mx-auto px-4 py-4">
+    <!-- Responsive layout: single column on phones, two columns on wide screens -->
+    <div class="flex flex-col gap-4 lg:grid lg:grid-cols-2 lg:gap-5 lg:items-start">
+
+    <!-- ===== Left Column: today's dashboard, quick record & routines ===== -->
+    <div class="flex flex-col gap-4 min-w-0">
+
     <!-- Hero Score & Balance Dashboard -->
     <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white p-5 sm:p-6 shadow-xl shadow-indigo-950/15 border border-indigo-900/30">
       <div class="absolute -right-8 -top-8 w-40 h-40 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
@@ -207,6 +212,10 @@
       <div id="quickTasksGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-0.5"></div>
     </div>
 
+    </div>
+    <!-- ===== Right Column: analytics & history stream ===== -->
+    <div class="flex flex-col gap-4 min-w-0">
+
     <!-- Trend Analytics Card (Day / Week / Month Bar Chart) -->
     <div class="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-4 sm:p-5 shadow-sm space-y-3.5">
       <div class="flex items-center justify-between">
@@ -253,6 +262,9 @@
         <i data-lucide="inbox" class="w-12 h-12 mx-auto stroke-[1.5] mb-2 opacity-50"></i>
         <p class="text-base font-medium">暂无记录</p>
       </div>
+    </div>
+
+    </div>
     </div>
 
   </main>
@@ -578,7 +590,7 @@
   <!-- ================= JAVASCRIPT LOGIC ================= -->
   <script>
     // Build version generated based on current release timestamp
-    const APP_VERSION = "2026.10.05.2222";
+    const APP_VERSION = "2026.10.06.0146";
 
     const STORAGE_KEY = 'STAR_LEDGER_DATA_V2';
     const GITHUB_CFG_KEY = 'STAR_LEDGER_GH_CONFIG';
