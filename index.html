@@ -85,6 +85,8 @@
     .drag-handle {
       touch-action: none;
     }
+    .panel-chevron { transition: transform 0.2s ease; }
+    .panel-collapsed .panel-chevron { transform: rotate(-90deg); }
   </style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans transition-colors duration-200 text-sm">
@@ -129,16 +131,20 @@
     <!-- Responsive layout: single column on phones, two columns on wide screens -->
     <div class="flex flex-col gap-4 lg:grid lg:grid-cols-2 lg:gap-5 lg:items-start">
 
-    <!-- ===== Left Column: today's dashboard, quick record & routines ===== -->
+    <!-- ===== Left Column: dashboard, quick record, routines & analytics ===== -->
     <div class="flex flex-col gap-4 min-w-0">
 
     <!-- Hero Score & Balance Dashboard -->
-    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white p-5 sm:p-6 shadow-xl shadow-indigo-950/15 border border-indigo-900/30">
+    <div data-panel="hero" class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white p-5 sm:p-6 shadow-xl shadow-indigo-950/15 border border-indigo-900/30">
       <div class="absolute -right-8 -top-8 w-40 h-40 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
       <div class="absolute -left-8 -bottom-8 w-32 h-32 bg-amber-500/15 rounded-full blur-2xl pointer-events-none"></div>
 
+      <button onclick="togglePanel('hero')" class="absolute top-3 right-3 z-20 p-1.5 rounded-lg text-indigo-200/70 hover:bg-white/10 transition" title="收起 / 展开">
+        <i data-lucide="chevron-down" class="panel-chevron w-5 h-5"></i>
+      </button>
+
       <div class="relative z-10 flex flex-col items-center text-center">
-        <span class="text-sm font-semibold uppercase tracking-wider text-indigo-300/80 mb-1">当前可用结余 / Current Balance</span>
+        <span onclick="togglePanel('hero')" class="text-sm font-semibold uppercase tracking-wider text-indigo-300/80 mb-1 cursor-pointer select-none">当前可用结余 / Current Balance</span>
         <div class="flex items-baseline space-x-2">
           <span id="currentTotalScore" class="text-5xl sm:text-6xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-amber-200 via-white to-indigo-100">
             0
@@ -146,24 +152,26 @@
           <span class="text-sm text-indigo-300/80 font-medium">pts / 元</span>
         </div>
 
-        <div class="grid grid-cols-3 gap-2 w-full mt-5 pt-4 border-t border-white/10">
-          <div class="bg-white/5 rounded-2xl p-2.5 backdrop-blur-sm border border-white/5 flex flex-col items-center">
-            <span class="text-xs text-emerald-300 font-medium flex items-center gap-1">
-              <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i> 累计总奖励
-            </span>
-            <span id="totalRewardScore" class="text-lg font-extrabold text-emerald-400 mt-0.5">+0</span>
-          </div>
-          <div class="bg-white/5 rounded-2xl p-2.5 backdrop-blur-sm border border-white/5 flex flex-col items-center">
-            <span class="text-xs text-rose-300 font-medium flex items-center gap-1">
-              <i data-lucide="arrow-down-right" class="w-3.5 h-3.5"></i> 累计总惩罚
-            </span>
-            <span id="totalPenaltyScore" class="text-lg font-extrabold text-rose-400 mt-0.5">-0</span>
-          </div>
-          <div class="bg-white/5 rounded-2xl p-2.5 backdrop-blur-sm border border-white/5 flex flex-col items-center">
-            <span class="text-xs text-blue-300 font-medium flex items-center gap-1">
-              <i data-lucide="shopping-bag" class="w-3.5 h-3.5"></i> 累计总支出
-            </span>
-            <span id="totalExpenseScore" class="text-lg font-extrabold text-blue-400 mt-0.5">-0</span>
+        <div data-panel-body="hero" class="w-full">
+          <div class="grid grid-cols-3 gap-2 w-full mt-5 pt-4 border-t border-white/10">
+            <div class="bg-white/5 rounded-2xl p-2.5 backdrop-blur-sm border border-white/5 flex flex-col items-center">
+              <span class="text-xs text-emerald-300 font-medium flex items-center gap-1">
+                <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i> 累计总奖励
+              </span>
+              <span id="totalRewardScore" class="text-lg font-extrabold text-emerald-400 mt-0.5">+0</span>
+            </div>
+            <div class="bg-white/5 rounded-2xl p-2.5 backdrop-blur-sm border border-white/5 flex flex-col items-center">
+              <span class="text-xs text-rose-300 font-medium flex items-center gap-1">
+                <i data-lucide="arrow-down-right" class="w-3.5 h-3.5"></i> 累计总惩罚
+              </span>
+              <span id="totalPenaltyScore" class="text-lg font-extrabold text-rose-400 mt-0.5">-0</span>
+            </div>
+            <div class="bg-white/5 rounded-2xl p-2.5 backdrop-blur-sm border border-white/5 flex flex-col items-center">
+              <span class="text-xs text-blue-300 font-medium flex items-center gap-1">
+                <i data-lucide="shopping-bag" class="w-3.5 h-3.5"></i> 累计总支出
+              </span>
+              <span id="totalExpenseScore" class="text-lg font-extrabold text-blue-400 mt-0.5">-0</span>
+            </div>
           </div>
         </div>
       </div>
@@ -186,9 +194,9 @@
     </div>
 
     <!-- Quick Routines Checklist Card (with Touch Drag Reorder) -->
-    <div id="quickRoutinesSection" class="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-4 sm:p-5 shadow-sm space-y-3.5">
+    <div data-panel="routines" id="quickRoutinesSection" class="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-4 sm:p-5 shadow-sm space-y-3.5">
       <div class="flex items-center justify-between">
-        <div class="flex items-center gap-2.5">
+        <div class="flex items-center gap-2.5 cursor-pointer select-none" onclick="togglePanel('routines')">
           <div class="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
             <i data-lucide="zap" class="w-4 h-4"></i>
           </div>
@@ -205,84 +213,119 @@
             <span>管理清单</span>
             <i data-lucide="chevron-right" class="w-4 h-4"></i>
           </button>
+          <button onclick="togglePanel('routines')" class="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition" title="收起 / 展开">
+            <i data-lucide="chevron-down" class="panel-chevron w-5 h-5"></i>
+          </button>
         </div>
       </div>
 
       <!-- Drag Container -->
-      <div id="quickTasksGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-0.5"></div>
+      <div data-panel-body="routines">
+        <div id="quickTasksGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-0.5"></div>
+      </div>
     </div>
-
-    </div>
-    <!-- ===== Right Column: analytics & history stream ===== -->
-    <div class="flex flex-col gap-4 min-w-0">
 
     <!-- Trend Analytics Card (Day / Week / Month Bar Chart) -->
-    <div class="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-4 sm:p-5 shadow-sm space-y-3.5">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-2.5">
+    <div data-panel="chart" class="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-4 sm:p-5 shadow-sm space-y-3.5">
+      <div class="flex items-center justify-between gap-2">
+        <div class="flex items-center gap-2.5 cursor-pointer select-none min-w-0" onclick="togglePanel('chart')">
           <div class="w-8 h-8 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
             <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
           </div>
-          <div>
-            <h2 class="text-base font-bold text-slate-900 dark:text-white">积分收支走势</h2>
-          </div>
+          <h2 class="text-base font-bold text-slate-900 dark:text-white">积分收支走势</h2>
         </div>
-        
-        <div class="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl text-xs font-bold">
-          <button onclick="changeChartMode('day')" id="chartBtnDay" class="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-700 shadow-sm text-indigo-600 dark:text-indigo-400 transition">日</button>
-          <button onclick="changeChartMode('week')" id="chartBtnWeek" class="px-3 py-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 transition">周</button>
-          <button onclick="changeChartMode('month')" id="chartBtnMonth" class="px-3 py-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 transition">月</button>
+
+        <div class="flex items-center gap-2 flex-shrink-0">
+          <div class="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl text-xs font-bold">
+            <button onclick="changeChartMode('day')" id="chartBtnDay" class="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-700 shadow-sm text-indigo-600 dark:text-indigo-400 transition">日</button>
+            <button onclick="changeChartMode('week')" id="chartBtnWeek" class="px-3 py-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 transition">周</button>
+            <button onclick="changeChartMode('month')" id="chartBtnMonth" class="px-3 py-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 transition">月</button>
+          </div>
+          <button onclick="togglePanel('chart')" class="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition" title="收起 / 展开">
+            <i data-lucide="chevron-down" class="panel-chevron w-5 h-5"></i>
+          </button>
         </div>
       </div>
 
-      <div class="w-full h-52 relative pt-2">
+      <div data-panel-body="chart" class="w-full h-52 relative pt-2">
         <canvas id="analyticsChartCanvas"></canvas>
       </div>
     </div>
 
-    <!-- Item Ranking Stats Card (Reward / Penalty) -->
-    <div id="statsRankCard" class="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-4 sm:p-5 shadow-sm space-y-3.5">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-2.5">
+    <!-- Item Ranking Stats Card (Reward / Penalty, by points / by count) -->
+    <div data-panel="stats" id="statsRankCard" class="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-4 sm:p-5 shadow-sm space-y-3.5">
+      <div class="flex items-center justify-between gap-2">
+        <div class="flex items-center gap-2.5 cursor-pointer select-none min-w-0" onclick="togglePanel('stats')">
           <div class="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center">
             <i data-lucide="trophy" class="w-4 h-4"></i>
           </div>
           <div>
             <h2 class="text-base font-bold text-slate-900 dark:text-white">事项统计排行</h2>
-            <p class="text-[11px] text-slate-400">按累计分数从多到少排列</p>
+            <p id="statsSubtitle" class="text-[11px] text-slate-400">按累计分数从多到少排列</p>
+          </div>
+        </div>
+        <button onclick="togglePanel('stats')" class="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition flex-shrink-0" title="收起 / 展开">
+          <i data-lucide="chevron-down" class="panel-chevron w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div data-panel-body="stats" class="space-y-3 pt-0.5">
+        <div class="flex items-center justify-between gap-2 flex-wrap">
+          <div class="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl text-xs font-bold">
+            <button onclick="changeStatsMode('reward')" id="statsBtnReward" class="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-700 shadow-sm text-emerald-600 dark:text-emerald-400 transition">奖励榜</button>
+            <button onclick="changeStatsMode('penalty')" id="statsBtnPenalty" class="px-3 py-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 transition">惩罚榜</button>
+          </div>
+          <div class="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl text-xs font-bold">
+            <button onclick="changeStatsMetric('points')" id="statsMetricPoints" class="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-700 shadow-sm text-indigo-600 dark:text-indigo-400 transition">按积分</button>
+            <button onclick="changeStatsMetric('count')" id="statsMetricCount" class="px-3 py-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 transition">按计数</button>
+          </div>
+        </div>
+        <div id="statsRankList" class="space-y-2.5"></div>
+      </div>
+    </div>
+
+    </div>
+    <!-- ===== Right Column: history stream ===== -->
+    <div class="flex flex-col gap-4 min-w-0">
+
+    <!-- Records List Section (collapsible) -->
+    <div data-panel="records">
+      <div class="flex items-center justify-between gap-2 mb-3 px-1">
+        <div class="flex items-center gap-2.5 cursor-pointer select-none min-w-0" onclick="togglePanel('records')">
+          <div class="w-8 h-8 rounded-xl bg-sky-500/10 text-sky-600 dark:text-sky-400 flex items-center justify-center">
+            <i data-lucide="list" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h2 class="text-base font-bold text-slate-900 dark:text-white">流水记录</h2>
+            <p id="recordsCountText" class="text-[11px] text-slate-400">共 0 笔</p>
+          </div>
+        </div>
+        <button onclick="togglePanel('records')" class="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition flex-shrink-0" title="收起 / 展开">
+          <i data-lucide="chevron-down" class="panel-chevron w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div data-panel-body="records">
+        <div class="flex items-center justify-between mb-3 px-1">
+          <div class="flex space-x-1.5 bg-slate-200/70 dark:bg-slate-800/70 p-1 rounded-xl text-sm font-medium">
+            <button onclick="switchTab('all')" id="tabAll" class="px-3.5 py-1.5 rounded-lg bg-white dark:bg-slate-700 font-bold shadow-sm transition">全部</button>
+            <button onclick="switchTab('reward')" id="tabReward" class="px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 transition">奖励</button>
+            <button onclick="switchTab('penalty')" id="tabPenalty" class="px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 transition">惩罚</button>
+            <button onclick="switchTab('expense')" id="tabExpense" class="px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 transition">支出</button>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="openPresetManagerModal()" class="text-xs text-slate-500 dark:text-slate-400 font-medium hover:underline">常用预设</button>
+            <span class="text-slate-300 dark:text-slate-700">|</span>
+            <button onclick="toggleExpandAllMonths()" id="toggleAllMonthsBtn" class="text-xs text-indigo-500 font-medium hover:underline">展开全部月份</button>
           </div>
         </div>
 
-        <div class="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl text-xs font-bold flex-shrink-0">
-          <button onclick="changeStatsMode('reward')" id="statsBtnReward" class="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-700 shadow-sm text-emerald-600 dark:text-emerald-400 transition">奖励榜</button>
-          <button onclick="changeStatsMode('penalty')" id="statsBtnPenalty" class="px-3 py-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 transition">惩罚榜</button>
+        <div id="monthlyGroupedList" class="space-y-4 pb-20"></div>
+
+        <div id="emptyState" class="hidden py-14 text-center text-slate-400">
+          <i data-lucide="inbox" class="w-12 h-12 mx-auto stroke-[1.5] mb-2 opacity-50"></i>
+          <p class="text-base font-medium">暂无记录</p>
         </div>
-      </div>
-
-      <div id="statsRankList" class="space-y-2.5 pt-0.5"></div>
-    </div>
-
-    <!-- Filter & Monthly Stream Section -->
-    <div class="pt-2">
-      <div class="flex items-center justify-between mb-3 px-1">
-        <div class="flex space-x-1.5 bg-slate-200/70 dark:bg-slate-800/70 p-1 rounded-xl text-sm font-medium">
-          <button onclick="switchTab('all')" id="tabAll" class="px-3.5 py-1.5 rounded-lg bg-white dark:bg-slate-700 font-bold shadow-sm transition">全部</button>
-          <button onclick="switchTab('reward')" id="tabReward" class="px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 transition">奖励</button>
-          <button onclick="switchTab('penalty')" id="tabPenalty" class="px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 transition">惩罚</button>
-          <button onclick="switchTab('expense')" id="tabExpense" class="px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 transition">支出</button>
-        </div>
-        <div class="flex items-center gap-2">
-          <button onclick="openPresetManagerModal()" class="text-xs text-slate-500 dark:text-slate-400 font-medium hover:underline">常用预设</button>
-          <span class="text-slate-300 dark:text-slate-700">|</span>
-          <button onclick="toggleExpandAllMonths()" id="toggleAllMonthsBtn" class="text-xs text-indigo-500 font-medium hover:underline">展开全部月份</button>
-        </div>
-      </div>
-
-      <div id="monthlyGroupedList" class="space-y-4 pb-20"></div>
-
-      <div id="emptyState" class="hidden py-14 text-center text-slate-400">
-        <i data-lucide="inbox" class="w-12 h-12 mx-auto stroke-[1.5] mb-2 opacity-50"></i>
-        <p class="text-base font-medium">暂无记录</p>
       </div>
     </div>
 
@@ -612,10 +655,11 @@
   <!-- ================= JAVASCRIPT LOGIC ================= -->
   <script>
     // Build version generated based on current release timestamp
-    const APP_VERSION = "2026.10.06.0210";
+    const APP_VERSION = "2026.10.06.1145";
 
     const STORAGE_KEY = 'STAR_LEDGER_DATA_V2';
     const GITHUB_CFG_KEY = 'STAR_LEDGER_GH_CONFIG';
+    const PANEL_COLLAPSE_KEY = 'STAR_LEDGER_COLLAPSED_PANELS';
 
     let appData = {
       config: {
@@ -639,6 +683,8 @@
     let chartMode = 'day';
     let analyticsChartInstance = null;
     let statsMode = 'reward';
+    let statsMetric = 'points';
+    let collapsedPanels = new Set();
     let quickSortable = null;
     let presetSortable = null;
     
@@ -765,6 +811,7 @@
     // Initialize App
     window.addEventListener('DOMContentLoaded', () => {
       loadLocalStorage();
+      loadPanelState();
       
       const currentMonthStr = getCurrentMonthString();
       const todayStr = getLocalDateString(new Date());
@@ -773,6 +820,7 @@
 
       renderVersionInfo();
       renderAll();
+      applyPanelState();
       initTheme();
       lucide.createIcons();
 
@@ -851,6 +899,43 @@
     function saveLocalStorage() {
       appData.config.lastUpdated = new Date().toISOString();
       localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+    }
+
+    // ================= COLLAPSIBLE PANELS =================
+    function loadPanelState() {
+      try {
+        const raw = localStorage.getItem(PANEL_COLLAPSE_KEY);
+        collapsedPanels = raw ? new Set(JSON.parse(raw)) : new Set();
+      } catch (e) {
+        collapsedPanels = new Set();
+      }
+    }
+
+    function savePanelState() {
+      try {
+        localStorage.setItem(PANEL_COLLAPSE_KEY, JSON.stringify([...collapsedPanels]));
+      } catch (e) {}
+    }
+
+    function applyPanelState() {
+      document.querySelectorAll('[data-panel]').forEach(panel => {
+        const id = panel.getAttribute('data-panel');
+        const isCollapsed = collapsedPanels.has(id);
+        panel.classList.toggle('panel-collapsed', isCollapsed);
+        const body = panel.querySelector('[data-panel-body]');
+        if (body) body.classList.toggle('hidden', isCollapsed);
+      });
+    }
+
+    function togglePanel(id) {
+      if (collapsedPanels.has(id)) collapsedPanels.delete(id);
+      else collapsedPanels.add(id);
+      savePanelState();
+      applyPanelState();
+      // Chart.js cannot size correctly while hidden, so redraw when it is shown again
+      if (id === 'chart' && !collapsedPanels.has('chart')) {
+        renderAnalyticsChart();
+      }
     }
 
     // Master Render
@@ -1247,6 +1332,20 @@
       renderStatsRank();
     }
 
+    function changeStatsMetric(metric) {
+      statsMetric = metric;
+      ['points', 'count'].forEach(m => {
+        const btn = document.getElementById('statsMetric' + m.charAt(0).toUpperCase() + m.slice(1));
+        if (!btn) return;
+        if (m === metric) {
+          btn.className = "px-3 py-1.5 rounded-lg bg-white dark:bg-slate-700 shadow-sm text-indigo-600 dark:text-indigo-400 transition";
+        } else {
+          btn.className = "px-3 py-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 transition";
+        }
+      });
+      renderStatsRank();
+    }
+
     // Aggregate records by title within the current type, then rank high -> low
     function renderStatsRank() {
       const container = document.getElementById('statsRankList');
@@ -1254,10 +1353,14 @@
       container.innerHTML = '';
 
       const isReward = statsMode === 'reward';
+      const byCount = statsMetric === 'count';
       const accentText = isReward ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400';
       const accentBar = isReward ? 'bg-emerald-500' : 'bg-rose-500';
       const accentSoft = isReward ? 'bg-emerald-50 dark:bg-emerald-950/40' : 'bg-rose-50 dark:bg-rose-950/40';
       const sign = isReward ? '+' : '-';
+
+      const subtitle = document.getElementById('statsSubtitle');
+      if (subtitle) subtitle.innerText = byCount ? '按出现次数从多到少排列' : '按累计分数从多到少排列';
 
       const grouped = {};
       (appData.records || []).forEach(r => {
@@ -1269,9 +1372,10 @@
         if (!grouped[key].category && r.category) grouped[key].category = r.category;
       });
 
-      const list = Object.values(grouped).sort((a, b) =>
-        b.points - a.points || b.count - a.count || a.title.localeCompare(b.title)
-      );
+      const list = Object.values(grouped).sort((a, b) => {
+        if (byCount) return b.count - a.count || b.points - a.points || a.title.localeCompare(b.title);
+        return b.points - a.points || b.count - a.count || a.title.localeCompare(b.title);
+      });
 
       if (list.length === 0) {
         container.innerHTML = `
@@ -1283,15 +1387,19 @@
         return;
       }
 
-      const maxPoints = Math.max(...list.map(i => i.points)) || 1;
+      const maxValue = Math.max(...list.map(i => byCount ? i.count : i.points)) || 1;
 
       list.forEach((item, idx) => {
-        const pct = Math.max(4, Math.round((item.points / maxPoints) * 100));
+        const value = byCount ? item.count : item.points;
+        const pct = Math.max(4, Math.round((value / maxValue) * 100));
         const rank = idx + 1;
         let rankClass = 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400';
         if (rank === 1) rankClass = 'bg-amber-400 text-white shadow-sm shadow-amber-400/30';
         else if (rank === 2) rankClass = 'bg-slate-300 text-slate-700';
         else if (rank === 3) rankClass = 'bg-orange-300 text-orange-900';
+
+        const primary = byCount ? ('×' + item.count) : (sign + formatPoints(item.points));
+        const secondary = byCount ? (sign + formatPoints(item.points)) : ('×' + item.count);
 
         const row = document.createElement('div');
         row.className = 'flex items-center gap-2.5';
@@ -1303,8 +1411,8 @@
                 <span class="text-sm font-bold text-slate-800 dark:text-slate-200 truncate">${item.title}</span>
                 ${item.category ? `<span class="text-[10px] font-semibold px-1.5 py-0.5 rounded-md ${accentSoft} ${accentText} flex-shrink-0">${item.category}</span>` : ''}
               </div>
-              <span class="text-sm font-extrabold font-mono ${accentText} flex-shrink-0">${sign}${formatPoints(item.points)}
-                <span class="text-[11px] font-bold text-slate-400">×${item.count}</span>
+              <span class="text-sm font-extrabold font-mono ${accentText} flex-shrink-0">${primary}
+                <span class="text-[11px] font-bold text-slate-400">${secondary}</span>
               </span>
             </div>
             <div class="h-1.5 rounded-full bg-slate-100 dark:bg-slate-800 mt-1 overflow-hidden">
@@ -1408,6 +1516,8 @@
     function renderMonthlyGroupedRecords() {
       const container = document.getElementById('monthlyGroupedList');
       const emptyEl = document.getElementById('emptyState');
+      const countEl = document.getElementById('recordsCountText');
+      if (countEl) countEl.innerText = '共 ' + (appData.records ? appData.records.length : 0) + ' 笔';
       container.innerHTML = '';
 
       let filtered = appData.records;
