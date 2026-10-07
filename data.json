@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-10-07T15:14:54.766Z"
+    "lastUpdated": "2026-10-07T17:54:23.786Z"
   },
   "presets": [
     {
@@ -155,6 +155,24 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1791395663787_nsca6",
+      "type": "penalty",
+      "title": "抖音超时",
+      "points": 2,
+      "category": "",
+      "timestamp": "2026-10-07T23:54",
+      "note": ""
+    },
+    {
+      "id": "rec_1791395663786_01c4k",
+      "type": "penalty",
+      "title": "超过11点睡觉",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-10-07T23:54",
+      "note": ""
+    },
     {
       "id": "rec_1791383651345_b9cnq",
       "presetId": "p_1786775136082_4kji",
