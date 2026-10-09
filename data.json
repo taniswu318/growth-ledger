@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-10-09T15:13:09.118Z"
+    "lastUpdated": "2026-10-09T16:10:36.027Z"
   },
   "presets": [
     {
@@ -155,6 +155,15 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1791562236027_qs61d",
+      "type": "penalty",
+      "title": "超过12点睡觉",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-10-10T00:10",
+      "note": ""
+    },
     {
       "id": "rec_1791558694038_0mzde",
       "type": "penalty",
