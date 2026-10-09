@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-10-09T15:13:01.010Z"
+    "lastUpdated": "2026-10-09T15:13:09.118Z"
   },
   "presets": [
     {
@@ -122,7 +122,7 @@
       "points": 1,
       "title": "没看书",
       "category": "学习",
-      "isDaily": false
+      "isDaily": true
     },
     {
       "id": "p_1786775530561_b81g",
