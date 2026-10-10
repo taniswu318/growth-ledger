@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-10-10T15:29:14.308Z"
+    "lastUpdated": "2026-10-10T16:07:34.487Z"
   },
   "presets": [
     {
@@ -156,6 +156,15 @@
   ],
   "records": [
     {
+      "id": "rec_1791648454487_xa360",
+      "type": "penalty",
+      "title": "超过11点睡觉",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-10-03T23:07",
+      "note": ""
+    },
+    {
       "id": "rec_1791646154308_3wrbu",
       "presetId": "p_1789576657093_w8t8",
       "type": "penalty",
@@ -204,15 +213,6 @@
       "category": "学习",
       "timestamp": "2026-10-10T21:46",
       "note": "快捷清单一键记录"
-    },
-    {
-      "id": "rec_1791562236027_qs61d",
-      "type": "penalty",
-      "title": "超过12点睡觉",
-      "points": 1,
-      "category": "",
-      "timestamp": "2026-10-10T00:10",
-      "note": ""
     },
     {
       "id": "rec_1791558694038_0mzde",
