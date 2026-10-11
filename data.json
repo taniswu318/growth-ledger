@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-10-11T15:06:22.487Z"
+    "lastUpdated": "2026-10-11T15:06:44.074Z"
   },
   "presets": [
     {
@@ -155,6 +155,24 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1791731204075_65qja",
+      "type": "penalty",
+      "title": "没看书",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-10-11T23:06",
+      "note": ""
+    },
+    {
+      "id": "rec_1791731204074_hez4c",
+      "type": "penalty",
+      "title": "没有跟读",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-10-11T23:06",
+      "note": ""
+    },
     {
       "id": "rec_1791731176145_miqmy",
       "presetId": "p_1786775070190_00c5",
