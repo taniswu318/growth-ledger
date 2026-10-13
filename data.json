@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-10-13T14:53:47.108Z"
+    "lastUpdated": "2026-10-13T15:07:39.762Z"
   },
   "presets": [
     {
@@ -155,6 +155,16 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1791904059762_3n8b1",
+      "presetId": "p_1789576657093_w8t8",
+      "type": "penalty",
+      "title": "超过11点睡觉",
+      "points": 1,
+      "category": "生活",
+      "timestamp": "2026-10-13T23:07",
+      "note": "快捷清单一键记录"
+    },
     {
       "id": "rec_1791903227108_7vzsc",
       "presetId": "p_1786775888497_zfo3",
