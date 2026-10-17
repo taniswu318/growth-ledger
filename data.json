@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-10-17T15:23:24.780Z"
+    "lastUpdated": "2026-10-17T15:23:48.535Z"
   },
   "presets": [
     {
@@ -160,7 +160,7 @@
       "presetId": "p_1786775070190_00c5",
       "type": "reward",
       "title": "运动",
-      "points": 2,
+      "points": 4,
       "category": "健康",
       "timestamp": "2026-10-17T23:23",
       "note": "快捷清单一键记录"
