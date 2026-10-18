@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-10-18T04:04:13.840Z"
+    "lastUpdated": "2026-10-18T10:48:04.445Z"
   },
   "presets": [
     {
@@ -155,6 +155,15 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1792320484445_ehhe6",
+      "type": "reward",
+      "title": "拖地",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-10-18T18:48",
+      "note": ""
+    },
     {
       "id": "rec_1792296253840_ht6gq",
       "presetId": "p_1789208402236_nyhd",
