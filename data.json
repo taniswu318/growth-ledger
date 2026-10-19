@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-10-19T14:41:34.060Z"
+    "lastUpdated": "2026-10-19T14:50:37.942Z"
   },
   "presets": [
     {
@@ -163,6 +163,26 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1792421437942_wtapn",
+      "presetId": "p_1786775136082_4kji",
+      "type": "reward",
+      "title": "洗碗",
+      "points": 1,
+      "category": "生活",
+      "timestamp": "2026-10-19T22:50",
+      "note": "快捷清单一键记录"
+    },
+    {
+      "id": "rec_1792421435607_3b41r",
+      "presetId": "p_1786775100157_4ad6",
+      "type": "reward",
+      "title": "英语跟读",
+      "points": 1,
+      "category": "学习",
+      "timestamp": "2026-10-19T22:50",
+      "note": "快捷清单一键记录"
+    },
     {
       "id": "rec_1792419186695_facet",
       "presetId": "p_1786775888497_zfo3",
