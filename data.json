@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-10-19T14:41:15.853Z"
+    "lastUpdated": "2026-10-19T14:41:31.058Z"
   },
   "presets": [
     {
@@ -101,6 +101,14 @@
       "isDaily": true
     },
     {
+      "id": "p_1792420875853_x9dr",
+      "type": "penalty",
+      "points": 1,
+      "title": "超过11点半睡觉",
+      "category": "生活",
+      "isDaily": false
+    },
+    {
       "id": "p_1789576669785_xxyp",
       "type": "penalty",
       "points": 2,
@@ -151,14 +159,6 @@
       "points": 2,
       "title": "没看英语视频60分钟",
       "category": "学习",
-      "isDaily": false
-    },
-    {
-      "id": "p_1792420875853_x9dr",
-      "type": "penalty",
-      "points": 1,
-      "title": "超过11点半睡觉",
-      "category": "生活",
       "isDaily": false
     }
   ],
