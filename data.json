@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-10-19T14:40:44.186Z"
+    "lastUpdated": "2026-10-19T14:40:50.228Z"
   },
   "presets": [
     {
@@ -103,7 +103,7 @@
     {
       "id": "p_1789576669785_xxyp",
       "type": "penalty",
-      "points": 2,
+      "points": 1,
       "title": "超过12点睡觉",
       "category": "生活",
       "isDaily": false
