@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-10-20T14:23:16.608Z"
+    "lastUpdated": "2026-10-20T15:00:07.962Z"
   },
   "presets": [
     {
@@ -164,6 +164,16 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1792508407962_lkpei",
+      "presetId": "p_1786777726937_k50c",
+      "type": "penalty",
+      "title": "抖音超时",
+      "points": 1,
+      "category": "快捷录入",
+      "timestamp": "2026-10-20T23:00",
+      "note": "快捷清单一键记录"
+    },
     {
       "id": "rec_1792506196608_djvya",
       "presetId": "p_1786775070190_00c5",
