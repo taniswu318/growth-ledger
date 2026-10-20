@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-10-20T15:31:29.704Z"
+    "lastUpdated": "2026-10-20T15:43:19.035Z"
   },
   "presets": [
     {
@@ -151,7 +151,7 @@
       "type": "penalty",
       "title": "抖音超时",
       "points": 1,
-      "category": "",
+      "category": "娱乐",
       "isDaily": true
     },
     {
