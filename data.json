@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-10-20T15:43:19.035Z"
+    "lastUpdated": "2026-10-21T12:12:45.822Z"
   },
   "presets": [
     {
@@ -164,6 +164,15 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1792584765822_pjj1z",
+      "type": "reward",
+      "title": "做单杠",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-10-20T23:12",
+      "note": ""
+    },
     {
       "id": "rec_1792510289704_m7eem",
       "presetId": "p_1792420875853_x9dr",
