@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-10-21T16:01:29.736Z"
+    "lastUpdated": "2026-10-21T16:01:48.912Z"
   },
   "presets": [
     {
@@ -164,6 +164,15 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1792598508912_km0o7",
+      "type": "reward",
+      "title": "英语跟读",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-10-21T23:01",
+      "note": ""
+    },
     {
       "id": "rec_1792598489736_7yftu",
       "type": "reward",
