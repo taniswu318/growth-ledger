@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-10-21T16:01:48.912Z"
+    "lastUpdated": "2026-10-22T14:39:05.035Z"
   },
   "presets": [
     {
@@ -164,6 +164,46 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1792679945035_zk1pq",
+      "presetId": "p_1786775888497_zfo3",
+      "type": "reward",
+      "title": "看书",
+      "points": 1,
+      "category": "学习",
+      "timestamp": "2026-10-22T22:39",
+      "note": "快捷清单一键记录"
+    },
+    {
+      "id": "rec_1792679942228_tj306",
+      "presetId": "p_1786775100157_4ad6",
+      "type": "reward",
+      "title": "英语跟读",
+      "points": 1,
+      "category": "学习",
+      "timestamp": "2026-10-22T22:39",
+      "note": "快捷清单一键记录"
+    },
+    {
+      "id": "rec_1792679940795_osr1i",
+      "presetId": "p_1786775070190_00c5",
+      "type": "reward",
+      "title": "运动",
+      "points": 2,
+      "category": "健康",
+      "timestamp": "2026-10-22T22:39",
+      "note": "快捷清单一键记录"
+    },
+    {
+      "id": "rec_1792679939585_344op",
+      "presetId": "p_1789208402236_nyhd",
+      "type": "reward",
+      "title": "看英语视频60分钟",
+      "points": 2,
+      "category": "学习",
+      "timestamp": "2026-10-22T22:38",
+      "note": "快捷清单一键记录"
+    },
     {
       "id": "rec_1792598508912_km0o7",
       "type": "reward",
