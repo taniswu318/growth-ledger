@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-10-22T14:59:05.314Z"
+    "lastUpdated": "2026-10-22T15:10:09.339Z"
   },
   "presets": [
     {
@@ -164,6 +164,16 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1792681809339_spi0b",
+      "presetId": "p_1786775252370_elml",
+      "type": "reward",
+      "title": "11点钟前睡觉",
+      "points": 1,
+      "category": "生活",
+      "timestamp": "2026-10-22T23:10",
+      "note": "快捷清单一键记录"
+    },
     {
       "id": "rec_1792681145314_oregd",
       "presetId": "p_1786775170269_d2k7",
