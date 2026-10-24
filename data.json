@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-10-24T15:18:09.598Z"
+    "lastUpdated": "2026-10-24T15:18:14.030Z"
   },
   "presets": [
     {
@@ -169,7 +169,7 @@
       "presetId": "p_1786777726937_k50c",
       "type": "penalty",
       "title": "抖音超时",
-      "points": 1,
+      "points": 3,
       "category": "娱乐",
       "timestamp": "2026-10-24T23:18",
       "note": "快捷清单一键记录"
