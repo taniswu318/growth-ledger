@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-10-26T14:41:02.248Z"
+    "lastUpdated": "2026-10-26T14:41:15.210Z"
   },
   "presets": [
     {
@@ -164,6 +164,26 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1793025675210_cbnvw",
+      "presetId": "p_1786775888497_zfo3",
+      "type": "reward",
+      "title": "看书",
+      "points": 1,
+      "category": "学习",
+      "timestamp": "2026-10-26T22:41",
+      "note": "快捷清单一键记录"
+    },
+    {
+      "id": "rec_1793025674290_kw710",
+      "presetId": "p_1790510367866_qa6f",
+      "type": "reward",
+      "title": "遛小白",
+      "points": 0.5,
+      "category": "生活",
+      "timestamp": "2026-10-26T22:41",
+      "note": "快捷清单一键记录"
+    },
     {
       "id": "rec_1793025662248_z02c0",
       "presetId": "p_1786775100157_4ad6",
