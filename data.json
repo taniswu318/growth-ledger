@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-10-29T15:11:17.481Z"
+    "lastUpdated": "2026-10-29T15:11:28.351Z"
   },
   "presets": [
     {
@@ -164,6 +164,26 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1793286688351_ovqt6",
+      "presetId": "p_1786775170269_d2k7",
+      "type": "reward",
+      "title": "做单杠",
+      "points": 1,
+      "category": "健康",
+      "timestamp": "2026-10-29T23:11",
+      "note": "快捷清单一键记录"
+    },
+    {
+      "id": "rec_1793286679962_zu71t",
+      "presetId": "p_1786775136082_4kji",
+      "type": "reward",
+      "title": "洗碗",
+      "points": 1,
+      "category": "生活",
+      "timestamp": "2026-10-29T23:11",
+      "note": "快捷清单一键记录"
+    },
     {
       "id": "rec_1793286677481_ukyff",
       "presetId": "p_1786775070190_00c5",
