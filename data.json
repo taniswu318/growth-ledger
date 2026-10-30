@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-10-29T18:20:35.829Z"
+    "lastUpdated": "2026-10-30T13:25:38.621Z"
   },
   "presets": [
     {
@@ -164,6 +164,15 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1793366738621_surfb",
+      "type": "expense",
+      "title": "买车模",
+      "points": 118,
+      "category": "",
+      "timestamp": "2026-10-30T21:25",
+      "note": ""
+    },
     {
       "id": "rec_1793286760889_vc4sw",
       "presetId": "p_1789576657093_w8t8",
