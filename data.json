@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-10-31T16:02:32.048Z"
+    "lastUpdated": "2026-10-31T16:03:55.204Z"
   },
   "presets": [
     {
@@ -164,6 +164,24 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1793462635205_wvfbr",
+      "type": "penalty",
+      "title": "超过11点半睡觉",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-10-31T23:31",
+      "note": ""
+    },
+    {
+      "id": "rec_1793462635204_6dv4z",
+      "type": "penalty",
+      "title": "超过11点睡觉",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-10-31T23:31",
+      "note": ""
+    },
     {
       "id": "rec_1793462552048_s56c4",
       "type": "reward",
