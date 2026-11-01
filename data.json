@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-11-01T13:32:30.467Z"
+    "lastUpdated": "2026-11-01T14:34:55.741Z"
   },
   "presets": [
     {
@@ -164,6 +164,15 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1793543695741_kf8dn",
+      "type": "penalty",
+      "title": "没看英语视频60分钟",
+      "points": 2,
+      "category": "",
+      "timestamp": "2026-11-01T22:34",
+      "note": ""
+    },
     {
       "id": "rec_1793539950467_qc0bm",
       "presetId": "p_1786775100157_4ad6",
