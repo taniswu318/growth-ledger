@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-11-01T14:54:36.302Z"
+    "lastUpdated": "2026-11-02T13:43:23.551Z"
   },
   "presets": [
     {
@@ -164,6 +164,26 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1793627003551_jb178",
+      "presetId": "p_1786775100157_4ad6",
+      "type": "reward",
+      "title": "英语跟读",
+      "points": 1,
+      "category": "学习",
+      "timestamp": "2026-11-02T21:43",
+      "note": "快捷清单一键记录"
+    },
+    {
+      "id": "rec_1793627002818_dd7v1",
+      "presetId": "p_1786775070190_00c5",
+      "type": "reward",
+      "title": "运动",
+      "points": 2,
+      "category": "健康",
+      "timestamp": "2026-11-02T21:43",
+      "note": "快捷清单一键记录"
+    },
     {
       "id": "rec_1793544876302_n79kt",
       "presetId": "p_1786775252370_elml",
