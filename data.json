@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-11-03T14:42:27.265Z"
+    "lastUpdated": "2026-11-03T15:08:20.655Z"
   },
   "presets": [
     {
@@ -164,6 +164,16 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1793718500655_d80us",
+      "presetId": "p_1786775170269_d2k7",
+      "type": "reward",
+      "title": "做单杠",
+      "points": 1,
+      "category": "健康",
+      "timestamp": "2026-11-03T23:08",
+      "note": "快捷清单一键记录"
+    },
     {
       "id": "rec_1793716947265_9dcz6",
       "presetId": "p_1786775136082_4kji",
