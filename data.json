@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-11-04T13:50:34.919Z"
+    "lastUpdated": "2026-11-04T14:51:48.009Z"
   },
   "presets": [
     {
@@ -164,6 +164,16 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1793803908009_kjby9",
+      "presetId": "p_1786775136082_4kji",
+      "type": "reward",
+      "title": "洗碗",
+      "points": 1,
+      "category": "生活",
+      "timestamp": "2026-11-04T22:51",
+      "note": "快捷清单一键记录"
+    },
     {
       "id": "rec_1793800234919_ahq86",
       "presetId": "p_1786775100157_4ad6",
