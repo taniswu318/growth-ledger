@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-11-06T15:32:37.464Z"
+    "lastUpdated": "2026-11-06T15:33:07.380Z"
   },
   "presets": [
     {
@@ -164,6 +164,15 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1793979187380_9dgpy",
+      "type": "penalty",
+      "title": "没有跟读",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-11-06T23:33",
+      "note": ""
+    },
     {
       "id": "rec_1793979157464_q30fq",
       "presetId": "p_1792420875853_x9dr",
