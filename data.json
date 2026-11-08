@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-11-08T15:23:50.317Z"
+    "lastUpdated": "2026-11-08T15:29:24.482Z"
   },
   "presets": [
     {
@@ -164,6 +164,26 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1794151764482_454l3",
+      "presetId": "p_1786775170269_d2k7",
+      "type": "reward",
+      "title": "做单杠",
+      "points": 1,
+      "category": "健康",
+      "timestamp": "2026-11-08T23:29",
+      "note": "快捷清单一键记录"
+    },
+    {
+      "id": "rec_1794151434139_katnz",
+      "presetId": "p_1791174094647_0a2v",
+      "type": "penalty",
+      "title": "没有跟读",
+      "points": 1,
+      "category": "学习",
+      "timestamp": "2026-11-08T23:23",
+      "note": "快捷清单一键记录"
+    },
     {
       "id": "rec_1794150520488_j5f1u",
       "presetId": "p_1789576657093_w8t8",
