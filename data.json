@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-11-13T16:02:33.011Z"
+    "lastUpdated": "2026-11-13T16:02:43.364Z"
   },
   "presets": [
     {
@@ -168,24 +168,6 @@
       "id": "rec_1794585753014_5zgzl",
       "type": "penalty",
       "title": "没有跟读",
-      "points": 1,
-      "category": "",
-      "timestamp": "2026-11-13T23:01",
-      "note": ""
-    },
-    {
-      "id": "rec_1794585753013_6zgte",
-      "type": "penalty",
-      "title": "遛小白",
-      "points": 0.5,
-      "category": "",
-      "timestamp": "2026-11-13T23:01",
-      "note": ""
-    },
-    {
-      "id": "rec_1794585753012_6bqsk",
-      "type": "penalty",
-      "title": "做单杠",
       "points": 1,
       "category": "",
       "timestamp": "2026-11-13T23:01",
