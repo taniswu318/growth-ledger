@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-11-12T15:23:35.956Z"
+    "lastUpdated": "2026-11-13T16:02:33.011Z"
   },
   "presets": [
     {
@@ -164,6 +164,42 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1794585753014_5zgzl",
+      "type": "penalty",
+      "title": "没有跟读",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-11-13T23:01",
+      "note": ""
+    },
+    {
+      "id": "rec_1794585753013_6zgte",
+      "type": "penalty",
+      "title": "遛小白",
+      "points": 0.5,
+      "category": "",
+      "timestamp": "2026-11-13T23:01",
+      "note": ""
+    },
+    {
+      "id": "rec_1794585753012_6bqsk",
+      "type": "penalty",
+      "title": "做单杠",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-11-13T23:01",
+      "note": ""
+    },
+    {
+      "id": "rec_1794585753011_4qri2",
+      "type": "penalty",
+      "title": "看英语视频60分钟",
+      "points": 2,
+      "category": "",
+      "timestamp": "2026-11-13T23:01",
+      "note": ""
+    },
     {
       "id": "rec_1794497015956_46oe3",
       "presetId": "p_1789576657093_w8t8",
