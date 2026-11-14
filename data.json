@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-11-14T14:39:45.729Z"
+    "lastUpdated": "2026-11-14T15:40:16.341Z"
   },
   "presets": [
     {
@@ -164,6 +164,36 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1794670816341_m6a3k",
+      "presetId": "p_1791174157591_8sz7",
+      "type": "penalty",
+      "title": "没看书",
+      "points": 1,
+      "category": "学习",
+      "timestamp": "2026-11-14T23:40",
+      "note": "快捷清单一键记录"
+    },
+    {
+      "id": "rec_1794670813850_edl00",
+      "presetId": "p_1792420875853_x9dr",
+      "type": "penalty",
+      "title": "超过11点半睡觉",
+      "points": 1,
+      "category": "生活",
+      "timestamp": "2026-11-14T23:40",
+      "note": "快捷清单一键记录"
+    },
+    {
+      "id": "rec_1794670812966_efc6l",
+      "presetId": "p_1789576657093_w8t8",
+      "type": "penalty",
+      "title": "超过11点睡觉",
+      "points": 1,
+      "category": "生活",
+      "timestamp": "2026-11-14T23:40",
+      "note": "快捷清单一键记录"
+    },
     {
       "id": "rec_1794667185729_7qrqq",
       "presetId": "p_1786775136082_4kji",
