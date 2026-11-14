@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-11-13T16:03:14.262Z"
+    "lastUpdated": "2026-11-14T08:58:40.454Z"
   },
   "presets": [
     {
@@ -164,6 +164,15 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1794646720454_t06k8",
+      "type": "expense",
+      "title": "充值XGPU",
+      "points": 295,
+      "category": "",
+      "timestamp": "2026-11-14T16:58",
+      "note": ""
+    },
     {
       "id": "rec_1794585794264_jcnz9",
       "type": "reward",
