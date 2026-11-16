@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-11-16T13:46:37.053Z"
+    "lastUpdated": "2026-11-16T13:46:46.561Z"
   },
   "presets": [
     {
@@ -164,6 +164,16 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1794836806561_2f8vi",
+      "presetId": "p_1786775070190_00c5",
+      "type": "reward",
+      "title": "运动",
+      "points": 2,
+      "category": "健康",
+      "timestamp": "2026-11-16T21:46",
+      "note": "快捷清单一键记录"
+    },
     {
       "id": "rec_1794836797053_9m86h",
       "presetId": "p_1789208402236_nyhd",
