@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-11-18T12:54:58.702Z"
+    "lastUpdated": "2026-11-18T12:56:50.441Z"
   },
   "presets": [
     {
@@ -164,6 +164,15 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1795006610441_879iy",
+      "type": "reward",
+      "title": "英语96分",
+      "points": 100,
+      "category": "",
+      "timestamp": "2026-11-18T20:56",
+      "note": ""
+    },
     {
       "id": "rec_1795006498702_845hz",
       "presetId": "p_1786775070190_00c5",
