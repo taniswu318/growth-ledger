@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-11-18T14:46:17.299Z"
+    "lastUpdated": "2026-11-18T15:29:50.722Z"
   },
   "presets": [
     {
@@ -164,6 +164,26 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1795015790722_a99bf",
+      "presetId": "p_1789576657093_w8t8",
+      "type": "penalty",
+      "title": "超过11点睡觉",
+      "points": 1,
+      "category": "生活",
+      "timestamp": "2026-11-18T23:29",
+      "note": "快捷清单一键记录"
+    },
+    {
+      "id": "rec_1795015789441_ql2o5",
+      "presetId": "p_1786775170269_d2k7",
+      "type": "reward",
+      "title": "做单杠",
+      "points": 1,
+      "category": "健康",
+      "timestamp": "2026-11-18T23:29",
+      "note": "快捷清单一键记录"
+    },
     {
       "id": "rec_1795013177299_d7wy1",
       "presetId": "p_1786775888497_zfo3",
