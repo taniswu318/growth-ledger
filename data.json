@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-11-18T14:46:04.118Z"
+    "lastUpdated": "2026-11-18T14:46:09.913Z"
   },
   "presets": [
     {
@@ -169,7 +169,7 @@
       "presetId": "p_1786775100157_4ad6",
       "type": "reward",
       "title": "英语跟读",
-      "points": 1,
+      "points": 2,
       "category": "学习",
       "timestamp": "2026-11-18T22:46",
       "note": "快捷清单一键记录"
