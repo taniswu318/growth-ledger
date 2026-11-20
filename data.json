@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-11-20T15:21:32.260Z"
+    "lastUpdated": "2026-11-20T15:25:51.845Z"
   },
   "presets": [
     {
@@ -164,6 +164,16 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1795188351845_r330o",
+      "presetId": "p_1791174094647_0a2v",
+      "type": "penalty",
+      "title": "没有跟读",
+      "points": 1,
+      "category": "学习",
+      "timestamp": "2026-11-20T23:25",
+      "note": "快捷清单一键记录"
+    },
     {
       "id": "rec_1795188092260_iasrj",
       "presetId": "p_1789576657093_w8t8",
