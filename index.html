@@ -514,13 +514,17 @@
       </div>
 
       <div class="space-y-5 pt-4">
-        <div class="p-4 rounded-2xl bg-slate-100/70 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60">
-          <h4 class="text-base font-bold mb-1">起始/继承金额 (零用钱底池)</h4>
-          <p class="text-xs text-slate-500 mb-3">历史结余金额，支持小数（如 100.5）。修改后会自动同步到云端。</p>
-          <div class="flex space-x-2">
-            <input type="number" step="0.01" id="settingInitialScore" placeholder="0.00" class="flex-1 px-4 py-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-base font-bold" />
-            <button onclick="saveInitialScore()" class="px-5 py-2.5 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-xl text-sm font-bold hover:opacity-90">更新金额</button>
+        <!-- System Information & Build Version Display -->
+        <div class="p-4 rounded-2xl bg-slate-100/70 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60 flex items-center justify-between">
+          <div>
+            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider">系统版本 / Build Version</h4>
+            <p id="appVersionSettingsText" class="text-sm font-mono font-bold text-slate-800 dark:text-slate-200 mt-0.5">
+              v...
+            </p>
           </div>
+          <span class="text-xs font-semibold px-2.5 py-1 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900/40">
+            最新构建
+          </span>
         </div>
 
         <div class="p-4 rounded-2xl bg-indigo-50/50 dark:bg-indigo-950/30 border border-indigo-100 dark:border-indigo-900/40 space-y-3.5">
@@ -580,19 +584,6 @@
             <button onclick="document.getElementById('importFileInput').click()" class="flex-1 py-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50">导入 JSON</button>
             <input type="file" id="importFileInput" accept=".json" class="hidden" onchange="importDataJson(event)" />
           </div>
-        </div>
-
-        <!-- NEW: System Information & Build Version Display -->
-        <div class="p-4 rounded-2xl bg-slate-100/70 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60 flex items-center justify-between">
-          <div>
-            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider">系统版本 / Build Version</h4>
-            <p id="appVersionSettingsText" class="text-sm font-mono font-bold text-slate-800 dark:text-slate-200 mt-0.5">
-              v...
-            </p>
-          </div>
-          <span class="text-xs font-semibold px-2.5 py-1 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900/40">
-            最新构建
-          </span>
         </div>
       </div>
     </div>
@@ -890,7 +881,6 @@
           document.getElementById('ghBranch').value = ghConfig.branch || 'main';
           document.getElementById('ghToken').value = ghConfig.token || '';
         }
-        document.getElementById('settingInitialScore').value = formatPoints(appData.config.initialScore);
       } catch (e) {
         console.error("Failed to load storage", e);
       }
@@ -950,7 +940,7 @@
     }
 
     function renderDashboard() {
-      const initial = Number(appData.config.initialScore) || 0;
+      const initial = Number((appData.config && appData.config.initialScore)) || 0;
       let totalReward = 0;
       let totalPenalty = 0;
       let totalExpense = 0;
@@ -967,7 +957,6 @@
       document.getElementById('totalRewardScore').innerText = '+' + formatPoints(totalReward);
       document.getElementById('totalPenaltyScore').innerText = '-' + formatPoints(totalPenalty);
       document.getElementById('totalExpenseScore').innerText = '-' + formatPoints(totalExpense);
-      document.getElementById('settingInitialScore').value = formatPoints(initial);
     }
 
     // ================= QUICK ROUTINES CHECKLIST =================
@@ -2048,15 +2037,6 @@
       triggerBackgroundSync();
     }
 
-    function saveInitialScore() {
-      const val = parseFloat(document.getElementById('settingInitialScore').value) || 0;
-      appData.config.initialScore = val;
-      saveLocalStorage();
-      renderDashboard();
-      showToast('起始底池金额已更新');
-      triggerBackgroundSync();
-    }
-
     // Modal Helpers
     function openModal(id) {
       document.getElementById(id).classList.remove('hidden');
@@ -2333,6 +2313,30 @@
       }
     }
 
+    // Fetch the remote ledger using the raw media type.
+    // Unlike the default JSON response, raw supports files up to 100 MB,
+    // and the ETag header carries the blob SHA needed for the next PUT.
+    async function fetchLedgerFromGitHub() {
+      const getUrl = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/data.json?ref=${ghConfig.branch}&_t=${Date.now()}`;
+      const getRes = await fetch(getUrl, {
+        headers: {
+          'Authorization': `Bearer ${ghConfig.token}`,
+          'Accept': 'application/vnd.github.raw+json'
+        }
+      });
+
+      if (getRes.status !== 200) {
+        const err = new Error(`GitHub API error: ${getRes.status}`);
+        err.status = getRes.status;
+        throw err;
+      }
+
+      const etag = getRes.headers.get('ETag');
+      const sha = etag ? etag.replace(/^"|"$/g, '') : null;
+      const text = await getRes.text();
+      return { data: JSON.parse(text), sha };
+    }
+
     async function smartSync(silent = false) {
       if (isSyncing) return;
       if (!ghConfig.token || !ghConfig.owner || !ghConfig.repo) {
@@ -2347,47 +2351,41 @@
       updateSyncBadge('syncing', '正在拉取与同步...');
 
       try {
-        const getUrl = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/data.json?ref=${ghConfig.branch}&_t=${Date.now()}`;
-        const getRes = await fetch(getUrl, {
-          headers: {
-            'Authorization': `Bearer ${ghConfig.token}`,
-            'Accept': 'application/vnd.github.v3+json'
-          }
-        });
-
-        if (getRes.status === 200) {
-          const fileData = await getRes.json();
-          fileSha = fileData.sha;
-          const content = decodeURIComponent(escape(atob(fileData.content.replace(/\n/g, ''))));
-          const remoteData = JSON.parse(content);
-
-          const remoteTime = new Date((remoteData.config && remoteData.config.lastUpdated) || 0).getTime();
-          const localTime = new Date((appData.config && appData.config.lastUpdated) || 0).getTime();
-
-          if (localTime > remoteTime) {
-            updateSyncBadge('syncing', '正在推送最新更改...');
+        let remoteData = null;
+        try {
+          const remote = await fetchLedgerFromGitHub();
+          remoteData = remote.data;
+          fileSha = remote.sha || fileSha;
+        } catch (getErr) {
+          if (getErr.status === 404) {
+            updateSyncBadge('syncing', '正在初始化云端...');
+            fileSha = null;
             await rawPushToGitHub();
-            updateSyncBadge('success', '云端已同步');
-            if (!silent) showToast('✅ 成功推送至云端！');
-          } else if (remoteTime > localTime) {
-            appData = remoteData;
-            if (!Array.isArray(appData.presets)) appData.presets = [];
-            saveLocalStorage();
-            renderAll();
-            updateSyncBadge('success', '已拉取云端最新数据');
-            if (!silent) showToast('✅ 成功拉取云端数据！');
-          } else {
-            updateSyncBadge('success', '数据已是最新');
-            if (!silent) showToast('✅ 两端数据已同步');
+            updateSyncBadge('success', '云端已创建');
+            if (!silent) showToast('✅ 成功创建并推送到云端！');
+            return;
           }
+          throw getErr;
+        }
 
-        } else if (getRes.status === 404) {
-          updateSyncBadge('syncing', '正在初始化云端...');
+        const remoteTime = new Date((remoteData.config && remoteData.config.lastUpdated) || 0).getTime();
+        const localTime = new Date((appData.config && appData.config.lastUpdated) || 0).getTime();
+
+        if (localTime > remoteTime) {
+          updateSyncBadge('syncing', '正在推送最新更改...');
           await rawPushToGitHub();
-          updateSyncBadge('success', '云端已创建');
-          if (!silent) showToast('✅ 成功创建并推送到云端！');
+          updateSyncBadge('success', '云端已同步');
+          if (!silent) showToast('✅ 成功推送至云端！');
+        } else if (remoteTime > localTime) {
+          appData = remoteData;
+          if (!Array.isArray(appData.presets)) appData.presets = [];
+          saveLocalStorage();
+          renderAll();
+          updateSyncBadge('success', '已拉取云端最新数据');
+          if (!silent) showToast('✅ 成功拉取云端数据！');
         } else {
-          throw new Error(`GitHub API error: ${getRes.status}`);
+          updateSyncBadge('success', '数据已是最新');
+          if (!silent) showToast('✅ 两端数据已同步');
         }
 
       } catch (err) {
@@ -2435,28 +2433,16 @@
       if (!confirm('确定要从云端重新拉取并覆盖当前本地记录吗？')) return;
       try {
         showToast('正在从云端拉取...');
-        const getUrl = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/data.json?ref=${ghConfig.branch}&_t=${Date.now()}`;
-        const getRes = await fetch(getUrl, {
-          headers: {
-            'Authorization': `Bearer ${ghConfig.token}`,
-            'Accept': 'application/vnd.github.v3+json'
-          }
-        });
-        if (getRes.status === 200) {
-          const fileData = await getRes.json();
-          fileSha = fileData.sha;
-          const content = decodeURIComponent(escape(atob(fileData.content.replace(/\n/g, ''))));
-          appData = JSON.parse(content);
-          if (!Array.isArray(appData.presets)) appData.presets = [];
-          saveLocalStorage();
-          renderAll();
-          showToast('✅ 已成功从云端恢复覆盖');
-          closeModal('settingsModal');
-        } else {
-          showToast(`❌ 拉取失败: HTTP ${getRes.status}`);
-        }
+        const remote = await fetchLedgerFromGitHub();
+        fileSha = remote.sha || fileSha;
+        appData = remote.data;
+        if (!Array.isArray(appData.presets)) appData.presets = [];
+        saveLocalStorage();
+        renderAll();
+        showToast('✅ 已成功从云端恢复覆盖');
+        closeModal('settingsModal');
       } catch (e) {
-        showToast('❌ 网络请求失败');
+        showToast(e.status === 404 ? '❌ 云端还没有数据文件' : '❌ 网络请求失败');
       }
     }
 
@@ -2464,16 +2450,12 @@
       if (!confirm('确定要用当前本地数据强制覆盖云端吗？')) return;
       try {
         showToast('正在推送至云端...');
-        const getUrl = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/data.json?ref=${ghConfig.branch}&_t=${Date.now()}`;
-        const getRes = await fetch(getUrl, {
-          headers: {
-            'Authorization': `Bearer ${ghConfig.token}`,
-            'Accept': 'application/vnd.github.v3+json'
-          }
-        });
-        if (getRes.status === 200) {
-          const fileData = await getRes.json();
-          fileSha = fileData.sha;
+        try {
+          const remote = await fetchLedgerFromGitHub();
+          fileSha = remote.sha || null;
+        } catch (e) {
+          if (e.status !== 404) throw e;
+          fileSha = null;
         }
         await rawPushToGitHub();
         showToast('✅ 已成功强制推送到云端');
