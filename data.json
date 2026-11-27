@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-11-27T15:42:13.030Z"
+    "lastUpdated": "2026-11-27T15:51:01.847Z"
   },
   "presets": [
     {
@@ -152,7 +152,7 @@
       "title": "抖音超时",
       "points": 1,
       "category": "娱乐",
-      "isDaily": true
+      "isDaily": false
     },
     {
       "id": "p_1791209262693_fu5a",
