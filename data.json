@@ -1,7 +1,7 @@
 {
   "config": {
     "initialScore": 1169,
-    "lastUpdated": "2026-11-28T15:43:58.718Z"
+    "lastUpdated": "2026-11-28T17:35:55.012Z"
   },
   "presets": [
     {
@@ -164,6 +164,15 @@
     }
   ],
   "records": [
+    {
+      "id": "rec_1795887355011_a4o5c",
+      "type": "penalty",
+      "title": "超过11点半睡觉",
+      "points": 1,
+      "category": "",
+      "timestamp": "2026-11-28T23:35",
+      "note": ""
+    },
     {
       "id": "rec_1795880638718_uxkve",
       "presetId": "p_1786775170269_d2k7",
